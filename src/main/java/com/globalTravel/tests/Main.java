@@ -1,9 +1,9 @@
-package globaltravel.modules.FlightModule.tests;
+package globaltravel.tests;
 
-import globaltravel.modules.FlightModule.models.*;
-import globaltravel.modules.FlightModule.services.AirlineService;
-import globaltravel.modules.FlightModule.services.FlightService;
-import globaltravel.modules.FlightModule.services.TicketService;
+import globaltravel.models.*;
+import globaltravel.services.AirlineService;
+import globaltravel.services.FlightService;
+import globaltravel.services.TicketService;
 
 public class Main {
     public static void main(String[] args) {
