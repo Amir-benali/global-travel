@@ -1,9 +1,9 @@
-package globaltravel.services;
+package com.globalTravel.services;
 
-import globaltravel.utils.DataSource;
-import globaltravel.models.Ticket;
-import globaltravel.models.TicketClass;
-import globaltravel.models.TicketStatus;
+import com.globalTravel.models.Ticket;
+import com.globalTravel.models.TicketClass;
+import com.globalTravel.models.TicketStatus;
+import com.globalTravel.utils.DataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -89,3 +89,4 @@ public class TicketService implements IService<Ticket> {
     }
 
 }
+

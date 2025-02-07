@@ -1,7 +1,7 @@
-package globaltravel.services;
+package com.globalTravel.services;
 
-import globaltravel.utils.DataSource;
-import globaltravel.models.Airline;
+import com.globalTravel.models.Airline;
+import com.globalTravel.utils.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -74,3 +74,4 @@ public class AirlineService implements IService<Airline> {
         return airlines;
     }
 }
+

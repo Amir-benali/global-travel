@@ -1,10 +1,13 @@
-package globaltravel.services;
+package com.globalTravel.services;
 
-import globaltravel.utils.DataSource;
-import globaltravel.models.Flight;
-import globaltravel.models.FlightStatus;
+import com.globalTravel.models.Flight;
+import com.globalTravel.models.FlightStatus;
+import com.globalTravel.utils.DataSource;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,3 +107,4 @@ public class FlightService implements IService<Flight> {
         return flights;
     }
 }
+
