@@ -1,4 +1,4 @@
-package globaltravel.models;
+package com.globalTravel.models;
 
 public class Flight {
     private int id_flight;
