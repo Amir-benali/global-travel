@@ -1,4 +1,4 @@
-package globaltravel.modules.FlightModule.models;
+package globaltravel.models;
 
 public class Airline {
     private int airline_id;
