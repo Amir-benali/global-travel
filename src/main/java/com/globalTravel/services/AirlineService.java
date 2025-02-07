@@ -1,7 +1,7 @@
-package globaltravel.modules.FlightModule.services;
+package globaltravel.services;
 
-import globaltravel.global.utils.DataSource;
-import globaltravel.modules.FlightModule.models.Airline;
+import globaltravel.utils.DataSource;
+import globaltravel.models.Airline;
 
 import java.sql.*;
 import java.util.ArrayList;
