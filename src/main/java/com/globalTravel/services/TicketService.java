@@ -1,9 +1,9 @@
-package globaltravel.modules.FlightModule.services;
+package globaltravel.services;
 
-import globaltravel.global.utils.DataSource;
-import globaltravel.modules.FlightModule.models.Ticket;
-import globaltravel.modules.FlightModule.models.TicketClass;
-import globaltravel.modules.FlightModule.models.TicketStatus;
+import globaltravel.utils.DataSource;
+import globaltravel.models.Ticket;
+import globaltravel.models.TicketClass;
+import globaltravel.models.TicketStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
