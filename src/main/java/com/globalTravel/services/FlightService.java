@@ -1,8 +1,8 @@
-package globaltravel.modules.FlightModule.services;
+package globaltravel.services;
 
-import globaltravel.global.utils.DataSource;
-import globaltravel.modules.FlightModule.models.Flight;
-import globaltravel.modules.FlightModule.models.FlightStatus;
+import globaltravel.utils.DataSource;
+import globaltravel.models.Flight;
+import globaltravel.models.FlightStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
