@@ -1,4 +1,4 @@
-package globaltravel.modules.FlightModule.models;
+package globaltravel.models;
 
 public enum FlightStatus {
     Scheduled,
