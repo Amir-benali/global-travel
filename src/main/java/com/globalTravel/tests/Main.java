@@ -2,7 +2,9 @@ package com.globalTravel.tests;
 
 
 import com.globalTravel.models.Activity;
+import com.globalTravel.models.TypeActivity;
 import com.globalTravel.services.ActivityService;
+import com.globalTravel.services.TypeActivityService;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -14,19 +16,18 @@ public class Main {
 
 
         //type activity
-        // TypeActivityService typeActivityService = new TypeActivityService();
-
+         //TypeActivityService typeActivityService = new TypeActivityService();
 
         //ajoute
-        //   TypeActivity newTypeActivity = new TypeActivity("Aventure", "hotel");
-        // typeActivityService.ajouter(newTypeActivity);
+           //TypeActivity newTypeActivity = new TypeActivity("Aventure", "hotel");
+          //typeActivityService.ajouter(newTypeActivity);
 
         // Modification
-        //TypeActivity updatedTypeActivity = new TypeActivity(1, "Aventure Extrême", "voiture");
-        //typeActivityService.modifier(updatedTypeActivity);
+      //  TypeActivity updatedTypeActivity = new TypeActivity(1, "Aventure Extrême", "voiture");
+       // typeActivityService.modifier(updatedTypeActivity);
 
         //Suppression
-        // TypeActivity typeActivityToDelete = new TypeActivity(1, "", "");
+       //  TypeActivity typeActivityToDelete = new TypeActivity(1, "", "");
         //typeActivityService.supprimer(typeActivityToDelete);
 
 
@@ -93,33 +94,43 @@ public class Main {
 
 
 
-        //Activity
+        //ajoute activity
+       // ActivityService activityService = new ActivityService();
+        // Calendar cal = Calendar.getInstance();
+        // Date dateDebut = cal.getTime();
+         //cal.set(2026, Calendar.FEBRUARY, 2, 22, 2, 2);
+         //Date dateFin = cal.getTime();
+         //Activity newActivity = new Activity(dateDebut, dateFin, "Excursion en montagne", "Tunis, Tunisie",
+           //     true, 250, true, false, true);
 
-        ActivityService activityService = new ActivityService();
+       // activityService.ajouter(newActivity);
 
-        // ajoute
-         Date dateDebut = new Date(2025 - 1900, Calendar.JANUARY, 1, 10, 1, 1);  // Date de début
-         Date dateFin = new Date(2025 - 1900, Calendar.JANUARY, 3, 22, 2, 2);    // Date de fin
 
-        Activity newActivity = new Activity(dateDebut, dateFin,"Excursion en montagne", "Tunis, Tunisie", true, 250, true, false, true);
-
-        // Ajouter l'activité
-         activityService.ajouter(newActivity);
 
 
 
         //   Modification d'une activité
-        //   Activity updatedActivity = new Activity(1,new Date(2024 - 1900, Calendar.FEBRUARY, 1, 10, 1, 1),
-        //          new Date(2024 - 1900, Calendar.FEBRUARY, 1, 10, 1, 1), "Plongée sous-marine",
-        //      "Hammamet, Tunisie", false, 500, false, true, true);
-        // activityService.modifier(updatedActivity);
+     //  ActivityService activityService = new ActivityService();
+      //  Calendar calDebut = Calendar.getInstance();
+      //  calDebut.set(2021, Calendar.FEBRUARY, 1, 11, 1, 1);
+      //  Date dateDebut = calDebut.getTime();
+        // Calendar calFin = Calendar.getInstance();
+        // calFin.set(2022, Calendar.FEBRUARY, 2, 22, 20, 20);
+      //  Date dateFin = calFin.getTime();
+
+       // Activity updatedActivity = new Activity(9, dateDebut, dateFin, "Plongée ", "Hammamet, ",
+         //       false, 600, false, true, true);
+       // activityService.modifier(updatedActivity);
+
+
+
+
 
         // Suppression d'une activité
-        //  Activity activityToDelete = new Activity(1, null, null, null, null, false, 0, false, false, false);
-        // activityService.supprimer(activityToDelete);
-
-        // Affichage des activités
-        // System.out.println(activityService.rechercher());
+        ActivityService activityService = new ActivityService();
+          Activity activityToDelete = new Activity(9, null, null, null, null, false, 0, false, false, false);
+         activityService.supprimer(activityToDelete);
+        System.out.println(activityService.rechercher());
 
 
     }

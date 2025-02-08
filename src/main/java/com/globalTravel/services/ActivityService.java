@@ -16,8 +16,8 @@ public class ActivityService implements IService<Activity> {
         String req = "INSERT INTO activity (dateDebut, dateFin, description, localisation, notification, prixTotal, hotelInclus, volInclus, voitureIncluse) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
-            pst.setDate(1, new java.sql.Date(activity.getDateDebut().getTime()));
-            pst.setDate(2, new java.sql.Date(activity.getDateFin().getTime()));
+            pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
+            pst.setTimestamp(2, new java.sql.Timestamp(activity.getDateFin().getTime()));
             pst.setString(3, activity.getDescription());
             pst.setString(4, activity.getLocalisation());
             pst.setBoolean(5, activity.isNotification());
@@ -37,8 +37,8 @@ public class ActivityService implements IService<Activity> {
         String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, notification=?, prixTotal=?, hotelInclus=?, volInclus=?, voitureIncluse=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
-            pst.setDate(1, new java.sql.Date(activity.getDateDebut().getTime()));
-            pst.setDate(2, new java.sql.Date(activity.getDateFin().getTime()));
+            pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
+            pst.setTimestamp(2, new java.sql.Timestamp(activity.getDateFin().getTime()));
             pst.setString(3, activity.getDescription());
             pst.setString(4, activity.getLocalisation());
             pst.setBoolean(5, activity.isNotification());
