@@ -1,16 +1,17 @@
 package com.globalTravel.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Offer {
     private int id;
     private String description;
-    private Date date;
+    private LocalDateTime date;
     private float price;
     private Route route;
     private PrivateCar car;
 
-    public Offer(int id, String description, Date date, float price, Route route, PrivateCar car) {
+    public Offer(int id, String description, LocalDateTime date, float price, Route route, PrivateCar car) {
         this.id = id;
         this.description = description;
         this.date = date;
@@ -19,7 +20,7 @@ public class Offer {
         this.car = car;
     }
 
-    public Offer(String description, Date date, float price, Route route, PrivateCar car) {
+    public Offer(String description, LocalDateTime date, float price, Route route, PrivateCar car) {
         this.description = description;
         this.date = date;
         this.price = price;
@@ -43,11 +44,11 @@ public class Offer {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

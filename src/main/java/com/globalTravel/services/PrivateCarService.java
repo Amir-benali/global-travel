@@ -82,4 +82,22 @@ public class PrivateCarService implements IService<PrivateCar> {
 
         return cars;
     }
+    public PrivateCar getPrivateCarById(int id) {
+        PrivateCar car = null;
+
+        String req = "SELECT * FROM private_car where id=?";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                car =new PrivateCar(rs.getInt("id"), rs.getString("brand"),rs.getString("model"), rs.getInt("num_place"),carDriverservice.getCarDriverById(rs.getInt("id_driver")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return car;
+    }
+
 }
