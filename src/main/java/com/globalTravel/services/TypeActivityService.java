@@ -23,9 +23,9 @@ public class TypeActivityService implements IService<TypeActivity> {
             pst.setString(1, typeActivity.getNomEvenement());
             pst.setString(2, typeActivity.getNomType());
             pst.executeUpdate();
-            System.out.println("Type d'activité ajouté avec succès !");
+            System.out.println("Type d'activité ajoute avec succes ");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du type d'activité : " + e.getMessage());
+            System.out.println("Erreur lors de l ajout du type d'activite : " + e.getMessage());
         }
     }
 
@@ -38,9 +38,9 @@ public class TypeActivityService implements IService<TypeActivity> {
             pst.setString(2, typeActivity.getNomType());
             pst.setInt(3, typeActivity.getId());
             pst.executeUpdate();
-            System.out.println("Type d'activité modifié avec succès !");
+            System.out.println("Type d'activité modifie avec succes ");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la modification du type d'activité : " + e.getMessage());
+            System.out.println("Erreur lors de la modification du type d'activite : " + e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class TypeActivityService implements IService<TypeActivity> {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setInt(1, typeActivity.getId());
             pst.executeUpdate();
-            System.out.println("Type d'activité supprimé avec succès !");
+            System.out.println("Type d'activité supprimé avec succes ");
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression du type d'activité : " + e.getMessage());
         }

@@ -26,9 +26,9 @@ public class ActivityService implements IService<Activity> {
             pst.setBoolean(8, activity.isVolInclus());
             pst.setBoolean(9, activity.isVoitureIncluse());
             pst.executeUpdate();
-            System.out.println("Activité ajoutée avec succès !");
+            System.out.println("Activité ajoute avec succes ");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout de l'activité : " + e.getMessage());
+            System.out.println("Erreur lors de l ajout de l activité : " + e.getMessage());
         }
     }
 
@@ -48,9 +48,9 @@ public class ActivityService implements IService<Activity> {
             pst.setBoolean(9, activity.isVoitureIncluse());
             pst.setInt(10, activity.getId());
             pst.executeUpdate();
-            System.out.println("Activité modifiée avec succès !");
+            System.out.println("Activité modifiee avec succes !");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la modification de l'activité : " + e.getMessage());
+            System.out.println("Erreur lors de la modification de l activité : " + e.getMessage());
         }
     }
 
@@ -61,9 +61,9 @@ public class ActivityService implements IService<Activity> {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setInt(1, activity.getId());
             pst.executeUpdate();
-            System.out.println("Activité supprimée avec succès !");
+            System.out.println("Activité supprimee avec succes ");
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de l'activité : " + e.getMessage());
+            System.out.println("Erreur lors de la suppression de l activité : " + e.getMessage());
         }
     }
 
