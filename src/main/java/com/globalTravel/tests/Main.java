@@ -23,7 +23,7 @@ import com.globalTravel.models.PrivateCar;
 import com.globalTravel.models.Route;
 import com.globalTravel.services.OfferService;
 
-import com.globalTravel.models.*;
+
 import com.globalTravel.services.AirlineService;
 import com.globalTravel.services.FlightService;
 import com.globalTravel.services.TicketService;
@@ -38,7 +38,6 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
-import java.sql.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -65,35 +64,35 @@ public class Main {
                 "Super Admin"
         );
 
-// Instancier le service AdminService
-        AdminService adminService = new AdminService();
-
-        // Ajouter un Admin dans la base de données
-        adminService.ajouter(admin);
-
-        // Récupérer tous les Admins et les afficher
-      List<Admin> admins = adminService.rechercher();
-       System.out.println("Liste des Admins :");
-        for (Admin a : admins) {
-            System.out.println(a.getFirstName() + " " + a.getLastName());
-        }
-
-       // Modifier un Admin (vous devez avoir l'id de l'Admin à modifier)
-        if (!admins.isEmpty()) {
-            Admin adminToModify = admins.get(5); // Modifier le premier Admin trouvé
-            adminToModify.setFirstName("Jonathan");
-            adminService.modifier(adminToModify);
-            System.out.println("Admin modifié !");
-        }
-
-        // Supprimer un Admin (encore une fois, avec un id valide)
-        if (!admins.isEmpty()) {
-            Admin adminToDelete = admins.get(5); // Supprimer le premier Admin trouvé
-            adminService.supprimer(adminToDelete);
-            System.out.println("Admin supprimé !");
-        }
-
-      
+//// Instancier le service AdminService
+//        AdminService adminService = new AdminService();
+//
+//        // Ajouter un Admin dans la base de données
+//        adminService.ajouter(admin);
+//
+//        // Récupérer tous les Admins et les afficher
+//      List<Admin> admins = adminService.rechercher();
+//       System.out.println("Liste des Admins :");
+//        for (Admin a : admins) {
+//            System.out.println(a.getFirstName() + " " + a.getLastName());
+//        }
+//
+//       // Modifier un Admin (vous devez avoir l'id de l'Admin à modifier)
+//        if (!admins.isEmpty()) {
+//            Admin adminToModify = admins.get(5); // Modifier le premier Admin trouvé
+//            adminToModify.setFirstName("Jonathan");
+//            adminService.modifier(adminToModify);
+//            System.out.println("Admin modifié !");
+//        }
+//
+//        // Supprimer un Admin (encore une fois, avec un id valide)
+//        if (!admins.isEmpty()) {
+//            Admin adminToDelete = admins.get(5); // Supprimer le premier Admin trouvé
+//            adminService.supprimer(adminToDelete);
+//            System.out.println("Admin supprimé !");
+//        }
+//
+//
       
       
 // flight module
@@ -121,55 +120,55 @@ public class Main {
       
   
 // car module       
-      
-        OfferService service = new OfferService();
-        CarDriver driver1 =new CarDriver(3,"ahmed","amin","99885544");
-//        service.ajouter(new CarDriver("ahmed","amin","99885544"));
-//        service.ajouter(new PrivateCar("brand 1","model 1",3));
-//        service.modifier(new PrivateCar(2,"brand 2","model 2",2));
-
-//        service.supprimer(new PrivateCar(2,"brand 2","model 2",2));
-//        service.ajouter(new PrivateCar("brand 2","model 2",2));
-//        service.ajouter(new PrivateCar("brand 4","model 4",1));
-//        service.ajouter(new PrivateCar("brand 5","model 5",4));
-//        service.supprimer(new CarDriver(2,"aziz","amin","999800815"));
-//        service.ajouter(new Route(1,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
-
-//        service.supprimer(new Route(2,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
-
-//        service.ajouter(new Offer("offer desc",LocalDateTime.now(),20.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(1,"","",4,new CarDriver(1,"","",""))));
-        service.supprimer(new Offer(4,"offer desc 2 ", LocalDateTime.now(),15.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(3,"","",4,new CarDriver(1,"","",""))));
-
-        System.out.println(service.rechercher());
-      
-      
+//
+//        OfferService service = new OfferService();
+//        CarDriver driver1 =new CarDriver(3,"ahmed","amin","99885544");
+////        service.ajouter(new CarDriver("ahmed","amin","99885544"));
+////        service.ajouter(new PrivateCar("brand 1","model 1",3));
+////        service.modifier(new PrivateCar(2,"brand 2","model 2",2));
+//
+////        service.supprimer(new PrivateCar(2,"brand 2","model 2",2));
+////        service.ajouter(new PrivateCar("brand 2","model 2",2));
+////        service.ajouter(new PrivateCar("brand 4","model 4",1));
+////        service.ajouter(new PrivateCar("brand 5","model 5",4));
+////        service.supprimer(new CarDriver(2,"aziz","amin","999800815"));
+////        service.ajouter(new Route(1,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
+//
+////        service.supprimer(new Route(2,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
+//
+////        service.ajouter(new Offer("offer desc",LocalDateTime.now(),20.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(1,"","",4,new CarDriver(1,"","",""))));
+//        service.supprimer(new Offer(4,"offer desc 2 ", LocalDateTime.now(),15.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(3,"","",4,new CarDriver(1,"","",""))));
+//
+//        System.out.println(service.rechercher());
+//
+//
       
       
       
 // hotel module      
-      
-        // Création d'une instance de hotelService
-        hotelService service = new hotelService();
-
-        // Création d'un nouvel hôtel
-        hotel h1 = new hotel("Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5, "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com", "Excellent séjour, personnel très accueillant.");
-
-        // Ajout de l'hôtel à la base de données
-        service.ajouter(h1);
-        service.rechercher().forEach(System.out::println);
-        // Modification de l'hôtel
-        service.modifier(new hotel(26, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4, "picine, Petit-déjeuner, Salle de réunion", "+21623456789, contact@hotelparis.com", "le meilleur, personnel très accueillant."));
-        // Recherche de tous les hôtels après modification
-        System.out.println("Liste des hôtels après modification :");
-        service.rechercher().forEach(System.out::println);
-
-        // Suppression de l'hôtel
-        service.supprimer(new hotel(26, "", "", "", "",0,"","",""));
-        System.out.println("Hôtel supprimé avec succès.");
-
-        // Recherche de tous les hôtels après suppression
-        System.out.println("Liste des hôtels après suppression :");
-        service.rechercher().forEach(System.out::println);
+//
+//        // Création d'une instance de hotelService
+//        hotelService service = new hotelService();
+//
+//        // Création d'un nouvel hôtel
+//        hotel h1 = new hotel("Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5, "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com", "Excellent séjour, personnel très accueillant.");
+//
+//        // Ajout de l'hôtel à la base de données
+//        service.ajouter(h1);
+//        service.rechercher().forEach(System.out::println);
+//        // Modification de l'hôtel
+//        service.modifier(new hotel(26, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4, "picine, Petit-déjeuner, Salle de réunion", "+21623456789, contact@hotelparis.com", "le meilleur, personnel très accueillant."));
+//        // Recherche de tous les hôtels après modification
+//        System.out.println("Liste des hôtels après modification :");
+//        service.rechercher().forEach(System.out::println);
+//
+//        // Suppression de l'hôtel
+//        service.supprimer(new hotel(26, "", "", "", "",0,"","",""));
+//        System.out.println("Hôtel supprimé avec succès.");
+//
+//        // Recherche de tous les hôtels après suppression
+//        System.out.println("Liste des hôtels après suppression :");
+//        service.rechercher().forEach(System.out::println);
 
         /*
         // ====================================================
@@ -286,7 +285,7 @@ public class Main {
         //  Activity activityToDelete = new Activity(9, null, null, null, null, false, 0, false, false, false);
         // activityService.supprimer(activityToDelete);
         // System.out.println(activityService.rechercher());
-      
+
     }
 
 
