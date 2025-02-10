@@ -3,33 +3,21 @@ package com.globalTravel.tests;
 import com.globalTravel.models.chambre;
 import com.globalTravel.models.hotel;
 import com.globalTravel.models.reservation_hotel;
-import com.globalTravel.services.chambreService;
-import com.globalTravel.services.hotelService;
-import com.globalTravel.services.reservation_hotelService;
+import com.globalTravel.services.*;
 import com.globalTravel.utils.DataSource;
 
 import com.globalTravel.models.Activity;
 import com.globalTravel.models.Review;
 import com.globalTravel.models.TypeActivity;
-import com.globalTravel.services.ActivityService;
-import com.globalTravel.services.ReviewService;
-import com.globalTravel.services.TypeActivityService;
-
 
 
 import com.globalTravel.models.CarDriver;
 import com.globalTravel.models.Offer;
 import com.globalTravel.models.PrivateCar;
 import com.globalTravel.models.Route;
-import com.globalTravel.services.OfferService;
 
-
-import com.globalTravel.services.AirlineService;
-import com.globalTravel.services.FlightService;
-import com.globalTravel.services.TicketService;
 
 import com.globalTravel.models.Admin;
-import com.globalTravel.services.AdminService;
 import com.globalTravel.utils.DataSource;
 
 
@@ -119,33 +107,48 @@ public class Main {
         //ts.supprimer(new Ticket(1, 2, "Abc251", TicketClass.Business, 100.0,TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
       
   
-// car module       
-//
-//        OfferService service = new OfferService();
-//        CarDriver driver1 =new CarDriver(3,"ahmed","amin","99885544");
-////        service.ajouter(new CarDriver("ahmed","amin","99885544"));
-////        service.ajouter(new PrivateCar("brand 1","model 1",3));
-////        service.modifier(new PrivateCar(2,"brand 2","model 2",2));
-//
-////        service.supprimer(new PrivateCar(2,"brand 2","model 2",2));
-////        service.ajouter(new PrivateCar("brand 2","model 2",2));
-////        service.ajouter(new PrivateCar("brand 4","model 4",1));
-////        service.ajouter(new PrivateCar("brand 5","model 5",4));
-////        service.supprimer(new CarDriver(2,"aziz","amin","999800815"));
-////        service.ajouter(new Route(1,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
-//
-////        service.supprimer(new Route(2,LocalDateTime.now() , LocalDateTime.of(2025,2,25,19,25,25),"1115","1209"));
-//
-////        service.ajouter(new Offer("offer desc",LocalDateTime.now(),20.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(1,"","",4,new CarDriver(1,"","",""))));
-//        service.supprimer(new Offer(4,"offer desc 2 ", LocalDateTime.now(),15.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(3,"","",4,new CarDriver(1,"","",""))));
-//
-//        System.out.println(service.rechercher());
-//
-//
+ //car module
+
+        OfferService offerService = new OfferService();
+        PrivateCarService carService = new PrivateCarService();
+        RouteService routeService = new RouteService();
+        CarDriverService driverService = new CarDriverService();
+
+        Route route = new Route(LocalDateTime.now(),LocalDateTime.now(),"11","11");
+        routeService.ajouter(route);
+        routeService.modifier(new Route(2,LocalDateTime.now(),LocalDateTime.now(),"12","12"));
+        routeService.supprimer(new Route(2,null,null,null,null));
+        System.out.println(routeService.rechercher());
+
+
+
+       CarDriver driver =new CarDriver("ahmed","amin","99885544");
+        driverService.ajouter(driver);
+        driverService.modifier(new CarDriver(2,"ahmed","ahmed","99885577"));
+        driverService.supprimer(new CarDriver(2,"","",""));
+        System.out.println(driverService.rechercher());
+
+
+        PrivateCar car = new PrivateCar("brand 2","model 2",5,new CarDriver(3,"ahmed","ahmed","99885577"));
+        carService.ajouter(car);
+        carService.modifier(new PrivateCar(2,"brand 10","model 10",5,new CarDriver(2,"ahmed","ahmed","99885577")));
+        carService.supprimer(new PrivateCar(2,"brand 10","model 10",5,new CarDriver(2,"ahmed","ahmed","99885577")));
+        System.out.println(carService.rechercher());
+
+
+        Offer offer = new Offer("offer desc",LocalDateTime.now(),20.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(1,"","",4,new CarDriver(1,"","","")));
+
+        offerService.ajouter(offer);
+        offerService.modifier(new Offer(4,"offer desc 4 ", LocalDateTime.now(),15.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"14","14"),new PrivateCar(3,"","",4,new CarDriver(1,"","",""))));
+        offerService.supprimer(new Offer(4,"offer desc 2 ", LocalDateTime.now(),15.5f,new Route(1,LocalDateTime.now(),LocalDateTime.now(),"11","11"),new PrivateCar(3,"","",4,new CarDriver(1,"","",""))));
+
+        System.out.println(offerService.rechercher());
+
+
       
       
       
-// hotel module      
+// hotel module
 //
 //        // Création d'une instance de hotelService
 //        hotelService service = new hotelService();
@@ -228,7 +231,7 @@ public class Main {
         servicech.rechercher().forEach(System.out::println);
         */
 
-      
+
 
 
         //type activity
