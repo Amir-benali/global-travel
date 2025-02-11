@@ -69,7 +69,7 @@ public class chambreService implements IService<chambre> {
                         rs.getInt("id_Chambre_h"),
                         rs.getString("type_chambre_h"),
                         rs.getInt("prix_nuit_h"),
-                        rs.getDate("dispo_h").toLocalDate(), // Conversion de java.sql.Date à LocalDate
+                        rs.getDate("dispo_h").toLocalDate(),
                         rs.getString("option_h")
                 ));
             }

@@ -24,7 +24,7 @@ public class AdminService implements IService<Admin> {
             pstmt.setDate(2, new Date(admin.getDateNaissance().getTime()));
             pstmt.setString(3, admin.getAdresse());
             pstmt.setString(4, admin.getEmail());
-            pstmt.setString(5, "Admin"); // Spécifique à l'Admin
+            pstmt.setString(5, "Admin");
             pstmt.setString(6, admin.getPassword());
             pstmt.setString(7, admin.getFirstName());
             pstmt.setString(8, admin.getLastName());
