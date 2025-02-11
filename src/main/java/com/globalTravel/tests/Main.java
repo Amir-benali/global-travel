@@ -69,17 +69,20 @@ public class Main {
 // flight module
 
         AirlineService as=new AirlineService();
-        //as.ajouter(new Airline("Tunisia", "TUN2", "Tunisair"));
+        //as.ajouter(new Airline("Tunisia", "TUN", "Tunisair"));
+        as.ajouter(new Airline("France", "FR", "Airfrance"));
 
         FlightService fs=new FlightService();
         //fs.ajouter(new Flight("F1", 3, "TUN", "CDG", "2021-12-12 12:00:00", "2021-12-12 14:00:00", 2, 100, 200.0, FlightStatus.Scheduled));
+        fs.ajouter(new Flight("F2", 5, "TUN", "ORY", "2021-12-12 12:00:00", "2021-12-12 14:00:00", 2, 100, 200.0, FlightStatus.Scheduled));
 
-       TicketService ts=new TicketService();
-        ts.ajouter(new Ticket(6, "A1", TicketClass.Business, 100.0, TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
+        TicketService ts=new TicketService();
+        //ts.ajouter(new Ticket(6, "A1", TicketClass.Business, 100.0, TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
+        ts.ajouter(new Ticket(6, "A2", TicketClass.Economy, 100.0, TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
 
-        as.modifier(new Airline(3, "Tunisair", "TUN", "Tunisia"));
-        fs.modifier(new Flight(6, "F123", 3, "TUN", "CDG", "2021-12-12 12:00:00", "2021-12-12 14:00:00", 2, 100, 200.0, FlightStatus.Scheduled));
-        ts.modifier(new Ticket(1, 6, "Abc251", TicketClass.Business, 100.0,TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
+        as.modifier(new Airline(5, "Tunisair", "TUN", "Tunisia"));
+        fs.modifier(new Flight(7, "F2222", 5, "TUN", "CDG", "2021-12-12 12:00:00", "2021-12-12 14:00:00", 2, 100, 200.0, FlightStatus.Scheduled));
+        ts.modifier(new Ticket(5, 6, "Abcfre251", TicketClass.Business, 350.0,TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
 
         System.out.println(as.rechercher());
         System.out.println(fs.rechercher());
@@ -89,6 +92,12 @@ public class Main {
         //as.supprimer(new Airline(1, "", "", ""));
         //ts.supprimer(new Ticket(1, 3, "Abc251", TicketClass.Business, 100.0,TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
 
+     //SUPPRESSION
+      /*
+        fs.supprimer(new Flight(7, "",1, "", "", "", "", 0, 0, 0.0, FlightStatus.Scheduled));
+        as.supprimer(new Airline(5, "", "", ""));
+        ts.supprimer(new Ticket(5, 6, "", TicketClass.Business, 0.0,TicketStatus.Not_Booked, ""));
+      */
 
         //car module
 
