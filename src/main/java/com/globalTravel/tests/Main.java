@@ -8,9 +8,10 @@ import com.globalTravel.models.car.Offer;
 import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.models.car.Route;
 import com.globalTravel.models.flight.*;
-import com.globalTravel.models.hotel.chambre;
-import com.globalTravel.models.hotel.hotel;
-import com.globalTravel.models.hotel.reservation_hotel;
+
+import com.globalTravel.models.hotel.Chambre;
+import com.globalTravel.models.hotel.Hotel;
+import com.globalTravel.models.hotel.Reservation_hotel;
 import com.globalTravel.models.user.Admin;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.services.activity.ReviewService;
@@ -22,9 +23,11 @@ import com.globalTravel.services.car.RouteService;
 import com.globalTravel.services.flight.AirlineService;
 import com.globalTravel.services.flight.FlightService;
 import com.globalTravel.services.flight.TicketService;
-import com.globalTravel.services.hotel.chambreService;
-import com.globalTravel.services.hotel.hotelService;
-import com.globalTravel.services.hotel.reservation_hotelService;
+
+
+import com.globalTravel.services.hotel.ChambreService;
+import com.globalTravel.services.hotel.HotelService;
+import com.globalTravel.services.hotel.Reservation_hotelService;
 import com.globalTravel.services.user.AdminService;
 import com.globalTravel.utils.DataSource;
 
@@ -160,86 +163,103 @@ public class Main {
 
 // hotel module
 
-//Création d'une instance de hotelService
-        hotelService service = new hotelService();
 
-//Création d'un nouvel hôtel
-        hotel h1 = new hotel("Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5, "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com", "Excellent séjour, personnel très accueillant.");
+     try {
+      // Création d'une instance de HotelService
+      HotelService hotelService = new HotelService();
 
-//Ajout de l'hôtel
-        service.ajouter(h1);
-        service.rechercher().forEach(System.out::println);
-//Modification de l'hôtel
-        service.modifier(new hotel(28, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4, "picine, Petit-déjeuner, Salle de réunion", "+21623456789, contact@hotelparis.com", "le meilleur, personnel très accueillant."));
-//Recherche de tous les hôtels après modification
-        System.out.println("Liste des hôtels après modification :");
-        service.rechercher().forEach(System.out::println);
+      // Création d'un nouvel hôtel (utilise le constructeur sans ID)
+      Hotel hotel = new Hotel("Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5,
+              "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com",
+              "Excellent séjour, personnel très accueillant.");
 
-// Suppression de l'hôtel
-        service.supprimer(new hotel(28, "", "", "", "",0,"","",""));
-        System.out.println("Hôtel supprimé avec succès.");
+      // Ajout de l'hôtel à la base de données
+      hotelService.ajouter(hotel);
+      System.out.println("Liste des hôtels après ajout :");
+      hotelService.rechercher().forEach(System.out::println);
 
-//Recherche de tous les hôtels après suppression
-        System.out.println("Liste des hôtels après suppression :");
-        service.rechercher().forEach(System.out::println);
+      // Modification de l'hôtel avec ID 54 (vérifiez que cet ID existe dans votre BD)
+      Hotel hotelModifie = new Hotel(59, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4,
+              "picine, Petit-déjeuner, Salle de réunion", "+21623456789, contact@hotelparis.com", "le meilleur, personnel très accueillant.");
+      hotelService.modifier(hotelModifie);
 
+      System.out.println("Liste des hôtels après modification :");
+      hotelService.rechercher().forEach(System.out::println);
 
-        // ====================================================
+      // Suppression de l'hôtel avec ID 54
+      hotelService.supprimer(new Hotel(59, "", "", "", "", 0, "", "", ""));
+      System.out.println("Hôtel supprimé avec succès.");
 
-        reservation_hotelService serviceReservation = new reservation_hotelService();
+      System.out.println("Liste des hôtels après suppression :");
+      hotelService.rechercher().forEach(System.out::println);
 
-        // Création d'une nouvelle réservation
-        reservation_hotel reservation1 = new reservation_hotel(
-                LocalDate.of(2025, 2, 5), // Date de check-in : 5 février 2025
-                LocalDate.of(2025, 2, 15), // Date de check-out : 15 février 2025
-                2, // Nombre de chambres réservées
-                "confirmée", // Statut de la réservation
-                "Carte de crédit" // Méthode de paiement
-        );
+      // ====================================================
+      // Création d'une instance de ChambreService
+      ChambreService chambreService = new ChambreService();
 
-        // Ajout de la réservation
-        serviceReservation.ajouter(reservation1);
-        serviceReservation.rechercher().forEach(System.out::println);
+      // Création d'une nouvelle chambre avec un hôtel déjà existant
+      Hotel hotelExistant = new Hotel(28, "Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5,
+              "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com",
+              "Excellent séjour, personnel très accueillant.");
 
-        // Modification de la réservation
-        serviceReservation.modifier(new reservation_hotel(5, LocalDate.of(2025, 3, 1), LocalDate.of(2025, 3, 10), 3, "annuler", "PayPal"));
+      Chambre chambre = new Chambre("Suite", 150, LocalDate.of(2025, 2, 5),
+              "Massage, piscine, food", hotelExistant);
 
-        // Recherche de toutes les réservations après modification
-        serviceReservation.rechercher().forEach(System.out::println);
+      // Ajout de la chambre à la base de données
+      chambreService.ajouter(chambre);
+      System.out.println("Liste des chambres après ajout :");
+      chambreService.rechercher().forEach(System.out::println);
 
-        // Suppression de la réservation
-        serviceReservation.supprimer(new reservation_hotel(5, null, null, 0, "", ""));
+      // Modification de la chambre
+      Chambre chambreModifiee = new Chambre(38, "Triple", 1440, LocalDate.of(2027, 3, 10),
+              "Piscine, food", hotelExistant);
+      chambreService.modifier(chambreModifiee);
+      System.out.println("Liste des chambres après modification :");
+      chambreService.rechercher().forEach(System.out::println);
 
-        // Recherche de toutes les réservations après suppression
-        System.out.println("Liste des réservations après suppression :");
-        serviceReservation.rechercher().forEach(System.out::println);
+      // Suppression de la chambre
+      chambreService.supprimer(new Chambre(38, "", 0, null, "", hotelExistant));
 
+      System.out.println("Liste des chambres après suppression :");
+      chambreService.rechercher().forEach(System.out::println);
 
-        // Création d'une instance de chambreService
-        chambreService servicech = new chambreService();
+      // ====================================================
+      // Création d'une instance de Reservation_hotelService
+      Reservation_hotelService reservationService = new Reservation_hotelService();
 
-        // Création d'une nouvelle chambre
-        chambre chambre1 = new chambre("suite", 150, LocalDate.of(2025, 2, 5), "massage, piscine, food");
+      // Création d'une nouvelle réservation avec une chambre existante
+      Chambre chambreReservee = new Chambre(25, "Suite", 150, LocalDate.of(2025, 2, 5),
+              "Massage, piscine, food", hotelExistant);
 
-        // Ajout de la chambre
-        servicech.ajouter(chambre1);
-        System.out.println("Liste des chambres après ajout :");
-        servicech.rechercher().forEach(System.out::println);
+      Reservation_hotel reservation = new Reservation_hotel(
+              LocalDate.of(2025, 2, 5),
+              LocalDate.of(2025, 2, 10),
+              2, "Confirmée", "Carte de crédit", chambreReservee);
 
-        // Modification de la chambre
-        chambre chambreModifiee = new chambre(2, "double", 120, LocalDate.of(2027, 3, 10), "piscine, food");
-        servicech.modifier(chambreModifiee);
-        System.out.println("Liste des chambres après modification :");
-        servicech.rechercher().forEach(System.out::println);
+      // Ajout de la réservation à la base de données
+      reservationService.ajouter(reservation);
+      System.out.println("Liste des réservations après ajout :");
+      reservationService.rechercher().forEach(System.out::println);
 
-        // Suppression de la chambre
-        servicech.supprimer(new chambre(2,"",0, null, ""));
+      // Modification de la réservation
+      Reservation_hotel reservationModifiee = new Reservation_hotel(
+              7, LocalDate.of(2025, 2, 6),
+              LocalDate.of(2025, 2, 12),
+              3, "Annulée", "PayPal", chambreReservee);
+      reservationService.modifier(reservationModifiee);
+      System.out.println("Liste des réservations après modification :");
+      reservationService.rechercher().forEach(System.out::println);
 
-        // Recherche de toutes les chambres après suppression
-        System.out.println("Liste des chambres après suppression :");
-        servicech.rechercher().forEach(System.out::println);
+      // Suppression de la réservation
+      reservationService.supprimer(new Reservation_hotel(7, null, null, 0, null, null, null));
 
+      System.out.println("Liste des réservations après suppression :");
+      reservationService.rechercher().forEach(System.out::println);
 
+     } catch (Exception e) {
+      System.err.println("Erreur lors de l'exécution du programme : " + e.getMessage());
+      e.printStackTrace();
+     }
      // activity module
 
         //type activity

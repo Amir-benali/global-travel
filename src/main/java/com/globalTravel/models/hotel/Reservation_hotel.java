@@ -2,7 +2,7 @@ package com.globalTravel.models.hotel;
 
 import java.time.LocalDate;
 
-public class reservation_hotel {
+public class Reservation_hotel {
 
     private int id_reservation_h;
     private LocalDate date_checkin_h;
@@ -10,26 +10,37 @@ public class reservation_hotel {
     private int nombre_chambres_h;
     private String statut_h;
     private String moyen_Paiement_h;
+    private Chambre id_chambre_j;
 
     // Constructeur modifié pour utiliser LocalDate
-    public reservation_hotel(int id_reservation_h, LocalDate date_checkin_h, LocalDate date_checkout_h, int nombre_chambres_h, String statut_h, String moyen_Paiement_h) {
+    public Reservation_hotel(int id_reservation_h, LocalDate date_checkin_h, LocalDate date_checkout_h, int nombre_chambres_h, String statut_h, String moyen_Paiement_h, Chambre id_chambre_j) {
         this.id_reservation_h = id_reservation_h;
         this.date_checkin_h = date_checkin_h;
         this.date_checkout_h = date_checkout_h;
         this.nombre_chambres_h = nombre_chambres_h;
         this.statut_h = statut_h;
         this.moyen_Paiement_h = moyen_Paiement_h;
+        this.id_chambre_j = id_chambre_j;
     }
-    public reservation_hotel(LocalDate date_checkin_h, LocalDate date_checkout_h, int nombre_chambres_h, String statut_h, String moyen_Paiement_h) {
-        this.id_reservation_h = id_reservation_h;
+
+    public Reservation_hotel(LocalDate date_checkin_h, LocalDate date_checkout_h, int nombre_chambres_h, String statut_h, String moyen_Paiement_h, Chambre id_chambre_j) {
         this.date_checkin_h = date_checkin_h;
         this.date_checkout_h = date_checkout_h;
         this.nombre_chambres_h = nombre_chambres_h;
         this.statut_h = statut_h;
         this.moyen_Paiement_h = moyen_Paiement_h;
+        this.id_chambre_j = id_chambre_j;
     }
 
     // Getters et setters
+    public Chambre getid_chambre_j() {
+        return id_chambre_j;
+    }
+
+    public void setid_chambre_j(Chambre id_chambre_j) {
+        this.id_chambre_j = id_chambre_j;
+    }
+
     public int getId_reservation_h() {
         return id_reservation_h;
     }
@@ -87,6 +98,7 @@ public class reservation_hotel {
                 ", nombre_chambres_h=" + nombre_chambres_h +
                 ", statut_h='" + statut_h + '\'' +
                 ", moyen_Paiement_h='" + moyen_Paiement_h + '\'' +
+                ", id_chambre_j='" + id_chambre_j + '\'' +
                 '}';
     }
 }
