@@ -179,7 +179,7 @@ public class Main {
       hotelService.rechercher().forEach(System.out::println);
 
       // Modification de l'hôtel avec ID 54 (vérifiez que cet ID existe dans votre BD)
-      Hotel hotelModifie = new Hotel(59, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4,
+      Hotel hotelModifie = new Hotel(60, "Hôtel de Paris", "234 Rue de la Paix", "tunis", "tunisie", 4,
               "picine, Petit-déjeuner, Salle de réunion", "+21623456789, contact@hotelparis.com", "le meilleur, personnel très accueillant.");
       hotelService.modifier(hotelModifie);
 
@@ -187,7 +187,7 @@ public class Main {
       hotelService.rechercher().forEach(System.out::println);
 
       // Suppression de l'hôtel avec ID 54
-      hotelService.supprimer(new Hotel(59, "", "", "", "", 0, "", "", ""));
+      hotelService.supprimer(new Hotel(60, "", "", "", "", 0, "", "", ""));
       System.out.println("Hôtel supprimé avec succès.");
 
       System.out.println("Liste des hôtels après suppression :");
@@ -211,14 +211,14 @@ public class Main {
       chambreService.rechercher().forEach(System.out::println);
 
       // Modification de la chambre
-      Chambre chambreModifiee = new Chambre(38, "Triple", 1440, LocalDate.of(2027, 3, 10),
+      Chambre chambreModifiee = new Chambre(39, "Triple", 1440, LocalDate.of(2027, 3, 10),
               "Piscine, food", hotelExistant);
       chambreService.modifier(chambreModifiee);
       System.out.println("Liste des chambres après modification :");
       chambreService.rechercher().forEach(System.out::println);
 
       // Suppression de la chambre
-      chambreService.supprimer(new Chambre(38, "", 0, null, "", hotelExistant));
+      chambreService.supprimer(new Chambre(39, "", 0, null, "", hotelExistant));
 
       System.out.println("Liste des chambres après suppression :");
       chambreService.rechercher().forEach(System.out::println);
@@ -243,7 +243,7 @@ public class Main {
 
       // Modification de la réservation
       Reservation_hotel reservationModifiee = new Reservation_hotel(
-              7, LocalDate.of(2025, 2, 6),
+              8, LocalDate.of(2025, 2, 6),
               LocalDate.of(2025, 2, 12),
               3, "Annulée", "PayPal", chambreReservee);
       reservationService.modifier(reservationModifiee);
@@ -251,7 +251,7 @@ public class Main {
       reservationService.rechercher().forEach(System.out::println);
 
       // Suppression de la réservation
-      reservationService.supprimer(new Reservation_hotel(7, null, null, 0, null, null, null));
+      reservationService.supprimer(new Reservation_hotel(8, null, null, 0, null, null, null));
 
       System.out.println("Liste des réservations après suppression :");
       reservationService.rechercher().forEach(System.out::println);
