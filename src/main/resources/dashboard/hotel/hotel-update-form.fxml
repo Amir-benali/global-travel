@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<?import java.lang.String?>
+<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelUpdateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
+
+    <!-- Flight Number Field -->
+    <TextField fx:id="flightNumberField" promptText="Flight Number"/>
+
+    <!-- Airline ID Field -->
+    <TextField fx:id="airlineIdField" promptText="Airline ID"/>
+
+    <!-- Departure Airport Field -->
+    <TextField fx:id="departureAirportField" promptText="Departure Airport"/>
+
+    <!-- Arrival Airport Field -->
+    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport"/>
+
+    <!-- Departure Date Field -->
+    <DatePicker fx:id="departureDatePicker" promptText="Departure Date"/>
+
+    <!-- Departure Time Field -->
+    <TextField fx:id="departureTimeField" promptText="Departure Time (HH:MM)"/>
+
+    <!-- Arrival Time Field -->
+    <TextField fx:id="arrivalTimeField" promptText="Arrival Time (HH:MM)"/>
+
+    <!-- Duration Field -->
+    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)"/>
+
+    <!-- Available Seats Field -->
+    <TextField fx:id="availableSeatsField" promptText="Available Seats"/>
+
+    <!-- Base Price Field -->
+    <TextField fx:id="priceField" promptText="Base Price"/>
+
+    <!-- Flight Status ComboBox -->
+    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Scheduled"/>
+                <String fx:value="DELAYED"/>
+                <String fx:value="Cancelled"/>
+                <String fx:value="COMPLETED"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <!-- Image Selection Section -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+    </HBox>
+
+    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
+    </HBox>
+</VBox>
