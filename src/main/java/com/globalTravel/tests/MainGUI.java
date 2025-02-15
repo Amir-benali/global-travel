@@ -16,9 +16,10 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainTemplate.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/login.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("global-travel");
         primaryStage.show();
