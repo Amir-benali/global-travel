@@ -1,170 +1,130 @@
 package com.globalTravel.controllers.hotel;
 
-import com.globalTravel.models.flight.Flight;
-import com.globalTravel.models.flight.FlightStatus;
-import javafx.application.Platform;
+import com.globalTravel.models.hotel.Hotel;
+import com.globalTravel.services.hotel.HotelService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.time.LocalDate;
-import java.util.Arrays;
 
 public class HotelUpdateForm {
 
-    @FXML private ComboBox<String> statusComboBox;
+    // Champs FXML correspondant aux éléments du formulaire
     @FXML private Label formTitleLabel;
-    @FXML private TextField flightNumberField;
-    @FXML private TextField airlineIdField;
-    @FXML private TextField departureAirportField;
-    @FXML private TextField arrivalAirportField;
-    @FXML private DatePicker departureDatePicker;
-    @FXML private TextField departureTimeField;
-    @FXML private TextField arrivalTimeField;
-    @FXML private TextField durationField;
-    @FXML private TextField availableSeatsField;
-    @FXML private TextField priceField;
-    @FXML private Label selectedImageLabel;
-    @FXML private ImageView airlineLogoPreview;
+    @FXML private TextField nameField;
+    @FXML private TextField addressField;
+    @FXML private TextField cityField;
+    @FXML private TextField countryField;
+    @FXML private Spinner<Integer> categorySpinner;
+    @FXML private TextField amenitiesField;
+    @FXML private TextField locationField;
+    @FXML private TextArea reviewField;
     @FXML private Button saveButton;
 
-    private File selectedLogoFile;
-    private Flight flightToEdit;
+    // Variables pour gérer l'hôtel à modifier et la fenêtre
+    private Hotel hotelToEdit;
     private Stage stage;
+    private HotelService hotelService = new HotelService();
 
+    // Méthode pour définir la fenêtre (stage)
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    @FXML
-    public void initialize(Flight flightToEdit) {
-        System.out.println("Initializing FlightForm...");
+    // Méthode d'initialisation du formulaire
+    public void initialize(Hotel hotelToEdit) {
+        System.out.println("Initializing HotelUpdateForm...");
 
-        // Populate statusComboBox with FlightStatus values
-        statusComboBox.getItems().setAll(Arrays.stream(FlightStatus.values())
-                .map(Enum::name)
-                .toList());
-        if (flightToEdit != null) {
-            this.flightToEdit = flightToEdit;
+        // Configuration du Spinner pour la catégorie (1 à 5 étoiles)
+        SpinnerValueFactory<Integer> categoryFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 3);
+        categorySpinner.setValueFactory(categoryFactory);
+
+        if (hotelToEdit != null) {
+            this.hotelToEdit = hotelToEdit;
+            populateForm(); // Remplir le formulaire avec les données de l'hôtel
+        } else {
+            System.out.println("Aucun hôtel à modifier n'a été fourni.");
         }
-        populateForm();
-
-//        clearForm();
     }
 
-
-
-
-    private void clearForm() {
-        flightNumberField.clear();
-        airlineIdField.clear();
-        departureAirportField.clear();
-        arrivalAirportField.clear();
-        departureDatePicker.setValue(null);
-        departureTimeField.clear();
-        arrivalTimeField.clear();
-        durationField.clear();
-        availableSeatsField.clear();
-        priceField.clear();
-        selectedImageLabel.setText("No image selected");
-        airlineLogoPreview.setImage(null);
-        statusComboBox.getSelectionModel().clearSelection();
-    }
-
-    @FXML
+    // Méthode pour remplir le formulaire avec les données de l'hôtel
     private void populateForm() {
-
-            System.out.println("Populating form with flight data...");
-            Platform.runLater(() -> {
-                flightNumberField.setText(flightToEdit.getFlight_number());
-                airlineIdField.setText(String.valueOf(flightToEdit.getAirline_id()));
-                departureAirportField.setText(flightToEdit.getDeparture_airport());
-                arrivalAirportField.setText(flightToEdit.getArrival_airport());
-                departureDatePicker.setValue(LocalDate.parse(flightToEdit.getDeparture_time().split(" ")[0]));
-                departureTimeField.setText(flightToEdit.getDeparture_time());
-                arrivalTimeField.setText(flightToEdit.getArrival_time());
-                durationField.setText(String.valueOf(flightToEdit.getDuration()));
-                availableSeatsField.setText(String.valueOf(flightToEdit.getAvailable_seats()));
-                priceField.setText(String.valueOf(flightToEdit.getBase_price()));
-                statusComboBox.setValue(flightToEdit.getStatus().name());
-
-//                // Load airline logo if available
-//                if (flightToEdit.getAirlineLogoPath() != null) {
-//                    File logoFile = new File(flightToEdit.getAirlineLogoPath());
-//                    if (logoFile.exists()) {
-//                        selectedLogoFile = logoFile;
-//                        selectedImageLabel.setText(logoFile.getName());
-//                        airlineLogoPreview.setImage(new Image(logoFile.toURI().toString()));
-//                    }
-//                }
-
-            });
-
+        System.out.println("Remplissage du formulaire avec les données de l'hôtel...");
+        nameField.setText(hotelToEdit.getNom_h());
+        addressField.setText(hotelToEdit.getAdresse_h());
+        cityField.setText(hotelToEdit.getVille_h());
+        countryField.setText(hotelToEdit.getPays_h());
+        categorySpinner.getValueFactory().setValue(hotelToEdit.getCategorie_h());
+        amenitiesField.setText(hotelToEdit.getServices_h());
+        locationField.setText(hotelToEdit.getCoordonnees_h());
+        reviewField.setText(hotelToEdit.getAvis_h());
     }
 
+    // Méthode pour gérer l'enregistrement des modifications
     @FXML
-    private void handleChooseImage() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Airline Logo");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            selectedLogoFile = selectedFile;
-            selectedImageLabel.setText(selectedFile.getName());
-            airlineLogoPreview.setImage(new Image(selectedFile.toURI().toString()));
-        }
-    }
-
-    @FXML
-    private void handleSaveFlight() {
+    private void handleSaveHotel() {
         try {
-            String selectedStatus = statusComboBox.getValue();
-            FlightStatus status = FlightStatus.valueOf(selectedStatus);
+            // Vérifier que tous les champs sont remplis
+            if (nameField.getText().isEmpty() || addressField.getText().isEmpty() || cityField.getText().isEmpty() ||
+                    countryField.getText().isEmpty() || amenitiesField.getText().isEmpty() ||
+                    locationField.getText().isEmpty() || reviewField.getText().isEmpty()) {
+                showError("Veuillez remplir tous les champs !");
+                return;
+            }
 
-            Flight flight = new Flight(
-                    Integer.parseInt(flightNumberField.getText()),
-                    flightNumberField.getText(),
-                    Integer.parseInt(airlineIdField.getText()),
-                    departureAirportField.getText(),
-                    arrivalAirportField.getText(),
-                    departureTimeField.getText(),
-                    arrivalTimeField.getText(),
-                    Integer.parseInt(durationField.getText()),
-                    Integer.parseInt(availableSeatsField.getText()),
-                    Double.parseDouble(priceField.getText()),
-                    status
+            // Créer un nouvel objet Hotel avec les données mises à jour
+            Hotel updatedHotel = new Hotel(
+                    hotelToEdit.getId_hotel_h(), // Garder l'ID de l'hôtel pour la mise à jour
+                    nameField.getText(),
+                    addressField.getText(),
+                    cityField.getText(),
+                    countryField.getText(),
+                    categorySpinner.getValue(),
+                    amenitiesField.getText(),
+                    locationField.getText(),
+                    reviewField.getText()
             );
 
+            // Appeler le service pour mettre à jour l'hôtel
+            hotelService.modifier(updatedHotel);
+            System.out.println("Hôtel mis à jour avec succès !");
 
-                updateFlight(flight);
-
-
+            // Afficher une confirmation et fermer la fenêtre
+            showConfirmation("Hôtel mis à jour avec succès !");
             closeForm();
         } catch (Exception e) {
-            System.err.println("Error saving flight: " + e.getMessage());
+            System.err.println("Erreur lors de la mise à jour : " + e.getMessage());
+            showError("Erreur lors de la mise à jour !");
         }
     }
 
-
-    private void updateFlight(Flight flight) {
-        System.out.println("Updating flight: " + flight);
-        // Implement logic to update flight
-    }
-
+    // Méthode pour annuler et fermer le formulaire
     @FXML
     private void handleCancel() {
-        clearForm();
         closeForm();
     }
 
+    // Méthode pour fermer la fenêtre
     private void closeForm() {
         if (stage != null) {
             stage.close();
         }
+    }
+
+    // Méthode pour afficher une boîte de dialogue de confirmation
+    private void showConfirmation(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Méthode pour afficher une boîte de dialogue d'erreur
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
