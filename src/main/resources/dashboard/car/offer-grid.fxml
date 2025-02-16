@@ -12,14 +12,18 @@
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
                 <children>
                     <Label styleClass="section-title" text="Offer List" />
-                    <Button onAction="#navigateToRoute" styleClass="add-button" text="Route List" />
+                    <Button onAction="#navigateToCar" styleClass="view-details-button" text="Car List" />
+                    <Button onAction="#navigateToDriver" styleClass="view-details-button" text="Driver List" />
 
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#addOffer" styleClass="add-button" text="+ AJOUTER" />
+                    <Button onAction="#addOffer" styleClass="view-details-button" text="+ AJOUTER" />
                 </children>
+                <padding>
+                    <Insets left="20.0" right="20.0" />
+                </padding>
             </HBox>
             <FlowPane fx:id="offersGrid" hgap="20" vgap="20">
                 <padding>

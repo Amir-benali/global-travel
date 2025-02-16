@@ -125,4 +125,12 @@ public class OfferGrid implements Navigatable {
     public void navigateToRoute(ActionEvent actionEvent) {
 //        dashBoardController.navigateTo("dashboard/offer/route-grid.fxml");
     }
+
+    public void navigateToCar(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
+    }
+
+    public void navigateToDriver(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+    }
 }

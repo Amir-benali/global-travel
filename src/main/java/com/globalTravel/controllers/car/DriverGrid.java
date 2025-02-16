@@ -115,4 +115,14 @@ public class DriverGrid implements Navigatable {
     public void addDriver(ActionEvent actionEvent) {
         dashBoardController.navigateTo("dashboard/car/driver-create-form.fxml");
     }
+
+    public void navigateToCar(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
+
+    }
+
+    public void navigateToOffer(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+
+    }
 }

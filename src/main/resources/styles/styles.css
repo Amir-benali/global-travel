@@ -12,6 +12,7 @@
 .header {
     -fx-background-color: white;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 20px;
 }
 
 .header-title {
@@ -910,4 +911,103 @@
 
 .offer-car {
     -fx-text-fill: #FF9800; /* Orange color for car */
+}
+.menu-card-item {
+    -fx-padding: 10px 20px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.menu-card-item:hover {
+    -fx-background-color: #e0e0e0; /* Light gray background on hover */
+    -fx-text-fill: #2196F3; /* Blue text on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); /* Subtle shadow on hover */
+}
+
+/* Modern DatePicker styling */
+.date-picker {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-color: #cccccc; /* Light gray border */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-padding: 5px; /* Padding inside the DatePicker */
+    -fx-font-size: 14px; /* Font size */
+    -fx-text-fill: #333333; /* Text color */
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #2196F3; /* Blue background for the arrow button */
+    -fx-background-radius: 0 5px 5px 0; /* Rounded corners on the right side */
+    -fx-padding: 5px; /* Padding inside the arrow button */
+}
+
+.date-picker .arrow-button:hover {
+    -fx-background-color: #1976D2; /* Darker blue on hover */
+}
+
+.date-picker .arrow {
+    -fx-background-color: #ffffff; /* White arrow icon */
+}
+
+.date-picker .text-field {
+    -fx-background-color: transparent; /* Transparent background for the text field */
+    -fx-border-color: transparent; /* No border for the text field */
+    -fx-padding: 5px; /* Padding inside the text field */
+}
+
+.date-picker-popup {
+    -fx-background-color: #ffffff; /* White background for the popup */
+    -fx-border-color: #cccccc; /* Light gray border for the popup */
+    -fx-border-radius: 5px; /* Rounded corners for the popup */
+    -fx-background-radius: 5px; /* Rounded corners for the popup */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); /* Subtle shadow for the popup */
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #2196F3; /* Blue background for the month/year pane */
+    -fx-text-fill: #ffffff; /* White text for the month/year pane */
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-font-size: 14px; /* Font size for the month/year label */
+    -fx-font-weight: bold; /* Bold font for the month/year label */
+    -fx-text-fill: #ffffff;
+
+}
+
+.date-picker-popup .spinner .button {
+    -fx-background-color: #2196F3; /* Blue background for the spinner buttons */
+    -fx-background-radius: 5px; /* Rounded corners for the spinner buttons */
+    -fx-text-fill: #ffffff; /* White text for the spinner buttons */
+}
+
+.date-picker-popup .spinner .button:hover {
+    -fx-background-color: #1976D2; /* Darker blue on hover for the spinner buttons */
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: #ffffff; /* White background for the day cells */
+    -fx-text-fill: #333333; /* Dark gray text for the day cells */
+    -fx-border-color: transparent; /* No border for the day cells */
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #e0e0e0; /* Light gray background on hover */
+    -fx-text-fill: #2196F3; /* Blue text on hover */
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #2196F3; /* Blue background for the selected day */
+    -fx-text-fill: #ffffff; /* White text for the selected day */
+}
+
+.date-picker-popup  {
+    -fx-background-color: #e0e0e0; /* Light gray background for today's date */
+    -fx-text-fill: #ffffff; /* Dark gray text for today's date */
+    -fx-font-weight: bold; /* Bold font for today's date */
 }
