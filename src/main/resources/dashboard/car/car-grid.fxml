@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.Region?>
+<ScrollPane fitToWidth="true" styleClass="car-offers-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.car.CarGrid">
+    <content>
+        <VBox spacing="20">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                <children>
+                    <Label styleClass="section-title" text="Car Offers" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#addCar" styleClass="add-button" text="+ AJOUTER" />
+                </children>
+            </HBox>
+
+            <FlowPane fx:id="carOffersContainer" hgap="20" vgap="20">
+                <!-- Car offer cards will be added here programmatically -->
+
+                <!-- Example of a car offer card (you can replicate this structure in your controller) -->
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button onAction="#navigateToDetails" styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+
+                <!-- Add more car offer cards here for demonstration -->
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+                <VBox styleClass="car-offer-card">
+                    <ImageView fitHeight="150" fitWidth="200" preserveRatio="true">
+                        <Image url="@../../images/logo.jpg" />
+                    </ImageView>
+                    <VBox styleClass="car-info">
+                        <Label styleClass="car-title" text="Car Model Name" />
+                        <Label styleClass="car-price" text="Daily Rate: $50" />
+                        <Button styleClass="view-details-button" text="View Details" />
+                    </VBox>
+                </VBox>
+
+            </FlowPane>
+        </VBox>
+    </content>
+</ScrollPane>

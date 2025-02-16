@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" styleClass="dashboard-component" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.DashBoardContent">
+    <VBox spacing="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Dashboard" styleClass="dashboard-title"/>
+
+        <!-- Quick Stats -->
+        <HBox spacing="20" styleClass="quick-stats">
+            <VBox styleClass="stat-card">
+                <Label text="Total Bookings" styleClass="stat-title"/>
+                <Label fx:id="totalBookingsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card">
+                <Label text="Revenue" styleClass="stat-title"/>
+                <Label fx:id="revenueLabel" text="" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card">
+                <Label text="Active Users" styleClass="stat-title"/>
+                <Label fx:id="activeUsersLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+            <VBox styleClass="stat-card">
+                <Label text="New Activities" styleClass="stat-title"/>
+                <Label fx:id="newActivitiesLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Charts -->
+        <HBox spacing="20" styleClass="charts">
+            <VBox styleClass="chart-container">
+                <Label text="Bookings by Category" styleClass="chart-title"/>
+                <PieChart fx:id="bookingsPieChart" />
+            </VBox>
+            <VBox styleClass="chart-container">
+                <Label text="Revenue Trend" styleClass="chart-title"/>
+                <LineChart fx:id="revenueTrendChart">
+                    <xAxis>
+                        <CategoryAxis label="Month"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Revenue ($)"/>
+                    </yAxis>
+                </LineChart>
+            </VBox>
+        </HBox>
+
+        <!-- Top Activities -->
+        <VBox styleClass="top-activities">
+            <Label text="Top Activities" styleClass="section-title"/>
+            <TableView fx:id="topActivitiesTable">
+                <columns>
+                    <TableColumn text="Activity Name"/>
+                    <TableColumn text="Bookings"/>
+                    <TableColumn text="Revenue"/>
+                    <TableColumn text="Rating"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>
