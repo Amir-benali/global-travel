@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.DashBoard">
+
+    <!-- Top Header -->
+    <top>
+        <fx:include source="navbar.fxml" />
+    </top>
+
+    <!-- Left Sidebar -->
+    <left>
+        <VBox spacing="10" styleClass="sidebar">
+            <padding>
+                <Insets bottom="20" left="10" right="10" top="20" />
+            </padding>
+
+            <ImageView fitHeight="186.0" fitWidth="233.0" preserveRatio="true">
+                <Image url="@../images/logo.jpg" />
+            </ImageView>
+
+            <Button fx:id="btnSideDashboard" maxWidth="Infinity" onAction="#navigateToDashboard" styleClass="nav-button" text="Dashboard">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/dashboard.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button fx:id="btnSideActivity" maxWidth="Infinity" onAction="#navigateToActivity" styleClass="nav-button" text="Activités">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/activity.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button fx:id="btnSideUser" maxWidth="Infinity" onAction="#navigateToUser" styleClass="nav-button" text="Utilisateurs">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/user.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button fx:id="btnSideFlight" maxWidth="Infinity" onAction="#navigateToFlight" styleClass="nav-button" text="Vols">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/flights.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button fx:id="btnSideCar" maxWidth="Infinity" onAction="#navigateToCar" styleClass="nav-button" text="Voitures">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/car.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button fx:id="btnSideHotel" maxWidth="Infinity" onAction="#navigateToHotel" styleClass="nav-button" text="Hotels">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/hotel.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button maxWidth="Infinity" onAction="#Logout" styleClass="logout-button" text="Déconnexion">
+                <graphic>
+                    <ImageView fitHeight="16" fitWidth="16">
+                        <Image url="@../images/logout.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- Main Content -->
+    <center>
+        <fx:include source="user/user-table.fxml" />
+    </center>
+
+</BorderPane>
