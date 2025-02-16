@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true" styleClass="cars-grid-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.car.CarGrid">
+<ScrollPane fitToWidth="true" styleClass="offers-grid-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.car.OfferGrid">
     <content>
         <VBox spacing="20">
             <padding>
@@ -14,15 +14,14 @@
 
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                 <children>
-                    <Label styleClass="section-title" text="Private Car List" />
-                    <Button onAction="#navigateToDriver" styleClass="add-button" text="Driver List" />
-                    <Button onAction="#navigateToOffer" styleClass="add-button" text="Offer List" />
+                    <Label styleClass="section-title" text="Offer List" />
+                    <Button onAction="#navigateToRoute" styleClass="add-button" text="Route List" />
 
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#addCar" styleClass="add-button" text="+ AJOUTER" />
+                    <Button onAction="#addOffer" styleClass="add-button" text="+ AJOUTER" />
                 </children>
             </HBox>
-            <FlowPane fx:id="carsGrid" hgap="20" vgap="20">
+            <FlowPane fx:id="offersGrid" hgap="20" vgap="20">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>

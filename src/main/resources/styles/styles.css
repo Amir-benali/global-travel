@@ -806,3 +806,108 @@
     -fx-padding: 10px;
     -fx-pref-width: 200px;
 }
+
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.error-text {
+    -fx-fill: red;
+    -fx-font-size: 12px;
+}
+/* General styles for the form */
+.car-form {
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-background-color: #f4f4f4;
+}
+
+/* Form title */
+.form-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Text fields */
+.text-field {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 35px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Error containers */
+.error-container {
+    -fx-spacing: 5px;
+}
+
+/* Error text */
+.error-text {
+    -fx-fill: #ff0000;
+    -fx-font-size: 12px;
+}
+
+/* Driver card */
+.driver-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.driver-info {
+    -fx-spacing: 5px;
+}
+
+.driver-first-name, .driver-last-name, .driver-phone {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Offer Card Styling */
+.offer-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.offer-info {
+    -fx-spacing: 5px;
+}
+
+.offer-description, .offer-date, .offer-price, .offer-route, .offer-car {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Optional: Add specific styles for each field if needed */
+.offer-description {
+    -fx-font-weight: bold;
+}
+
+.offer-date {
+    -fx-text-fill: #555555;
+}
+
+.offer-price {
+    -fx-text-fill: #4CAF50; /* Green color for price */
+}
+
+.offer-route {
+    -fx-text-fill: #2196F3; /* Blue color for route */
+}
+
+.offer-car {
+    -fx-text-fill: #FF9800; /* Orange color for car */
+}

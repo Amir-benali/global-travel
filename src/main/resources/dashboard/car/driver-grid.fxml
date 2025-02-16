@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" styleClass="cars-grid-container" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.globalTravel.controllers.car.DriverGrid">
+    <content>
+        <VBox spacing="20">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" style="-fx-background-radius: 20; -fx-background-color: FFFFF;">
+                <children>
+                    <Label styleClass="section-title" text="Car Driver List" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#addDriver" styleClass="add-button" text="+ AJOUTER" />
+                </children>
+            </HBox>
+            <FlowPane fx:id="driversGrid" hgap="20" vgap="20">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+            </FlowPane>
+        </VBox>
+    </content>
+</ScrollPane>
