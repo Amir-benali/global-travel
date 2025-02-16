@@ -1,0 +1,808 @@
+/* Main Styles */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f5f5f5;
+}
+
+.main-container {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Header Styles */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+    -fx-border-radius: 100%;
+}
+
+.icon-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.language-selector {
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 4px;
+}
+
+.user-profile-button {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666666;
+    -fx-font-size: 14px;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 8;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+}
+
+.nav-button.selected {
+    -fx-background-color: #e6f0ff;
+    -fx-text-fill: #0197FF;
+}
+
+.nav-button .image-view {
+    -fx-opacity: 0.7;
+}
+
+.nav-button:hover .image-view {
+    -fx-opacity: 1;
+}
+
+.nav-button.selected .image-view {
+    -fx-opacity: 1;
+}
+
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff3333;
+    -fx-font-size: 14px;
+    -fx-padding: 12px;
+}
+
+.logout-button:hover {
+    -fx-background-color: #fff0f0;
+}
+
+.logout-button .image-view {
+    -fx-opacity: 0.7;
+}
+
+.logout-button:hover .image-view {
+    -fx-opacity: 1;
+}
+
+/* Content Styles */
+.content {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.add-button {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.add-button:hover {
+    -fx-background-color: #0197FF;
+}
+
+/* Table Styles */
+.user-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.user-table .column-header-background {
+    -fx-background-color: #f8f9fa;
+}
+
+.user-table .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent #e0e0e0 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.user-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #eee transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.user-table .table-row-cell:selected {
+    -fx-background-color: #f0f7ff;
+}
+
+.user-table .table-cell {
+    -fx-alignment: center-left;
+    -fx-padding: 12px;
+}
+
+/* Pagination Styles */
+.pagination {
+    -fx-padding: 20px 0;
+}
+
+.pagination-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-padding: 8px 12px;
+    -fx-background-radius: 4px;
+}
+
+.pagination-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.pagination-button.current {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: white;
+}
+
+/* Form Styles */
+.form-content {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-spacing: 20px;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.back-button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.back-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.form-content .label {
+    -fx-font-weight: bold;
+}
+
+.form-content .text-field,
+.form-content .password-field,
+.form-content .combo-box {
+    -fx-pref-width: 300px;
+}
+
+.cancel-button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.save-button {
+    -fx-background-color: #0066cc;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.save-button:hover {
+    -fx-background-color: #0052a3;
+}
+
+.form-content .combo-box {
+    -fx-pref-width: 300px;
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 4px;
+    -fx-padding: 4px;
+}
+
+.car-offers-container {
+    -fx-background-color: #f0f0f0;
+}
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.car-offer-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+    -fx-pref-width: 220;
+    -fx-alignment: center;
+}
+
+.car-info {
+    -fx-spacing: 5;
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: center-left;
+}
+
+.car-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.car-price {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+}
+
+.view-details-button {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 3;
+}
+
+.view-details-button:hover {
+    -fx-background-color: #0197FF;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #888;
+}
+
+.flow-pane {
+    -fx-background-color: transparent;
+}
+.car-details-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+}
+
+.car-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.car-price {
+    -fx-font-size: 18px;
+    -fx-text-fill: #0197FF;
+}
+
+.book-now-button {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+}
+
+.book-now-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.detail-label {
+    -fx-font-weight: bold;
+}
+
+.detail-value {
+    -fx-text-fill: #333333;
+}
+
+.section-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 0;
+}
+
+.car-description {
+    -fx-text-fill: #555555;
+}
+
+.back-button {
+    -fx-background-color: #0197FF;
+    -fx-text-fill: #FFFFFF;
+    -fx-padding: 10 20;
+}
+
+.back-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+.user-menu-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.user-menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+
+.user-menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.user-menu-button .menu-item:focused {
+    -fx-background-color: #e0e0e0;
+}
+
+.user-menu-button .menu-item:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.activity-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+.activity-type-flair {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-padding: 2 8;
+    -fx-background-radius: 20;
+    -fx-font-size: 12px;
+}
+
+.star-icon {
+    -fx-fill: gold;
+}
+
+.activity-card .activity-description {
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.dashboard-component {
+    -fx-background-color: #f0f0f0;
+}
+
+.dashboard-component .viewport {
+    -fx-background-color: transparent;
+}
+
+.dashboard-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.quick-stats {
+    -fx-alignment: center;
+}
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+    -fx-pref-width: 150px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+    -fx-background-radius: 5px;
+}
+
+.stat-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.stat-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.chart-container {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+    -fx-background-radius: 5px;
+}
+
+.chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.top-activities {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+    -fx-background-radius: 5px;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #3498db;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 35;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #2980b9;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.login-container, .logout-container, .reset-password-container {
+    -fx-background-color: linear-gradient(to bottom right, #3498db, #8e44ad);
+}
+
+.login-card, .logout-card, .reset-password-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-padding: 30;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.input-field {
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+}
+
+.login-button, .logout-button, .reset-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.login-button:hover, .logout-button:hover, .reset-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.remember-me {
+    -fx-text-fill: #7f8c8d;
+}
+
+.background-circle {
+    -fx-fill: rgba(255, 255, 255, 0.1);
+}
+
+.hyperlink {
+    -fx-text-fill: #3498db;
+    -fx-border-color: transparent;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #2980b9;
+}
+
+.login-container, .logout-container, .reset-password-container, .signup-container {
+    -fx-background-color: linear-gradient(to bottom right, #3498db, #8e44ad);
+}
+
+.login-card, .logout-card, .reset-password-card, .signup-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-padding: 30;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.input-field {
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+}
+
+.login-button, .logout-button, .reset-button, .signup-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.login-button:hover, .logout-button:hover, .reset-button:hover, .signup-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.remember-me, .terms-checkbox {
+    -fx-text-fill: #7f8c8d;
+}
+
+.background-circle {
+    -fx-fill: rgba(255, 255, 255, 0.1);
+}
+
+.hyperlink {
+    -fx-text-fill: #3498db;
+    -fx-border-color: transparent;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #2980b9;
+}
+
+.signup-card .input-field {
+    -fx-max-width: 300;
+}
+
+.signup-card .signup-button {
+    -fx-max-width: 300;
+}
+
+.terms-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 3;
+}
+
+.terms-checkbox:selected .box {
+    -fx-background-color: #3498db;
+}
+
+.terms-checkbox:selected .mark {
+    -fx-background-color: white;
+}
+.flights-grid-container {
+    -fx-background-color: #f0f0f0;
+}
+
+.flight-offer-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 5;
+    -fx-padding: 15;
+    -fx-pref-width: 220;
+    -fx-alignment: center;
+}
+
+.flight-info {
+    -fx-spacing: 5;
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: center-left;
+}
+
+.flight-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.flight-price {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2ecc71;
+}
+
+.view-details-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 3;
+}
+
+.view-details-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+/* ... (previous styles) ... */
+
+.flight-form {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.flight-form .form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.flight-form .text-field, .flight-form .date-picker {
+    -fx-pref-height: 35;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+}
+
+.flight-form .save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-form .save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.flight-form .cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-form .cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+/* ... (previous styles) ... */
+
+.flight-form {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.flight-form .form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.flight-form .text-field, .flight-form .date-picker {
+    -fx-pref-height: 35;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+}
+
+.flight-form .choose-image-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+}
+
+.flight-form .choose-image-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.flight-form .selected-image-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.flight-form .save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-form .save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.flight-form .cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-form .cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Styling for the combo box */
+.combo-box {
+    -fx-background-color: #fff;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
+    -fx-pref-width: 200px;
+}
