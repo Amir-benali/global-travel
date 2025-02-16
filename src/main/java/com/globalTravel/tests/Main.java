@@ -8,6 +8,8 @@ import com.globalTravel.services.activity.ReviewService;
 import com.globalTravel.utils.DataSource;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -226,16 +228,16 @@ public class Main {
 
         ////////////////////ajoute////////////////////////////
 
-     /* ReviewService reviewService = new ReviewService();
-        Review newReview = new Review("Super expérience !", 3, 31);
-        reviewService.ajouter(newReview); */
+      ReviewService reviewService = new ReviewService();
+      Review newReview = new Review("Super expérience !", 3, 79);
+        reviewService.ajouter(newReview);
 
 
         ///////////////////////modif/////////////////////////
 
-   /* ReviewService reviewService = new ReviewService();
-        int reviewIdToUpdate =16 ;
-        int activityId = 31;
+
+       int reviewIdToUpdate =17 ;
+        int activityId = 79;
         if (reviewService.reviewExists(reviewIdToUpdate)) {
             if (reviewService.activityExists(activityId)) {
 
@@ -246,23 +248,23 @@ public class Main {
             }
         } else {
             System.out.println("Erreur  Aucun avis trouvé avec ID " + reviewIdToUpdate);
-        }  */
+        }
 
         /////////////////////////////// Suppression///////////////////////////////////
 
-       /*    ReviewService reviewService = new ReviewService();
-        int reviewIdToDelete = 16;
+
+       int reviewIdToDelete = 17;
         if (reviewService.reviewExists(reviewIdToDelete)) {
-            Review reviewToDelete = new Review(reviewIdToDelete, ".", 0, null, 0);
+            Review reviewToDelete = new Review(reviewIdToDelete, ".", 0, null, 79);
             reviewService.supprimer(reviewToDelete);
         } else {
             System.out.println("Erreur : Aucun avis trouvé avec l ID " + reviewIdToDelete);
-        } */
+        }
 
 
         ///////////////////////////////////////affichage/////////////////////////////////////////
-      /*  ReviewService reviewService = new ReviewService();
-        reviewService.rechercher().forEach(System.out::println); */
+
+       reviewService.rechercher().forEach(System.out::println);
 
 
 
@@ -272,18 +274,19 @@ public class Main {
         ////////////////////////Ajoute///////////////////////////
 
 
-    /*  ActivityService activityService = new ActivityService();
-         Calendar calendar = Calendar.getInstance();
+        ActivityService activityService = new ActivityService();
+        Calendar calendar = Calendar.getInstance();
 
+        // 🔹 Ajout d'une nouvelle activité
         calendar.set(2025, Calendar.JANUARY, 1, 10, 1, 1);
-        Date dateDebut = calendar.getTime();
+        Timestamp dateDebut1 = new Timestamp(calendar.getTimeInMillis());
 
         calendar.set(2025, Calendar.FEBRUARY, 3, 22, 2, 2);
-        Date dateFin = calendar.getTime();
+        Timestamp dateFin1 = new Timestamp(calendar.getTimeInMillis());
 
         Activity newActivity = new Activity(
-                dateDebut,
-                dateFin,
+                dateDebut1,
+                dateFin1,
                 "Excursion en montagne",
                 "Tunis, Tunisie",
                 250,  // Prix total en TND
@@ -291,29 +294,23 @@ public class Main {
                 TypeActivity.WORKSHOPS,
                 28,  // ID de l'hôtel (joinHotelId)
                 1,   // ID de la voiture (joinVoitureId)
-                3 // ID du vol (joinVolsId) ajouté
+                3    // ID du vol (joinVolsId)
         );
 
-           // Ajouter actv va  ActivityService
         activityService.ajouter(newActivity);
-        System.out.println(" Activité ajoutée avec succès ");  */
+        System.out.println("✅ Activité ajoutée avec succès !");
 
-        ///////////////////////////////////////Modification///////////////////////////////////////
-
-      /* ActivityService activityService = new ActivityService();
-        Calendar calendar = Calendar.getInstance();
-
+        // 🔹 Modification d'une activité existante
         calendar.set(2024, Calendar.FEBRUARY, 1, 10, 1, 10);
-        Date dateDebut = calendar.getTime();
+        Timestamp dateDebut2 = new Timestamp(calendar.getTimeInMillis());
 
         calendar.set(2024, Calendar.FEBRUARY, 1, 18, 22, 10);
-        Date dateFin = calendar.getTime();
-
+        Timestamp dateFin2 = new Timestamp(calendar.getTimeInMillis());
 
         Activity updatedActivity = new Activity(
-                33, // ID existe deja utiliseé
-                dateDebut,
-                dateFin,
+                79, // ID existant
+                dateDebut2,
+                dateFin2,
                 "Plongée sous-marine",
                 "Hammamet, Tunisie",
                 500,  // Prix total en TND
@@ -321,22 +318,22 @@ public class Main {
                 TypeActivity.TEAM_BUILDING_ACTIVITIES,
                 28,  // ID de l'hôtel (joinHotelId)
                 1,   // ID de la voiture (joinVoitureId)
-                2   // ID du vol (joinVolsId) → AJOUTÉ
+                2    // ID du vol (joinVolsId)
         );
-        activityService.modifier(updatedActivity);
-        System.out.println(" Activité mise à jour avec succès ");    */
 
+        activityService.modifier(updatedActivity);
+        System.out.println("✅ Activité mise à jour avec succès !");
 
         ////////////////////////////supprimee//////////////////////
 
-       /* ActivityService activityService = new ActivityService();
+
         Activity activityToDelete = new Activity(33,null, null, null, null, 0, null, null, 28,1,2);
-        activityService.supprimer(activityToDelete); */
+        activityService.supprimer(activityToDelete);
 
 
         /////////////////////recherche//////////////////////////
-       /* ActivityService activityService = new ActivityService();
-        activityService.rechercher().forEach(activity -> System.out.println(activity)); */
+
+        activityService.rechercher().forEach(activity -> System.out.println(activity));
 
 
 

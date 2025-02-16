@@ -16,7 +16,7 @@ public class ResponsableService implements IService<Responsable> {
     }
 
     @Override
-    public void ajouter(Responsable responsable) {
+    public boolean ajouter(Responsable responsable) {
         String sql = "INSERT INTO user (genre, date_naissance, adresse, email, roles, password, firstname, lastname, phone_number, image, statut, departement) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -39,6 +39,7 @@ public class ResponsableService implements IService<Responsable> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout du Responsable : " + e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class ResponsableService implements IService<Responsable> {
     }
 
     @Override
-    public void modifier(Responsable responsable) {
+    public boolean modifier(Responsable responsable) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, departement = ? " +
                 "WHERE id = ? AND roles = 'Responsable'";
 
@@ -97,6 +98,7 @@ public class ResponsableService implements IService<Responsable> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de la modification du Responsable : " + e.getMessage());
         }
+        return false;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class chambreService implements IService<chambre> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(chambre c) {
+    public boolean ajouter(chambre c) {
         String req = "INSERT INTO chambre (type_chambre_h, prix_nuit_h, dispo_h, option_h) VALUES ('"
                 + c.getType_chambre_h() + "', "
                 + c.getPrix_nuit_h() + ", '"
@@ -31,10 +31,11 @@ public class chambreService implements IService<chambre> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(chambre c) {
+    public boolean modifier(chambre c) {
         String req = "UPDATE chambre SET type_chambre_h='" + c.getType_chambre_h() + "', prix_nuit_h=" + c.getPrix_nuit_h()
                 + ", dispo_h='" + c.getDispo_h() + "', option_h='" + c.getOption_h() + "' WHERE id_Chambre_h=" + c.getId_Chambre_h();
         try {
@@ -44,6 +45,7 @@ public class chambreService implements IService<chambre> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override

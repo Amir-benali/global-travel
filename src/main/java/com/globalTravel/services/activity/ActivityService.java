@@ -14,7 +14,7 @@ public class ActivityService implements IService<Activity> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(Activity activity) {
+    public boolean ajouter(Activity activity) {
         String req = "INSERT INTO activity (dateDebut, dateFin, description, localisation, prixTotal, nomActivity, typeActivity, joinHotelId, joinVoitureId, joinVolsId) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
@@ -32,10 +32,11 @@ public class ActivityService implements IService<Activity> {
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout de l'activité : " + e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(Activity activity) {
+    public boolean modifier(Activity activity) {
         String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, prixTotal=?, nomActivity=?, typeActivity=?, joinHotelId=?, joinVoitureId=?, joinVolsId=? WHERE id=?";
         try (PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
@@ -54,6 +55,7 @@ public class ActivityService implements IService<Activity> {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la modification de l'activité : " + e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -104,7 +106,38 @@ public class ActivityService implements IService<Activity> {
             System.out.println("Type d'activité invalide: " + typeActivityString);
             return null;
         }
+
     }
+
+    public boolean existsById(int id) {
+        String query = "SELECT COUNT(*) FROM activity WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Retourne vrai si l'ID existe
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Integer> getAllActivityIds() {
+        // Simulation des données récupérées depuis la base de données
+        List<Integer> activityIds = new ArrayList<>();
+        activityIds.add(1);
+        activityIds.add(2);
+        activityIds.add(3);
+        activityIds.add(4);
+        activityIds.add(5);
+        return activityIds;
+    }
+
+
+
+
+
 
 
 

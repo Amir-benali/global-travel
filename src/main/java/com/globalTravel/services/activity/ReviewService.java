@@ -120,6 +120,20 @@ public class ReviewService {
         }
         return false;
     }
+    public List<Integer> getAllActivityIds() {
+        List<Integer> activityIds = new ArrayList<>();
+        String req = "SELECT id FROM activity";  // Vous pouvez ajuster la requête selon votre besoin
+        try (PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                activityIds.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des IDs des activités : " + e.getMessage());
+        }
+        return activityIds;
+    }
 
 
 

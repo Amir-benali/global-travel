@@ -16,7 +16,7 @@ public class EmployeeService implements IService<Employee> {
     }
 
     @Override
-    public void ajouter(Employee employee) {
+    public boolean ajouter(Employee employee) {
         String sql = "INSERT INTO user (genre, date_naissance, adresse, email, roles, password, firstname, lastname, phone_number, image, statut, poste) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -39,6 +39,7 @@ public class EmployeeService implements IService<Employee> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout de l'Employee : " + e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class EmployeeService implements IService<Employee> {
     }
 
     @Override
-    public void modifier(Employee employee) {
+    public boolean modifier(Employee employee) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, poste = ? " +
                 "WHERE id = ? AND roles = 'Employee'";
 
@@ -97,6 +98,7 @@ public class EmployeeService implements IService<Employee> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de la modification de l'Employee : " + e.getMessage());
         }
+        return false;
     }
 
     @Override

@@ -1,13 +1,11 @@
 package com.globalTravel.models.activity;
 
-
-
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Activity {
     private int id;
-    private Date dateDebut;
-    private Date dateFin;
+    private Timestamp dateDebut;
+    private Timestamp dateFin;
     private String description;
     private String localisation;
     private int prixTotal;
@@ -17,8 +15,7 @@ public class Activity {
     private int joinVoitureId;
     private int joinVolsId;
 
-
-    public Activity(int id, Date dateDebut, Date dateFin, String description, String localisation,
+    public Activity(int id, Timestamp dateDebut, Timestamp dateFin, String description, String localisation,
                     int prixTotal, String nomActivity, TypeActivity typeActivity,
                     int joinHotelId, int joinVoitureId, int joinVolsId) {
         this.id = id;
@@ -34,8 +31,7 @@ public class Activity {
         this.joinVolsId = joinVolsId;
     }
 
-
-    public Activity(Date dateDebut, Date dateFin, String description, String localisation,
+    public Activity(Timestamp dateDebut, Timestamp dateFin, String description, String localisation,
                     int prixTotal, String nomActivity, TypeActivity typeActivity,
                     int joinHotelId, int joinVoitureId, int joinVolsId) {
         this.dateDebut = dateDebut;
@@ -49,7 +45,6 @@ public class Activity {
         this.joinVoitureId = joinVoitureId;
         this.joinVolsId = joinVolsId;
     }
-
 
     public int getId() {
         return id;
@@ -59,19 +54,19 @@ public class Activity {
         this.id = id;
     }
 
-    public Date getDateDebut() {
+    public Timestamp getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(Timestamp dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public Timestamp getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(Timestamp dateFin) {
         this.dateFin = dateFin;
     }
 
