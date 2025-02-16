@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class HotelGrid implements Navigatable {
     }
 
     private void loadHotels() {
+        hotelsGrid.getChildren().clear();
         hotels = getHotels();
 
         for (Hotel hotel : hotels) {
@@ -125,7 +127,7 @@ public class HotelGrid implements Navigatable {
                     HotelService hotelService = new HotelService();
                     hotelService.supprimer(hotel);
                     System.out.println("Hôtel supprimé avec succès : " + hotel);
-
+                    loadHotels();
                     // Afficher une boîte de dialogue de confirmation directement
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Succès");
@@ -167,5 +169,9 @@ public class HotelGrid implements Navigatable {
      */
     public void addHotel(ActionEvent actionEvent) {
         dashBoardController.navigateTo("dashboard/hotel/hotel-create-form.fxml");
+    }
+
+    public void navigateToChambre(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
     }
 }

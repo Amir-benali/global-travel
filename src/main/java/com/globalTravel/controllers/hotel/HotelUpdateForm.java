@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 
 public class HotelUpdateForm {
 
-    // Champs FXML correspondant aux éléments du formulaire
     @FXML private Label formTitleLabel;
     @FXML private TextField nameField;
     @FXML private TextField addressField;
@@ -20,33 +19,33 @@ public class HotelUpdateForm {
     @FXML private TextArea reviewField;
     @FXML private Button saveButton;
 
-    // Variables pour gérer l'hôtel à modifier et la fenêtre
     private Hotel hotelToEdit;
     private Stage stage;
     private HotelService hotelService = new HotelService();
 
-    // Méthode pour définir la fenêtre (stage)
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    // Méthode d'initialisation du formulaire
+    /**
+     * Initialisation du formulaire avec l'hôtel à modifier.
+     */
     public void initialize(Hotel hotelToEdit) {
         System.out.println("Initializing HotelUpdateForm...");
-
-        // Configuration du Spinner pour la catégorie (1 à 5 étoiles)
-        SpinnerValueFactory<Integer> categoryFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 3);
+        // Configuration du Spinner pour la catégorie (1 à 5)
+        SpinnerValueFactory<Integer> categoryFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 3);
         categorySpinner.setValueFactory(categoryFactory);
 
         if (hotelToEdit != null) {
             this.hotelToEdit = hotelToEdit;
-            populateForm(); // Remplir le formulaire avec les données de l'hôtel
+            populateForm();
+            addListeners();
         } else {
             System.out.println("Aucun hôtel à modifier n'a été fourni.");
         }
     }
 
-    // Méthode pour remplir le formulaire avec les données de l'hôtel
     private void populateForm() {
         System.out.println("Remplissage du formulaire avec les données de l'hôtel...");
         nameField.setText(hotelToEdit.getNom_h());
@@ -59,36 +58,142 @@ public class HotelUpdateForm {
         reviewField.setText(hotelToEdit.getAvis_h());
     }
 
-    // Méthode pour gérer l'enregistrement des modifications
+    private void addListeners() {
+        nameField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        addressField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        cityField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        countryField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        amenitiesField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        locationField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        reviewField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+    }
+
+    /**
+     * Valide le formulaire :
+     * - Les champs nom, adresse, ville, pays, services et coordonnées doivent contenir entre 3 et 30 caractères.
+     * - L'avis doit contenir entre 2 et 50 caractères.
+     */
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        // Nom (3-30)
+        String name = nameField.getText().trim();
+        if (name.isEmpty()) {
+            setFieldError(nameField, "Le nom est obligatoire.");
+            isValid = false;
+        } else if (name.length() < 3 || name.length() > 30) {
+            setFieldError(nameField, "Le nom doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(nameField);
+        }
+
+        // Adresse (3-30)
+        String address = addressField.getText().trim();
+        if (address.isEmpty()) {
+            setFieldError(addressField, "L'adresse est obligatoire.");
+            isValid = false;
+        } else if (address.length() < 3 || address.length() > 30) {
+            setFieldError(addressField, "L'adresse doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(addressField);
+        }
+
+        // Ville (3-30)
+        String city = cityField.getText().trim();
+        if (city.isEmpty()) {
+            setFieldError(cityField, "La ville est obligatoire.");
+            isValid = false;
+        } else if (city.length() < 3 || city.length() > 30) {
+            setFieldError(cityField, "La ville doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(cityField);
+        }
+
+        // Pays (3-30)
+        String country = countryField.getText().trim();
+        if (country.isEmpty()) {
+            setFieldError(countryField, "Le pays est obligatoire.");
+            isValid = false;
+        } else if (country.length() < 3 || country.length() > 30) {
+            setFieldError(countryField, "Le pays doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(countryField);
+        }
+
+        // Services (3-30)
+        String amenities = amenitiesField.getText().trim();
+        if (amenities.isEmpty()) {
+            setFieldError(amenitiesField, "Les services sont obligatoires.");
+            isValid = false;
+        } else if (amenities.length() < 3 || amenities.length() > 30) {
+            setFieldError(amenitiesField, "Les services doivent contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(amenitiesField);
+        }
+
+        // Coordonnées (3-30)
+        String location = locationField.getText().trim();
+        if (location.isEmpty()) {
+            setFieldError(locationField, "La localisation est obligatoire.");
+            isValid = false;
+        } else if (location.length() < 3 || location.length() > 30) {
+            setFieldError(locationField, "La localisation doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(locationField);
+        }
+
+        // Avis (2-50)
+        String review = reviewField.getText().trim();
+        if (review.isEmpty()) {
+            setFieldError(reviewField, "L'avis est obligatoire.");
+            isValid = false;
+        } else if (review.length() < 2 || review.length() > 50) {
+            setFieldError(reviewField, "L'avis doit contenir entre 2 et 50 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(reviewField);
+        }
+
+        saveButton.setDisable(!isValid);
+        return isValid;
+    }
+
+    private void setFieldError(Control field, String message) {
+        field.setStyle("-fx-border-color: red;");
+        field.setTooltip(new Tooltip(message));
+    }
+
+    private void clearFieldError(Control field) {
+        field.setStyle("");
+        field.setTooltip(null);
+    }
+
     @FXML
     private void handleSaveHotel() {
         try {
-            // Vérifier que tous les champs sont remplis
-            if (nameField.getText().isEmpty() || addressField.getText().isEmpty() || cityField.getText().isEmpty() ||
-                    countryField.getText().isEmpty() || amenitiesField.getText().isEmpty() ||
-                    locationField.getText().isEmpty() || reviewField.getText().isEmpty()) {
-                showError("Veuillez remplir tous les champs !");
+            if (!validateForm()) {
                 return;
             }
-
             // Créer un nouvel objet Hotel avec les données mises à jour
             Hotel updatedHotel = new Hotel(
-                    hotelToEdit.getId_hotel_h(), // Garder l'ID de l'hôtel pour la mise à jour
-                    nameField.getText(),
-                    addressField.getText(),
-                    cityField.getText(),
-                    countryField.getText(),
+                    hotelToEdit.getId_hotel_h(),
+                    nameField.getText().trim(),
+                    addressField.getText().trim(),
+                    cityField.getText().trim(),
+                    countryField.getText().trim(),
                     categorySpinner.getValue(),
-                    amenitiesField.getText(),
-                    locationField.getText(),
-                    reviewField.getText()
+                    amenitiesField.getText().trim(),
+                    locationField.getText().trim(),
+                    reviewField.getText().trim()
             );
-
-            // Appeler le service pour mettre à jour l'hôtel
             hotelService.modifier(updatedHotel);
             System.out.println("Hôtel mis à jour avec succès !");
-
-            // Afficher une confirmation et fermer la fenêtre
             showConfirmation("Hôtel mis à jour avec succès !");
             closeForm();
         } catch (Exception e) {
@@ -97,20 +202,17 @@ public class HotelUpdateForm {
         }
     }
 
-    // Méthode pour annuler et fermer le formulaire
     @FXML
     private void handleCancel() {
         closeForm();
     }
 
-    // Méthode pour fermer la fenêtre
     private void closeForm() {
         if (stage != null) {
             stage.close();
         }
     }
 
-    // Méthode pour afficher une boîte de dialogue de confirmation
     private void showConfirmation(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Succès");
@@ -119,7 +221,6 @@ public class HotelUpdateForm {
         alert.showAndWait();
     }
 
-    // Méthode pour afficher une boîte de dialogue d'erreur
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erreur");
