@@ -123,16 +123,8 @@ public class ActivityService implements IService<Activity> {
         return false;
     }
 
-    public List<Integer> getAllActivityIds() {
-        // Simulation des données récupérées depuis la base de données
-        List<Integer> activityIds = new ArrayList<>();
-        activityIds.add(1);
-        activityIds.add(2);
-        activityIds.add(3);
-        activityIds.add(4);
-        activityIds.add(5);
-        return activityIds;
-    }
+
+
 
 
 

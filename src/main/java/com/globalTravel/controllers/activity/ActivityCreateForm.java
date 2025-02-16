@@ -3,12 +3,19 @@ package com.globalTravel.controllers.activity;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
+import com.globalTravel.utils.DataSource;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityCreateForm {
 
@@ -25,13 +32,14 @@ public class ActivityCreateForm {
     @FXML private ComboBox<String> endSecondComboBox;
     @FXML private TextField priceField;
     @FXML private TextField localisationField;
-    @FXML private TextField hotelIdField;
-    @FXML private TextField carIdField;
-    @FXML private TextField flightIdField;
+    @FXML private ComboBox<Integer> hotelIdComboBox;
+    @FXML private ComboBox<Integer> carIdComboBox;
+    @FXML private ComboBox<Integer> flightIdComboBox;
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
 
     private final ActivityService activityService = new ActivityService();
+    private final Connection connection = DataSource.getInstance().getConnection();
     private Stage stage;
 
     public void setStage(Stage stage) {
@@ -42,6 +50,29 @@ public class ActivityCreateForm {
     public void initialize() {
         typeComboBox.getItems().setAll(TypeActivity.values());
         populateHourMinuteSecondComboBoxes();
+
+        // Charger les IDs depuis la base de données
+        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel"));
+        carIdComboBox.getItems().setAll(getIdsFromDatabase("voiture"));
+        flightIdComboBox.getItems().setAll(getIdsFromDatabase("vols"));
+    }
+
+    private List<Integer> getIdsFromDatabase(String tableName) {
+        List<Integer> ids = new ArrayList<>();
+        String query = "SELECT id FROM " + tableName;
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                ids.add(resultSet.getInt("id"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des ID de " + tableName + " : " + e.getMessage());
+        }
+
+        return ids;
     }
 
     private void populateHourMinuteSecondComboBoxes() {
@@ -52,13 +83,11 @@ public class ActivityCreateForm {
         startHourComboBox.getItems().setAll(hours);
         endHourComboBox.getItems().setAll(hours);
 
-        String[] minutes = {"00", "15", "30", "45"};
-        startMinuteComboBox.getItems().setAll(minutes);
-        endMinuteComboBox.getItems().setAll(minutes);
-
-        String[] seconds = {"00", "15", "30", "45"};
-        startSecondComboBox.getItems().setAll(seconds);
-        endSecondComboBox.getItems().setAll(seconds);
+        String[] minutesSeconds = {"00", "15", "30", "45"};
+        startMinuteComboBox.getItems().setAll(minutesSeconds);
+        endMinuteComboBox.getItems().setAll(minutesSeconds);
+        startSecondComboBox.getItems().setAll(minutesSeconds);
+        endSecondComboBox.getItems().setAll(minutesSeconds);
     }
 
     @FXML
@@ -75,8 +104,8 @@ public class ActivityCreateForm {
                     clearForm();
                     closeForm();
                 } else {
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "L'activité n'a pas pu être ajoutée.");
-                    statusLabel.setText("Échec de l'ajout de l'activité.");
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "L'ajout a échoué !");
+                    statusLabel.setText("Erreur lors de l'ajout !");
                     statusLabel.setStyle("-fx-text-fill: red;");
                 }
             }
@@ -99,9 +128,9 @@ public class ActivityCreateForm {
                 parsePrice(priceField.getText()),
                 activityNameField.getText().trim(),
                 typeComboBox.getValue(),
-                parseId(hotelIdField.getText()),
-                parseId(carIdField.getText()),
-                parseId(flightIdField.getText())
+                hotelIdComboBox.getValue() != null ? hotelIdComboBox.getValue() : 0,
+                carIdComboBox.getValue() != null ? carIdComboBox.getValue() : 0,
+                flightIdComboBox.getValue() != null ? flightIdComboBox.getValue() : 0
         );
     }
 
@@ -149,14 +178,6 @@ public class ActivityCreateForm {
         return isValidPrice(priceText) ? Integer.parseInt(priceText) : 0;
     }
 
-    private int parseId(String idText) {
-        try {
-            return Integer.parseInt(idText);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
     @FXML
     private void handleCancel() {
         clearForm();
@@ -168,18 +189,12 @@ public class ActivityCreateForm {
         descriptionField.clear();
         localisationField.clear();
         priceField.clear();
-        hotelIdField.clear();
-        carIdField.clear();
-        flightIdField.clear();
+        hotelIdComboBox.getSelectionModel().clearSelection();
+        carIdComboBox.getSelectionModel().clearSelection();
+        flightIdComboBox.getSelectionModel().clearSelection();
         typeComboBox.setValue(null);
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
-        startHourComboBox.setValue(null);
-        startMinuteComboBox.setValue(null);
-        startSecondComboBox.setValue(null);
-        endHourComboBox.setValue(null);
-        endMinuteComboBox.setValue(null);
-        endSecondComboBox.setValue(null);
     }
 
     private void closeForm() {

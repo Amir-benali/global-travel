@@ -2,56 +2,56 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>  <!-- Ajouté pour CENTER_RIGHT -->
+<?import javafx.geometry.Pos?>
 <?import com.globalTravel.models.activity.TypeActivity?>
 
-<VBox spacing="10" styleClass="activity-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityCreateForm">
+<VBox spacing="10" styleClass="activity-form" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityCreateForm">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
     <Label fx:id="formTitleLabel" text="Ajouter une nouvelle activité" styleClass="form-title"/>
 
-    <!-- Champ : Nom de l'Activité -->
-    <TextField fx:id="activityNameField" promptText="Nom de l'activité"/>
+    <VBox spacing="5">
+        <!-- Champ : Nom de l'Activité -->
+        <TextField fx:id="activityNameField" promptText="Nom de l'activité"/>
 
-    <!-- Champ : Description -->
-    <TextArea fx:id="descriptionField" promptText="Description"/>
+        <!-- Champ : Description -->
+        <TextArea fx:id="descriptionField" promptText="Description"/>
 
-    <!-- Champ : Localisation -->
-    <TextField fx:id="localisationField" promptText="Localisation"/>
+        <!-- Champ : Localisation -->
+        <TextField fx:id="localisationField" promptText="Localisation"/>
+    </VBox>
 
-    <!-- Champ : Date de début -->
-    <DatePicker fx:id="startDatePicker" promptText="Date de début"/>
+    <!-- Section : Date et Heure de début -->
+    <VBox spacing="5">
+        <DatePicker fx:id="startDatePicker" promptText="Date de début"/>
+        <HBox spacing="10" alignment="CENTER">
+            <ComboBox fx:id="startHourComboBox" promptText="Heure"/>
+            <ComboBox fx:id="startMinuteComboBox" promptText="Minute"/>
+            <ComboBox fx:id="startSecondComboBox" promptText="Seconde"/>
+        </HBox>
+    </VBox>
 
-    <!-- Champ : Heure de début -->
-    <HBox spacing="10">
-        <ComboBox fx:id="startHourComboBox" promptText="Heure"/>
-        <ComboBox fx:id="startMinuteComboBox" promptText="Minute"/>
-        <ComboBox fx:id="startSecondComboBox" promptText="Seconde"/>
-    </HBox>
-
-    <!-- Champ : Date de fin -->
-    <DatePicker fx:id="endDatePicker" promptText="Date de fin"/>
-
-    <!-- Champ : Heure de fin -->
-    <HBox spacing="10">
-        <ComboBox fx:id="endHourComboBox" promptText="Heure"/>
-        <ComboBox fx:id="endMinuteComboBox" promptText="Minute"/>
-        <ComboBox fx:id="endSecondComboBox" promptText="Seconde"/>
-    </HBox>
+    <!-- Section : Date et Heure de fin -->
+    <VBox spacing="5">
+        <DatePicker fx:id="endDatePicker" promptText="Date de fin"/>
+        <HBox spacing="10" alignment="CENTER">
+            <ComboBox fx:id="endHourComboBox" promptText="Heure"/>
+            <ComboBox fx:id="endMinuteComboBox" promptText="Minute"/>
+            <ComboBox fx:id="endSecondComboBox" promptText="Seconde"/>
+        </HBox>
+    </VBox>
 
     <!-- Champ : Prix -->
     <TextField fx:id="priceField" promptText="Prix"/>
 
-    <!-- Champ : ID Hôtel -->
-    <TextField fx:id="hotelIdField" promptText="ID Hôtel"/>
-
-    <!-- Champ : ID Voiture -->
-    <TextField fx:id="carIdField" promptText="ID Voiture"/>
-
-    <!-- Champ : ID Vol -->
-    <TextField fx:id="flightIdField" promptText="ID Vol"/>
+    <!-- Sélection des IDs via ComboBox -->
+    <VBox spacing="5">
+        <ComboBox fx:id="hotelIdComboBox" promptText="ID Hôtel"/>
+        <ComboBox fx:id="carIdComboBox" promptText="ID Voiture"/>
+        <ComboBox fx:id="flightIdComboBox" promptText="ID Vol"/>
+    </VBox>
 
     <!-- Type d'Activité -->
     <ComboBox fx:id="typeComboBox" promptText="Type d'Activité"/>

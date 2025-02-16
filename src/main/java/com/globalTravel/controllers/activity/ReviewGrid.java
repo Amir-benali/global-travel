@@ -64,7 +64,7 @@ public class ReviewGrid implements Navigatable {
             try {
                 navigateToUpdateReview(review);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                ex.printStackTrace(); // Affichage de l'erreur dans la console pour le debug
             }
         });
         Button deleteButton = createStyledButton("Supprimer", e -> confirmDelete(review));
@@ -117,8 +117,12 @@ public class ReviewGrid implements Navigatable {
     }
 
     private void navigateToUpdateReview(Review review) throws IOException {
+        // Navigation vers le formulaire de mise à jour de la revue
         dashBoardController.navigateTo("dashboard/activity/review-update-form.fxml");
-      ((ReviewUpdateForm) dashBoardController.getController()).initialize(review); // Initialise le formulaire de mise à jour avec la revue
+
+        // Obtention du contrôleur et initialisation de la revue à modifier
+        ReviewUpdateForm updateFormController = (ReviewUpdateForm) dashBoardController.getController();
+        updateFormController.setReviewToUpdate(review);
     }
 
     public void addReview() {
