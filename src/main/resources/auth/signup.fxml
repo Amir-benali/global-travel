@@ -16,7 +16,6 @@
         <Label text="Create an Account" styleClass="title"/>
         <TextField fx:id="fullNameField" promptText="Full Name" styleClass="input-field"/>
         <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
-        <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
         <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
         <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="input-field"/>
         <HBox alignment="CENTER_LEFT" spacing="10">
