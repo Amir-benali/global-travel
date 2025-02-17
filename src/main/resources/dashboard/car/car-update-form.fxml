@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="10" styleClass="car-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.car.CarUpdateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Update Private Car" styleClass="form-title"/>
+
+    <!-- Brand Field -->
+    <VBox>
+        <TextField fx:id="brandField" promptText="Brand"/>
+        <VBox fx:id="brandErrorContainer"/>
+    </VBox>
+
+    <!-- Model Field -->
+    <VBox>
+        <TextField fx:id="modelField" promptText="Model"/>
+        <VBox fx:id="modelErrorContainer"/>
+    </VBox>
+
+    <!-- Number of Seats Field -->
+    <VBox>
+        <TextField fx:id="numSeatsField" promptText="Number of Seats"/>
+        <VBox fx:id="numSeatsErrorContainer"/>
+    </VBox>
+
+    <!-- Driver ComboBox -->
+    <VBox>
+        <ComboBox fx:id="driverComboBox" promptText="Select Driver">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <!-- Populated dynamically in the controller -->
+                </FXCollections>
+            </items>
+        </ComboBox>
+        <VBox fx:id="driverErrorContainer"/>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Car" onAction="#handleSaveCar" styleClass="save-button"/>
+    </HBox>
+</VBox>

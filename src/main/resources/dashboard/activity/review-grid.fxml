@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.paint.Color?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true" styleClass="activities-grid-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewGrid">
+    <content>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <!-- Header Section -->
+            <HBox alignment="CENTER_LEFT" spacing="30.0">
+                <children>
+                    <Label styleClass="section-title" text="Review List" style="-fx-font-family: 'Roboto', sans-serif; -fx-font-size: 28px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"/>
+                    <Button onAction="#navigateToReview" styleClass="add-button" text="Review List"
+                            style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 25px; -fx-background-radius: 25px;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#addReview" styleClass="add-button" text="+ ADD REVIEW"
+                            style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 25px; -fx-background-radius: 25px;"/>
+                </children>
+                <padding>
+                    <Insets top="10" bottom="10" left="15" right="15"/>
+                </padding>
+            </HBox>
+
+            <!-- Grid Section -->
+            <FlowPane fx:id="reviewsGrid" hgap="20" vgap="20" prefWidth="600" prefHeight="400"
+                      style="-fx-background-color: #F4F6F9; -fx-border-radius: 15px;">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+            </FlowPane>
+        </VBox>
+    </content>
+</ScrollPane>

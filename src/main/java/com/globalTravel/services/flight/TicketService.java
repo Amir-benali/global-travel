@@ -17,7 +17,7 @@ public class TicketService implements IService<Ticket> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(Ticket ticket) {
+    public boolean ajouter(Ticket ticket) {
         String req="INSERT INTO tickets (id_flight, seat_number, ticket_class, ticket_price, ticket_status, ticket_booking_date) VALUES (?,?,?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -26,7 +26,7 @@ public class TicketService implements IService<Ticket> {
             pst.setString(3, ticket.getTicketClass().name());
             pst.setDouble(4, ticket.getTicket_price());
             pst.setString(5, ticket.getStatus().name());
-            pst.setString(6, ticket.getBooking_date());
+            pst.setTimestamp(6, ticket.getBooking_date());
 
             pst.executeUpdate();
 
@@ -34,10 +34,11 @@ public class TicketService implements IService<Ticket> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(Ticket ticket) {
+    public boolean modifier(Ticket ticket) {
         String req = "UPDATE tickets SET id_flight=?, seat_number=?, ticket_class=?, ticket_price=?, ticket_status=?, ticket_booking_date=? WHERE ticket_id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -46,7 +47,7 @@ public class TicketService implements IService<Ticket> {
             pst.setString(3, ticket.getTicketClass().name());
             pst.setDouble(4, ticket.getTicket_price());
             pst.setString(5, ticket.getStatus().name());
-            pst.setString(6, ticket.getBooking_date());
+            pst.setTimestamp(6, ticket.getBooking_date());
             pst.setInt(7, ticket.getTicket_id());
 
             pst.executeUpdate();
@@ -56,6 +57,7 @@ public class TicketService implements IService<Ticket> {
             System.out.println(e.getMessage());
         }
 
+        return false;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class TicketService implements IService<Ticket> {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.executeQuery();
             while (pst.getResultSet().next()) {
-                tickets.add(new Ticket(pst.getResultSet().getInt("ticket_id"), pst.getResultSet().getInt("id_flight"), pst.getResultSet().getString("seat_number"), TicketClass.valueOf(pst.getResultSet().getString("ticket_class")), pst.getResultSet().getDouble("ticket_price"), TicketStatus.valueOf(pst.getResultSet().getString("ticket_status")), pst.getResultSet().getString("ticket_booking_date")));
+                tickets.add(new Ticket(pst.getResultSet().getInt("ticket_id"), pst.getResultSet().getInt("id_flight"), pst.getResultSet().getString("seat_number"), TicketClass.valueOf(pst.getResultSet().getString("ticket_class")), pst.getResultSet().getDouble("ticket_price"), TicketStatus.valueOf(pst.getResultSet().getString("ticket_status")), pst.getResultSet().getTimestamp("ticket_booking_date")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

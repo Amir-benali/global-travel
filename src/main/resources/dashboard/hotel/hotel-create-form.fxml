@@ -2,71 +2,43 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
 
-<?import java.lang.String?>
-<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelCreateForm">
+<VBox spacing="10" styleClass="hotel-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelCreateForm">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
+    <Label fx:id="formTitleLabel" text="Add New Hotel" styleClass="form-title"/>
 
-    <!-- Flight Number Field -->
-    <TextField fx:id="flightNumberField" promptText="Flight Number"/>
+    <!-- Hotel Name Field -->
+    <TextField fx:id="hotelNameField" promptText="Hotel Name"/>
 
-    <!-- Airline ID Field -->
-    <TextField fx:id="airlineIdField" promptText="Airline ID"/>
+    <!-- Address Field -->
+    <TextField fx:id="addressField" promptText="Address"/>
 
-    <!-- Departure Airport Field -->
-    <TextField fx:id="departureAirportField" promptText="Departure Airport"/>
+    <!-- City Field -->
+    <TextField fx:id="cityField" promptText="City"/>
 
-    <!-- Arrival Airport Field -->
-    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport"/>
+    <!-- Country Field -->
+    <TextField fx:id="countryField" promptText="Country"/>
 
-    <!-- Departure Date Field -->
-    <DatePicker fx:id="departureDatePicker" promptText="Departure Date"/>
+    <!-- Category Field -->
+    <TextField fx:id="categoryField" promptText="Category (Stars)"/>
 
-    <!-- Departure Time Field -->
-    <TextField fx:id="departureTimeField" promptText="Departure Time (HH:MM)"/>
+    <!-- Services Field -->
+    <TextField fx:id="servicesField" promptText="Services"/>
 
-    <!-- Arrival Time Field -->
-    <TextField fx:id="arrivalTimeField" promptText="Arrival Time (HH:MM)"/>
+    <!-- Coordinates Field -->
+    <TextField fx:id="coordinatesField" promptText="Coordinates"/>
 
-    <!-- Duration Field -->
-    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)"/>
-
-    <!-- Available Seats Field -->
-    <TextField fx:id="availableSeatsField" promptText="Available Seats"/>
-
-    <!-- Base Price Field -->
-    <TextField fx:id="priceField" promptText="Base Price"/>
-
-    <!-- Flight Status ComboBox -->
-    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Scheduled"/>
-                <String fx:value="DELAYED"/>
-                <String fx:value="Cancelled"/>
-                <String fx:value="COMPLETED"/>
-            </FXCollections>
-        </items>
-    </ComboBox>
-
-    <!-- Image Selection Section -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
-        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
-    </HBox>
-
-    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+    <!-- Reviews Field -->
+    <TextArea fx:id="reviewsField" promptText="Customer Reviews"/>
 
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
+        <Button fx:id="saveButton" text="Save Hotel" onAction="#handleSaveHotel" styleClass="save-button"/>
     </HBox>
 </VBox>

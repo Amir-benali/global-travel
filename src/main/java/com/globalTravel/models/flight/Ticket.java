@@ -1,5 +1,7 @@
 package com.globalTravel.models.flight;
 
+import java.sql.Timestamp;
+
 public class Ticket {
     private int ticket_id;
     private int flight_id;
@@ -7,9 +9,9 @@ public class Ticket {
     private TicketClass ticketClass;
     private double ticket_price;
     private TicketStatus status;
-    private String booking_date;
+    private Timestamp booking_date;
 
-    public Ticket(int ticket_id, int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, String booking_date) {
+    public Ticket(int ticket_id, int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
         this.ticket_id = ticket_id;
         this.flight_id = flight_id;
         this.seat_number = seat_number;
@@ -19,7 +21,7 @@ public class Ticket {
         this.booking_date = booking_date;
     }
 
-    public Ticket(int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, String booking_date) {
+    public Ticket(int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
         this.flight_id = flight_id;
         this.seat_number = seat_number;
         this.ticketClass = ticketClass;
@@ -89,11 +91,11 @@ public class Ticket {
         this.status = status;
     }
 
-    public String getBooking_date() {
+    public Timestamp getBooking_date() {
         return booking_date;
     }
 
-    public void setBooking_date(String booking_date) {
+    public void setBooking_date(Timestamp booking_date) {
         this.booking_date = booking_date;
     }
 }
