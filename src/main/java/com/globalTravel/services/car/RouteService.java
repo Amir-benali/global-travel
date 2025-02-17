@@ -12,7 +12,7 @@ public class RouteService implements IService<Route> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public boolean ajouter(Route route) {
+    public void ajouter(Route route) {
         String req = "INSERT INTO car_route (date_start, date_destination,location_start,location_destination) VALUES (?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -27,11 +27,10 @@ public class RouteService implements IService<Route> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(Route route) {
+    public void modifier(Route route) {
 
         String req = "UPDATE car_route SET date_start=? ,date_destination=?,location_start=?,location_destination=? WHERE id=?";
         try {
@@ -48,7 +47,6 @@ public class RouteService implements IService<Route> {
             System.out.println(e.getMessage());
         }
 
-        return false;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class AirlineService implements IService<Airline> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public boolean ajouter(Airline airline) {
+    public void ajouter(Airline airline) {
         String req = "INSERT INTO airlines (airline_name,airline_iata_code,airline_country) VALUES (?,?,?)";
         try{
             PreparedStatement pst = connection.prepareStatement(req);
@@ -25,11 +25,10 @@ public class AirlineService implements IService<Airline> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(Airline airline) {
+    public void modifier(Airline airline) {
         String req = "UPDATE airlines SET airline_name=?, airline_iata_code=?, airline_country=? WHERE airline_id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -43,7 +42,6 @@ public class AirlineService implements IService<Airline> {
             System.out.println(e.getMessage());
         }
 
-        return false;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class FlightService implements IService<Flight> {
 
 
     @Override
-    public boolean ajouter(Flight flight) {
+    public void ajouter(Flight flight) {
         String req = "INSERT INTO flights (flight_number, airline_id, departure_airport_name, arrival_airport_name, departure_time, arrival_time, duration_per_hours, available_seats, flight_base_price, flight_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -40,11 +40,10 @@ public class FlightService implements IService<Flight> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(Flight flight) {
+    public void modifier(Flight flight) {
         String req = "UPDATE flights SET flight_number=?, airline_id=?, departure_airport_name=?, arrival_airport_name=?, departure_time=?, arrival_time=?, duration_per_hours=?, available_seats=?, flight_base_price=?, flight_status=? WHERE id_flight=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -66,7 +65,6 @@ public class FlightService implements IService<Flight> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
