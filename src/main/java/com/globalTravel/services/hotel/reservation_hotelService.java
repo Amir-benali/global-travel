@@ -18,7 +18,7 @@ public class reservation_hotelService implements IService<reservation_hotel> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(reservation_hotel reservationHotel) {
+    public boolean ajouter(reservation_hotel reservationHotel) {
         String req = "INSERT INTO reservation_hotel (date_checkin_h, date_checkout_h, nombre_chambres_h, statut_h, moyen_Paiement_h) VALUES ('" +
                 reservationHotel.getDate_checkin_h() + "','" +
                 reservationHotel.getDate_checkout_h() + "'," +
@@ -32,10 +32,11 @@ public class reservation_hotelService implements IService<reservation_hotel> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(reservation_hotel reservationHotel) {
+    public boolean modifier(reservation_hotel reservationHotel) {
         String req = "UPDATE reservation_hotel SET date_checkin_h='" + reservationHotel.getDate_checkin_h() + "', " +
                 "date_checkout_h='" + reservationHotel.getDate_checkout_h() + "', " +
                 "nombre_chambres_h=" + reservationHotel.getNombre_chambres_h() + ", " +
@@ -49,6 +50,7 @@ public class reservation_hotelService implements IService<reservation_hotel> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override

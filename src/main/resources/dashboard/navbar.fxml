@@ -28,9 +28,8 @@
             </ImageView>
         </graphic>
         <items>
-            <MenuItem text="Profile" onAction="#handleProfile" />
-            <MenuItem text="Settings" onAction="#handleSettings" />
-            <MenuItem text="Logout" onAction="#handleLogout" />
+            <MenuItem styleClass="menu-card-item" text="Profile" onAction="#handleProfile" />
+            <MenuItem styleClass="menu-card-item" text="Settings" onAction="#handleSettings" />
         </items>
     </MenuButton>
 </HBox>

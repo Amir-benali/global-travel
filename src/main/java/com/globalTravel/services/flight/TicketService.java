@@ -17,7 +17,7 @@ public class TicketService implements IService<Ticket> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(Ticket ticket) {
+    public boolean ajouter(Ticket ticket) {
         String req="INSERT INTO tickets (id_flight, seat_number, ticket_class, ticket_price, ticket_status, ticket_booking_date) VALUES (?,?,?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -34,10 +34,11 @@ public class TicketService implements IService<Ticket> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(Ticket ticket) {
+    public boolean modifier(Ticket ticket) {
         String req = "UPDATE tickets SET id_flight=?, seat_number=?, ticket_class=?, ticket_price=?, ticket_status=?, ticket_booking_date=? WHERE ticket_id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -56,6 +57,7 @@ public class TicketService implements IService<Ticket> {
             System.out.println(e.getMessage());
         }
 
+        return false;
     }
 
     @Override

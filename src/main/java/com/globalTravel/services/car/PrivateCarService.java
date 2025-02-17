@@ -19,7 +19,7 @@ public class PrivateCarService implements IService<PrivateCar> {
     private CarDriverService carDriverservice = new CarDriverService();
 
     @Override
-    public void ajouter(PrivateCar privateCar) {
+    public boolean ajouter(PrivateCar privateCar) {
         String req = "INSERT INTO private_car (brand, model ,num_place,id_driver) VALUES (?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -33,10 +33,11 @@ public class PrivateCarService implements IService<PrivateCar> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(PrivateCar privateCar) {
+    public boolean modifier(PrivateCar privateCar) {
         String req = "UPDATE private_car SET brand=? ,model=?,num_place=?,id_driver=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -51,6 +52,7 @@ public class PrivateCarService implements IService<PrivateCar> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -101,4 +103,14 @@ public class PrivateCarService implements IService<PrivateCar> {
         return car;
     }
 
+
+
+
 }
+
+
+
+
+
+
+

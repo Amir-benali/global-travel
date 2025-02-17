@@ -1,72 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
 
-<?import java.lang.String?>
-<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityUpdateForm">
+<VBox spacing="10" styleClass="activity-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityUpdateForm">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
+    <Label fx:id="formTitleLabel" text="Update Activity" styleClass="form-title"/>
 
-    <!-- Flight Number Field -->
-    <TextField fx:id="flightNumberField" promptText="Flight Number"/>
+    <TextField fx:id="activityNameField" promptText="Activity Name"/>
+    <TextField fx:id="descriptionField" promptText="Activity Description"/>
+    <TextField fx:id="locationField" promptText="Location"/>
+    <DatePicker fx:id="startDatePicker" promptText="Start Date"/>
 
-    <!-- Airline ID Field -->
-    <TextField fx:id="airlineIdField" promptText="Airline ID"/>
-
-    <!-- Departure Airport Field -->
-    <TextField fx:id="departureAirportField" promptText="Departure Airport"/>
-
-    <!-- Arrival Airport Field -->
-    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport"/>
-
-    <!-- Departure Date Field -->
-    <DatePicker fx:id="departureDatePicker" promptText="Departure Date"/>
-
-    <!-- Departure Time Field -->
-    <TextField fx:id="departureTimeField" promptText="Departure Time (HH:MM)"/>
-
-    <!-- Arrival Time Field -->
-    <TextField fx:id="arrivalTimeField" promptText="Arrival Time (HH:MM)"/>
-
-    <!-- Duration Field -->
-    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)"/>
-
-    <!-- Available Seats Field -->
-    <TextField fx:id="availableSeatsField" promptText="Available Seats"/>
-
-    <!-- Base Price Field -->
-    <TextField fx:id="priceField" promptText="Base Price"/>
-
-    <!-- Flight Status ComboBox -->
-    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Scheduled"/>
-                <String fx:value="DELAYED"/>
-                <String fx:value="Cancelled"/>
-                <String fx:value="COMPLETED"/>
-            </FXCollections>
-        </items>
-    </ComboBox>
-
-    <!-- Image Selection Section -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
-        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+    <!-- Start Time Fields -->
+    <HBox spacing="5">
+        <ComboBox fx:id="startHourComboBox" promptText="Start Hour"/>
+        <ComboBox fx:id="startMinuteComboBox" promptText="Start Minute"/>
+        <ComboBox fx:id="startSecondComboBox" promptText="Start Second"/>
     </HBox>
 
-    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+    <DatePicker fx:id="endDatePicker" promptText="End Date"/>
 
-    <!-- Action Buttons -->
+    <!-- End Time Fields -->
+    <HBox spacing="5">
+        <ComboBox fx:id="endHourComboBox" promptText="End Hour"/>
+        <ComboBox fx:id="endMinuteComboBox" promptText="End Minute"/>
+        <ComboBox fx:id="endSecondComboBox" promptText="End Second"/>
+    </HBox>
+
+    <TextField fx:id="priceField" promptText="Activity Price"/>
+    <ComboBox fx:id="typeComboBox" promptText="Activity Type"/>
+
+    <!-- ComboBox for Hotel, Car, and Flight IDs -->
+    <ComboBox fx:id="hotelIdComboBox" promptText="Hotel ID"/>
+    <ComboBox fx:id="carIdComboBox" promptText="Car ID"/>
+    <ComboBox fx:id="flightIdComboBox" promptText="Flight ID"/>
+
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
+        <Button fx:id="saveButton" text="Save Activity" onAction="#handleSaveActivity" styleClass="save-button"/>
     </HBox>
 </VBox>

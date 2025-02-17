@@ -18,7 +18,7 @@ public class hotelService implements IService<hotel> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public void ajouter(hotel h) {
+    public boolean ajouter(hotel h) {
         String req = "INSERT INTO hotel (nom_h, adresse_h, ville_h, pays_h, categorie_h, services_h, coordonnees_h, avis_h) VALUES ('"+h.getNom_h()+"','"+h.getAdresse_h()+"','"+h.getVille_h()+"','"+h.getPays_h()+"',"+h.getCategorie_h()+",'"+h.getServices_h()+"','"+h.getCoordonnees_h()+"','"+h.getAvis_h()+"')";
         try {
             Statement st = connection.createStatement();
@@ -27,10 +27,11 @@ public class hotelService implements IService<hotel> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
-    public void modifier(hotel h) {
+    public boolean modifier(hotel h) {
         String req = "UPDATE hotel SET nom_h='"+h.getNom_h()+"', adresse_h='"+h.getAdresse_h()+"', ville_h='"+h.getVille_h()+"', pays_h='"+h.getPays_h()+"', categorie_h="+h.getCategorie_h()+", services_h='"+h.getServices_h()+"', coordonnees_h='"+h.getCoordonnees_h()+"', avis_h='"+h.getAvis_h()+"' WHERE id_hotel_h="+h.getId_hotel_h();
         try {
             Statement st = connection.createStatement();
@@ -39,6 +40,7 @@ public class hotelService implements IService<hotel> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -68,4 +70,7 @@ public class hotelService implements IService<hotel> {
         }
         return hotels;
     }
+
+
 }
+
