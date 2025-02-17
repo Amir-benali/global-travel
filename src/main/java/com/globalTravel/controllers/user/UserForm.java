@@ -6,10 +6,10 @@ import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class UserForm implements Navigatable {
     private DashBoard dashBoardController;
@@ -18,6 +18,9 @@ public class UserForm implements Navigatable {
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
+
+    @FXML
+    private DatePicker birthDatePicker;
 
     @FXML
     private TextField emailField;
@@ -59,6 +62,8 @@ public class UserForm implements Navigatable {
             phoneField.setText(currentUser.getPhoneNumber());
             lastNameField.setText(currentUser.getLastName());
             firstNameField.setText(currentUser.getFirstName());
+            birthDatePicker.setValue(LocalDate.parse(currentUser.getDateNaissance().toString()));
+            roleComboBox.setValue(currentUser.getRoles());
         }
     }
 
@@ -75,6 +80,7 @@ public class UserForm implements Navigatable {
         currentUser.setLastName(lastNameField.getText());
         currentUser.setFirstName(firstNameField.getText());
         currentUser.setRoles(roleComboBox.getValue());
+        currentUser.setDateNaissance(Date.valueOf(birthDatePicker.getValue()));
         userService.modifier(currentUser);
 
         dashBoardController.navigateTo("dashboard/user/user-table.fxml");

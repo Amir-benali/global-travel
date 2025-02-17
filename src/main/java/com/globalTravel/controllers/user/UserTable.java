@@ -74,8 +74,8 @@ public class UserTable implements Navigatable {
                     private final Button deleteButton = new Button("Delete");
 
                     {
-                        editButton.getStylesheets().add("view-details-button");
-                        deleteButton.getStylesheets().add("view-details-button");
+                        editButton.getStyleClass().add("view-details-button");
+                        deleteButton.getStyleClass().add("view-details-button");
                         // Edit Button Action
                         editButton.setOnAction((ActionEvent event) -> {
                             User user = getTableView().getItems().get(getIndex());
@@ -137,12 +137,25 @@ public class UserTable implements Navigatable {
     }
 
     private void handleDeleteUser(User user) {
+        if (user == null) return;
 
-        userService.supprimer(user);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer l'utilisateur");
+        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + user.getFirstName() + " " + user.getLastName() + " ?");
 
-        users = FXCollections.observableArrayList(userService.rechercher());
-        userTable.setItems(users);
+        // Récupérer la réponse de l'utilisateur
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Supprimer l'utilisateur si l'utilisateur confirme
+            userService.supprimer(user);
+
+            // Recharger la liste après suppression
+            users = FXCollections.observableArrayList(userService.rechercher());
+            userTable.setItems(users);
+        }
     }
+
 
 
 }

@@ -46,7 +46,7 @@ public class Main {
         Admin admin = new Admin(
                 0, // L'id sera auto-généré par la base de données
                 "Homme",
-                new Date(1990, 5, 10),
+                new java.sql.Date(2001,2,1),
                 "Tunis, Tunisie",
                 "admin@example.com",
                 "Admin2",

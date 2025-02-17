@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.control.DatePicker?>
 <VBox styleClass="content" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.user.UserForm">
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
@@ -42,11 +43,14 @@
             <Label text="Adresse E-mail" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Label text="Numéro de téléphone" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Date de naissance " GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <DatePicker fx:id="birthDatePicker" GridPane.columnIndex="1" promptText="Date de naissance" GridPane.rowIndex="3"/>
 
-            <Label text="Role" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <ComboBox fx:id="roleComboBox" accessibleText="selectioner role" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Numéro de téléphone" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+            <Label text="Role" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <ComboBox fx:id="roleComboBox" promptText="selectioner role" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
 
             <columnConstraints>

@@ -1,6 +1,7 @@
 package com.globalTravel.models.user;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class User {
     protected int id;
@@ -58,7 +59,7 @@ public class User {
     public String getGenre() { return genre; }
     public void setGenre(String genre) { this.genre = genre; }
 
-    public Date getDateNaissance() { return dateNaissance; }
+    public java.sql.Date getDateNaissance() { return dateNaissance; }
     public void setDateNaissance(Date dateNaissance) { this.dateNaissance = dateNaissance; }
 
     public String getAdresse() { return adresse; }

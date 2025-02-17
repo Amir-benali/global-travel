@@ -35,7 +35,6 @@
             <TableColumn fx:id="phoneNumberColumn" text="Téléphone" prefWidth="150.0" />
             <TableColumn fx:id="rolesColumn" text="Rôle" prefWidth="150.0" />
             <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100.0" />
-            <TableColumn fx:id="posteColumn" text="Poste" prefWidth="150.0" />
             <TableColumn fx:id="actionColumn" text="Actions" prefWidth="150.0" /> <!-- New Action Column -->
         </columns>
         <VBox.margin>
