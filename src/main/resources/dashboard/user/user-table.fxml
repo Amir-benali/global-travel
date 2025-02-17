@@ -20,7 +20,7 @@
     <HBox alignment="CENTER_LEFT" spacing="10">
         <Label fx:id="selectionLabel" text="0 sélectionné" />
         <Region HBox.hgrow="ALWAYS" />
-        <TextField fx:id="searchField" promptText="Rechercher..." />
+        <TextField  fx:id="searchField" promptText="Rechercher..." />
     </HBox>
 
     <!-- Table -->

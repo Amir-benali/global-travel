@@ -65,7 +65,6 @@ public class Login {
                 boolean isCorrectPassword = BCrypt.checkpw(password,storedPassword);
 
                 if (isCorrectPassword){
-                    showAlert("Succès", "Connexion réussie !", Alert.AlertType.INFORMATION);
                     navigateToDashboard();
                 } else {
                     showAlert("Erreur", "Mot de passe incorrect.", Alert.AlertType.ERROR);

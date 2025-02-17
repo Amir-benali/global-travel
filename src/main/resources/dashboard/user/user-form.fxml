@@ -1,35 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
-
-<?import javafx.scene.control.DatePicker?>
 <VBox styleClass="content" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.user.UserForm">
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <!-- User Form -->
     <VBox spacing="20" styleClass="form-content">
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label fx:id="formTitle" styleClass="form-title" text="Mettre à jour l'utilisateur" />
-
             <Region HBox.hgrow="ALWAYS" />
-
             <Button onAction="#handleBackToList" styleClass="back-button" text="Retour à la liste des utilisateurs" />
         </HBox>
 
@@ -37,34 +20,28 @@
             <Label text="Nom" GridPane.columnIndex="0" GridPane.rowIndex="0" />
             <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label text="Prenom" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Prénom" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <TextField fx:id="firstNameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
             <Label text="Adresse E-mail" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Label text="Date de naissance " GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <DatePicker fx:id="birthDatePicker" GridPane.columnIndex="1" promptText="Date de naissance" GridPane.rowIndex="3"/>
+            <Label text="Date de naissance" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <DatePicker fx:id="birthDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
             <Label text="Numéro de téléphone" GridPane.columnIndex="0" GridPane.rowIndex="4" />
             <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-            <Label text="Role" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <ComboBox fx:id="roleComboBox" promptText="selectioner role" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Adresse" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <TextField fx:id="adresseField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
+            <Label text="Rôle" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <ComboBox fx:id="roleComboBox" promptText="Sélectionner un rôle" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" prefWidth="200.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="300.0" />
             </columnConstraints>
-            <rowConstraints>
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-                <RowConstraints />
-            </rowConstraints>
         </GridPane>
 
         <HBox alignment="CENTER_RIGHT" spacing="10">

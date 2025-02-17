@@ -10,86 +10,132 @@ import javafx.scene.control.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 public class UserForm implements Navigatable {
     private DashBoard dashBoardController;
-    private UserService userService = new UserService();
+    private final UserService userService = new UserService();
+
+    @FXML
+    private DatePicker birthDatePicker;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField lastNameField;
+    @FXML
+    private TextField firstNameField;
+    @FXML
+    private TextField phoneField;
+    @FXML
+    private TextField adresseField;
+    @FXML
+    private ComboBox<String> roleComboBox;
+
+    private User currentUser;
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
 
     @FXML
-    private DatePicker birthDatePicker;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private Label formTitle;
-
-    @FXML
-    private TextField lastNameField;
-    @FXML
-    private TextField firstNameField;
-
-
-    @FXML
-    private TextField phoneField;
-
-    @FXML
-    private ComboBox<String> roleComboBox;
-
-    private User currentUser;
-    @FXML
     void handleBackToList(ActionEvent event) {
         if (dashBoardController != null) {
-            System.out.println(dashBoardController);
             dashBoardController.navigateTo("dashboard/user/user-table.fxml");
         }
     }
 
     @FXML
-    public void initialize(User user){
-        currentUser= user;
+    public void initialize(User user) {
+        currentUser = user;
         populateUserForm();
     }
 
     private void populateUserForm() {
-        roleComboBox.getItems().addAll("Responsable","Employee","Admin");
-        if(currentUser != null){
+        roleComboBox.getItems().addAll("Responsable", "Employee", "Admin");
+
+        if (currentUser != null) {
             emailField.setText(currentUser.getEmail());
             phoneField.setText(currentUser.getPhoneNumber());
             lastNameField.setText(currentUser.getLastName());
             firstNameField.setText(currentUser.getFirstName());
             birthDatePicker.setValue(LocalDate.parse(currentUser.getDateNaissance().toString()));
             roleComboBox.setValue(currentUser.getRoles());
+            adresseField.setText(currentUser.getAdresse());
         }
     }
 
     @FXML
     void handleCancel(ActionEvent event) {
-
+        if (showConfirmationDialog("Confirmation", "Êtes-vous sûr de vouloir annuler ?")) {
+            if (dashBoardController != null) {
+                dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+            }
+        }
     }
 
     @FXML
     void handleSave(ActionEvent event) {
-        validateUserForm();
-        currentUser.setEmail(emailField.getText());
-        currentUser.setPhoneNumber(phoneField.getText());
-        currentUser.setLastName(lastNameField.getText());
-        currentUser.setFirstName(firstNameField.getText());
-        currentUser.setRoles(roleComboBox.getValue());
-        currentUser.setDateNaissance(Date.valueOf(birthDatePicker.getValue()));
-        userService.modifier(currentUser);
+        if (!validateUserForm()) return;
 
-        dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+        if (showConfirmationDialog("Confirmation", "Voulez-vous vraiment mettre à jour cet utilisateur ?")) {
+            currentUser.setEmail(emailField.getText());
+            currentUser.setPhoneNumber(phoneField.getText());
+            currentUser.setLastName(lastNameField.getText());
+            currentUser.setFirstName(firstNameField.getText());
+            currentUser.setRoles(roleComboBox.getValue());
+            currentUser.setDateNaissance(Date.valueOf(birthDatePicker.getValue()));
+            currentUser.setAdresse(adresseField.getText());
 
-
+            userService.modifier(currentUser);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Utilisateur mis à jour avec succès.");
+            dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+        }
     }
 
-    private void validateUserForm() {
+    private boolean validateUserForm() {
+        String email = emailField.getText();
+        String phone = phoneField.getText();
+        String lastName = lastNameField.getText();
+        String firstName = firstNameField.getText();
+        String role = roleComboBox.getValue();
+        LocalDate birthDate = birthDatePicker.getValue();
+
+        if (firstName.isBlank() || lastName.isBlank() || email.isBlank() || phone.isBlank() || birthDate == null || role == null) {
+            showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Tous les champs sont obligatoires sauf l'adresse.");
+            return false;
+        }
+
+        // Vérification email
+        if (!Pattern.matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$", email)) {
+            showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Veuillez saisir une adresse email valide.");
+            return false;
+        }
+
+        // Vérification numéro de téléphone (8 chiffres)
+        if (!Pattern.matches("^\\d{8}$", phone)) {
+            showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Le numéro de téléphone doit contenir exactement 8 chiffres.");
+            return false;
+        }
+
+        return true;
     }
 
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
+    private boolean showConfirmationDialog(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        return alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES;
+    }
 }

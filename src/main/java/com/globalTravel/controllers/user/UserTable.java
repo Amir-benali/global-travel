@@ -2,7 +2,6 @@ package com.globalTravel.controllers.user;
 
 import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
-import com.globalTravel.models.user.Employee;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import javafx.collections.FXCollections;
@@ -11,13 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public class UserTable implements Navigatable {
@@ -115,9 +113,9 @@ public class UserTable implements Navigatable {
     }
 
     @FXML
-    private void handleSearch() {
+    private void handleSearch(InputMethodEvent event) {
         String keyword = searchField.getText().toLowerCase();
-        ObservableList<User> filteredUsers = FXCollections.observableArrayList();
+        ObservableList<User> filteredUsers = FXCollections.observableArrayList(users);
 
         for (User user : users) {
             if (user.getFirstName().toLowerCase().contains(keyword) ||
