@@ -32,7 +32,24 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.image = image;
         this.statut = statut;
+
     }
+
+    public User(int id, String genre, java.sql.Date dateNaissance, String adresse, String email, String roles, String password, String firstName, String lastName, String phoneNumber, String image, String statut, String poste) {
+        this.id = id;
+        this.genre = genre;
+        this.dateNaissance = dateNaissance;
+        this.adresse = adresse;
+        this.email = email;
+        this.roles = roles;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.image = image;
+        this.statut = statut;
+    }
+
 
     // Getters & Setters
     public int getId() { return id; }

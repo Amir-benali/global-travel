@@ -18,25 +18,25 @@
 
     <!-- Top Controls -->
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label fx:id="selectionLabel" text="5 sélectionné" />
+        <Label fx:id="selectionLabel" text="0 sélectionné" />
         <Region HBox.hgrow="ALWAYS" />
         <TextField fx:id="searchField" promptText="Rechercher..." />
-        <Button onAction="#handleAddUser" styleClass="add-button" text="+ AJOUTER" />
     </HBox>
 
     <!-- Table -->
     <TableView fx:id="userTable" styleClass="user-table" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn>
-                <graphic>
-                    <CheckBox fx:id="selectAllCheckbox" />
-                </graphic>
-            </TableColumn>
-            <TableColumn fx:id="nameColumn" prefWidth="202.0" text="Nom des utilisateurs" />
-            <TableColumn fx:id="emailColumn" prefWidth="238.0" text="Adresse E-mail" />
-            <TableColumn fx:id="phoneColumn" prefWidth="219.0" text="Numéro de téléphone" />
-            <TableColumn fx:id="roleColumn" prefWidth="206.0" text="Role" />
-            <TableColumn fx:id="actionColumn" prefWidth="162.0" text="Action" />
+            <TableColumn fx:id="firstNameColumn" text="Prénom" prefWidth="120.0" />
+            <TableColumn fx:id="lastNameColumn" text="Nom" prefWidth="120.0" />
+            <TableColumn fx:id="genreColumn" text="Genre" prefWidth="80.0" />
+            <TableColumn fx:id="dateNaissanceColumn" text="Date de Naissance" prefWidth="150.0" />
+            <TableColumn fx:id="adresseColumn" text="Adresse" prefWidth="200.0" />
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="200.0" />
+            <TableColumn fx:id="phoneNumberColumn" text="Téléphone" prefWidth="150.0" />
+            <TableColumn fx:id="rolesColumn" text="Rôle" prefWidth="150.0" />
+            <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100.0" />
+            <TableColumn fx:id="posteColumn" text="Poste" prefWidth="150.0" />
+            <TableColumn fx:id="actionColumn" text="Actions" prefWidth="150.0" /> <!-- New Action Column -->
         </columns>
         <VBox.margin>
             <Insets top="20" />

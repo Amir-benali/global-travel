@@ -2,6 +2,8 @@ package com.globalTravel.controllers.user;
 
 import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.models.user.User;
+import com.globalTravel.services.user.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -11,14 +13,11 @@ import javafx.scene.control.TextField;
 
 public class UserForm implements Navigatable {
     private DashBoard dashBoardController;
-
+    private UserService userService = new UserService();
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
-
-    @FXML
-    private PasswordField confirmPasswordField;
 
     @FXML
     private TextField emailField;
@@ -27,22 +26,39 @@ public class UserForm implements Navigatable {
     private Label formTitle;
 
     @FXML
-    private TextField nameField;
-
+    private TextField lastNameField;
     @FXML
-    private PasswordField passwordField;
+    private TextField firstNameField;
+
 
     @FXML
     private TextField phoneField;
 
     @FXML
-    private ComboBox<?> roleComboBox;
+    private ComboBox<String> roleComboBox;
 
+    private User currentUser;
     @FXML
     void handleBackToList(ActionEvent event) {
         if (dashBoardController != null) {
             System.out.println(dashBoardController);
             dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+        }
+    }
+
+    @FXML
+    public void initialize(User user){
+        currentUser= user;
+        populateUserForm();
+    }
+
+    private void populateUserForm() {
+        roleComboBox.getItems().addAll("Responsable","Employee","Admin");
+        if(currentUser != null){
+            emailField.setText(currentUser.getEmail());
+            phoneField.setText(currentUser.getPhoneNumber());
+            lastNameField.setText(currentUser.getLastName());
+            firstNameField.setText(currentUser.getFirstName());
         }
     }
 
@@ -53,7 +69,21 @@ public class UserForm implements Navigatable {
 
     @FXML
     void handleSave(ActionEvent event) {
+        validateUserForm();
+        currentUser.setEmail(emailField.getText());
+        currentUser.setPhoneNumber(phoneField.getText());
+        currentUser.setLastName(lastNameField.getText());
+        currentUser.setFirstName(firstNameField.getText());
+        currentUser.setRoles(roleComboBox.getValue());
+        userService.modifier(currentUser);
+
+        dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+
 
     }
+
+    private void validateUserForm() {
+    }
+
 
 }
