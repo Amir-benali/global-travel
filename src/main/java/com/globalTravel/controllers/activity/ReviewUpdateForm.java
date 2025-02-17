@@ -1,11 +1,14 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.services.activity.ReviewService;  // Utilisation de ReviewService au lieu de ActivityService
+import com.globalTravel.services.activity.ReviewService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.globalTravel.models.activity.Review;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReviewUpdateForm {
@@ -30,7 +33,7 @@ public class ReviewUpdateForm {
     private Review reviewToUpdate;
 
     @FXML
-    public void initialize(Review review) {
+    public void initialize() {
         // Charger les notes possibles (de 0 à 5)
         noteComboBox.setItems(FXCollections.observableArrayList(0, 1, 2, 3, 4, 5));
 
@@ -59,43 +62,61 @@ public class ReviewUpdateForm {
     @FXML
     private void handleSaveReview() {
         if (reviewToUpdate == null) {
-            showAlert("Erreur", "Aucune review à mettre à jour.");
+            showAlert("Erreur", "Aucune review à mettre à jour.", Alert.AlertType.ERROR);
             return;
         }
 
-        String commentaire = commentaireField.getText().trim();
-        Integer note = noteComboBox.getValue();
-        Integer selectedActivityId = activityIdComboBox.getValue();
-
-        if (commentaire.isEmpty()) {
-            showAlert("Erreur", "Le commentaire ne peut pas être vide.");
+        // Validation des champs obligatoires
+        if (!validateInputs()) {
             return;
         }
 
-        if (note == null) {
-            showAlert("Erreur", "Veuillez sélectionner une note.");
-            return;
-        }
-
-        if (selectedActivityId == null || !reviewService.activityExists(selectedActivityId)) {
-            showAlert("Erreur", "Veuillez sélectionner une activité valide.");
-            return;
-        }
-
-        // Appliquer les modifications à la revue
-        reviewToUpdate.setCommentaire(commentaire);
-        reviewToUpdate.setNote(note);
-        reviewToUpdate.setActivityId(selectedActivityId);
+        // Appliquer les modifications à la review
+        reviewToUpdate.setCommentaire(commentaireField.getText().trim());
+        reviewToUpdate.setNote(noteComboBox.getValue());
+        reviewToUpdate.setActivityId(activityIdComboBox.getValue());
 
         // Sauvegarder les modifications via le service ReviewService
         reviewService.modifier(reviewToUpdate);
-        showAlert("Succès", "La review a été mise à jour avec succès.");
+
+        // Afficher un message de succès
+        showAlert("Succès", "La review a été mise à jour avec succès.", Alert.AlertType.INFORMATION);
     }
 
-    private void showAlert(String title, String message) {
-        // Afficher une alerte d'information ou d'erreur
-        Alert alert = new Alert(Alert.AlertType.INFORMATION); // Alerte d'information
+    // Méthode pour valider les champs de saisie
+    private boolean validateInputs() {
+        // Vérifier que le commentaire n'est pas vide
+        if (commentaireField.getText().trim().isEmpty()) {
+            showAlert("Erreur", "Le commentaire ne peut pas être vide.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Vérifier qu'une note est sélectionnée
+        if (noteComboBox.getValue() == null) {
+            showAlert("Erreur", "Veuillez sélectionner une note.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Vérifier qu'un ID d'activité est sélectionné
+        if (activityIdComboBox.getValue() == null) {
+            showAlert("Erreur", "Veuillez sélectionner une activité.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Vérifier que l'ID d'activité existe dans la base de données
+        if (!reviewService.activityExists(activityIdComboBox.getValue())) {
+            showAlert("Erreur", "L'ID de l'activité sélectionné n'existe pas dans la base de données.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Méthode pour afficher une alerte
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -103,7 +124,7 @@ public class ReviewUpdateForm {
     @FXML
     private void handleCancel() {
         // Fermer la fenêtre ou annuler l'édition
-        // Stage stage = (Stage) saveButton.getScene().getWindow();
-        // stage.close();
+        Stage stage = (Stage) saveButton.getScene().getWindow();
+        stage.close();
     }
 }

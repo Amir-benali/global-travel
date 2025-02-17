@@ -32,7 +32,7 @@ public class ActivityService implements IService<Activity> {
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout de l'activité : " + e.getMessage());
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ActivityService implements IService<Activity> {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la modification de l'activité : " + e.getMessage());
         }
-        return false;
+        return true;
     }
 
     @Override

@@ -34,9 +34,11 @@
 
     <TextField fx:id="priceField" promptText="Activity Price"/>
     <ComboBox fx:id="typeComboBox" promptText="Activity Type"/>
-    <TextField fx:id="hotelTextField" promptText="Hotel ID (Integer)" />
-    <TextField fx:id="carTextField" promptText="Car ID (Integer)" />
-    <TextField fx:id="flightTextField" promptText="Flight ID (Integer)" />
+
+    <!-- ComboBox for Hotel, Car, and Flight IDs -->
+    <ComboBox fx:id="hotelIdComboBox" promptText="Hotel ID"/>
+    <ComboBox fx:id="carIdComboBox" promptText="Car ID"/>
+    <ComboBox fx:id="flightIdComboBox" promptText="Flight ID"/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>

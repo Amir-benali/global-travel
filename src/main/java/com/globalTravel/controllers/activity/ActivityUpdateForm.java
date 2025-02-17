@@ -9,9 +9,16 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import com.globalTravel.utils.DataSource;
 
 public class ActivityUpdateForm {
 
@@ -28,13 +35,14 @@ public class ActivityUpdateForm {
     @FXML private ComboBox<String> endSecondComboBox;
     @FXML private TextField priceField;
     @FXML private ComboBox<TypeActivity> typeComboBox;
-    @FXML private TextField hotelTextField;  // TextField for hotel selection
-    @FXML private TextField carTextField;  // TextField for car selection
-    @FXML private TextField flightTextField;  // TextField for flight selection
+    @FXML private ComboBox<Integer> hotelIdComboBox;  // ComboBox for hotel selection
+    @FXML private ComboBox<Integer> carIdComboBox;   // ComboBox for car selection
+    @FXML private ComboBox<Integer> flightIdComboBox; // ComboBox for flight selection
     @FXML private Button saveButton;
 
     private Activity activityToEdit;
     private Stage stage;
+    private final Connection connection = DataSource.getInstance().getConnection();
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -45,6 +53,11 @@ public class ActivityUpdateForm {
         // Dynamically populate ComboBox with TypeActivity enum values
         typeComboBox.setItems(FXCollections.observableArrayList(TypeActivity.values()));
         populateHourMinuteSecondComboBoxes();
+
+        // Load IDs from the database
+        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel", "id_hotel_h"));
+        carIdComboBox.getItems().setAll(getIdsFromDatabase("private_car", "id"));
+        flightIdComboBox.getItems().setAll(getIdsFromDatabase("flights", "id_flight"));
     }
 
     public void initialize(Activity activityToEdit) {
@@ -76,10 +89,10 @@ public class ActivityUpdateForm {
             priceField.setText(String.valueOf(activityToEdit.getPrixTotal()));
             typeComboBox.setValue(activityToEdit.getTypeActivity());
 
-            // Set hotel, car, flight TextField values
-            hotelTextField.setText(String.valueOf(activityToEdit.getJoinHotelId()));
-            carTextField.setText(String.valueOf(activityToEdit.getJoinVoitureId()));
-            flightTextField.setText(String.valueOf(activityToEdit.getJoinVolsId()));
+            // Set hotel, car, flight ComboBox values
+            hotelIdComboBox.setValue(activityToEdit.getJoinHotelId());
+            carIdComboBox.setValue(activityToEdit.getJoinVoitureId());
+            flightIdComboBox.setValue(activityToEdit.getJoinVolsId());
         });
     }
 
@@ -110,7 +123,7 @@ public class ActivityUpdateForm {
             }
 
             // Validate fields
-            if (validateFields()) {
+            if (validateInputs()) {
                 // Construct the updated activity object
                 TypeActivity selectedType = typeComboBox.getValue();
                 if (selectedType == null) {
@@ -135,6 +148,25 @@ public class ActivityUpdateForm {
                 String startTime = String.format("%s:%s:%s", startHour, startMinute, startSecond);
                 String endTime = String.format("%s:%s:%s", endHour, endMinute, endSecond);
 
+                // Get selected hotel, car, and flight IDs from ComboBoxes
+                Integer hotelId = hotelIdComboBox.getValue();
+                Integer carId = carIdComboBox.getValue();
+                Integer flightId = flightIdComboBox.getValue();
+
+                // Validate hotel, car, and flight IDs
+                if (hotelId != null && !idExistsInDatabase("hotel", "id_hotel_h", hotelId)) {
+                    showAlert("Validation Error", "The selected hotel ID does not exist in the database.", Alert.AlertType.WARNING);
+                    return;
+                }
+                if (carId != null && !idExistsInDatabase("private_car", "id", carId)) {
+                    showAlert("Validation Error", "The selected car ID does not exist in the database.", Alert.AlertType.WARNING);
+                    return;
+                }
+                if (flightId != null && !idExistsInDatabase("flights", "id_flight", flightId)) {
+                    showAlert("Validation Error", "The selected flight ID does not exist in the database.", Alert.AlertType.WARNING);
+                    return;
+                }
+
                 // Create updated Activity object
                 Activity activity = new Activity(
                         activityToEdit.getId(),
@@ -145,17 +177,21 @@ public class ActivityUpdateForm {
                         Integer.parseInt(priceField.getText()),
                         activityNameField.getText(),
                         selectedType,
-                        parseIntOrNull(hotelTextField.getText()),
-                        parseIntOrNull(carTextField.getText()),
-                        parseIntOrNull(flightTextField.getText())
+                        hotelId != null ? hotelId : 0,
+                        carId != null ? carId : 0,
+                        flightId != null ? flightId : 0
                 );
 
                 // Update activity in the database
                 ActivityService activityService = new ActivityService();
-                activityService.modifier(activity);
+                boolean isUpdated = activityService.modifier(activity);
 
-                showAlert("Success", "Activity updated successfully.", Alert.AlertType.INFORMATION);
-                closeForm();
+                if (isUpdated) {
+                    showAlert("Success", "Activity updated successfully.", Alert.AlertType.INFORMATION);
+                    closeForm();
+                } else {
+                    showAlert("Error", "Failed to update activity.", Alert.AlertType.ERROR);
+                }
             }
         } catch (Exception e) {
             showAlert("Error", "Error saving activity: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -174,18 +210,66 @@ public class ActivityUpdateForm {
     }
 
     // Method to validate fields before saving
-    private boolean validateFields() {
-        if (activityNameField.getText().isEmpty() || descriptionField.getText().isEmpty() || locationField.getText().isEmpty()) {
-            showAlert("Validation Error", "Please fill in all required fields.", Alert.AlertType.WARNING);
+    private boolean validateInputs() {
+        // Check required fields
+        if (activityNameField.getText().trim().isEmpty()) {
+            showAlert("Validation Error", "The activity name is required.", Alert.AlertType.WARNING);
             return false;
         }
-        try {
-            Integer.parseInt(priceField.getText());
-        } catch (NumberFormatException e) {
-            showAlert("Validation Error", "Please enter a valid price.", Alert.AlertType.WARNING);
+        if (descriptionField.getText().trim().isEmpty()) {
+            showAlert("Validation Error", "The description is required.", Alert.AlertType.WARNING);
             return false;
         }
+        if (locationField.getText().trim().isEmpty()) {
+            showAlert("Validation Error", "The location is required.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Check price field
+        if (!isValidPrice(priceField.getText())) {
+            showAlert("Validation Error", "The price must be a valid positive number.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Check dates
+        if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
+            showAlert("Validation Error", "Start and end dates are required.", Alert.AlertType.WARNING);
+            return false;
+        }
+        if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+            showAlert("Validation Error", "The start date cannot be after the end date.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Check time fields
+        if (startHourComboBox.getValue() == null || startMinuteComboBox.getValue() == null || startSecondComboBox.getValue() == null ||
+                endHourComboBox.getValue() == null || endMinuteComboBox.getValue() == null || endSecondComboBox.getValue() == null) {
+            showAlert("Validation Error", "Please select valid start and end times.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Check activity type
+        if (typeComboBox.getValue() == null) {
+            showAlert("Validation Error", "Please select an activity type.", Alert.AlertType.WARNING);
+            return false;
+        }
+
+        // Check hotel, car, and flight IDs
+        if (hotelIdComboBox.getValue() == null || carIdComboBox.getValue() == null || flightIdComboBox.getValue() == null) {
+            showAlert("Validation Error", "Please select valid IDs for hotel, car, and flight.", Alert.AlertType.WARNING);
+            return false;
+        }
+
         return true;
+    }
+
+    // Check if the price is valid
+    private boolean isValidPrice(String priceText) {
+        try {
+            return Integer.parseInt(priceText) >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     // Method to show alert
@@ -197,12 +281,50 @@ public class ActivityUpdateForm {
         alert.showAndWait();
     }
 
-    // Helper method to parse integer safely
-    private Integer parseIntOrNull(String text) {
-        try {
-            return text.isEmpty() ? null : Integer.parseInt(text);
-        } catch (NumberFormatException e) {
-            return null;
+    /**
+     * Retrieves IDs from the database for a given table and column.
+     *
+     * @param tableName    The name of the table.
+     * @param idColumnName The name of the ID column.
+     * @return A list of IDs.
+     */
+    private List<Integer> getIdsFromDatabase(String tableName, String idColumnName) {
+        List<Integer> ids = new ArrayList<>();
+        String query = "SELECT " + idColumnName + " FROM " + tableName;
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                ids.add(resultSet.getInt(idColumnName));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des ID de " + tableName + " : " + e.getMessage());
         }
+
+        return ids;
+    }
+
+    /**
+     * Checks if an ID exists in a specific table in the database.
+     *
+     * @param tableName    The name of the table.
+     * @param idColumnName The name of the ID column.
+     * @param id           The ID to check.
+     * @return true if the ID exists, false otherwise.
+     */
+    private boolean idExistsInDatabase(String tableName, String idColumnName, int id) {
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + idColumnName + " = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Returns true if the ID exists
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la vérification de l'ID dans la table " + tableName + " : " + e.getMessage());
+        }
+        return false;
     }
 }

@@ -52,20 +52,21 @@ public class ActivityCreateForm {
         populateHourMinuteSecondComboBoxes();
 
         // Charger les IDs depuis la base de données
-        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel"));
-        carIdComboBox.getItems().setAll(getIdsFromDatabase("voiture"));
-        flightIdComboBox.getItems().setAll(getIdsFromDatabase("vols"));
+        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel", "id_hotel_h"));
+        carIdComboBox.getItems().setAll(getIdsFromDatabase("private_car", "id"));
+        flightIdComboBox.getItems().setAll(getIdsFromDatabase("flights", "id_flight"));
     }
 
-    private List<Integer> getIdsFromDatabase(String tableName) {
+    private List<Integer> getIdsFromDatabase(String tableName, String idColumnName) {
         List<Integer> ids = new ArrayList<>();
-        String query = "SELECT id FROM " + tableName;
+        String query = "SELECT " + idColumnName + " FROM " + tableName;
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                ids.add(resultSet.getInt("id"));
+                ids.add(resultSet.getInt(idColumnName));
+                System.out.println("ID récupéré depuis " + tableName + ": " + resultSet.getInt(idColumnName));
             }
 
         } catch (SQLException e) {
@@ -143,27 +144,104 @@ public class ActivityCreateForm {
     }
 
     private boolean validateInputs() {
+        // Contrôle du nom de l'activité
         if (activityNameField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le nom de l'activité est requis.");
             return false;
         }
+
+        // Contrôle de la description
         if (descriptionField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La description est requise.");
             return false;
         }
+
+        // Contrôle du prix
         if (!isValidPrice(priceField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le prix est invalide. Veuillez entrer un nombre positif.");
             return false;
         }
+
+        // Contrôle de la localisation
+        if (localisationField.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "La localisation est requise.");
+            return false;
+        }
+
+        // Contrôle des dates de début et de fin
         if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Les dates de début et de fin sont requises.");
             return false;
         }
+
         if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La date de début ne peut pas être après la date de fin.");
             return false;
         }
+
+        // Contrôle des heures, minutes et secondes
+        if (startHourComboBox.getValue() == null || startMinuteComboBox.getValue() == null || startSecondComboBox.getValue() == null ||
+                endHourComboBox.getValue() == null || endMinuteComboBox.getValue() == null || endSecondComboBox.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner une heure, une minute et une seconde valides.");
+            return false;
+        }
+
+        // Contrôle du type d'activité
+        if (typeComboBox.getValue() == null) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un type d'activité.");
+            return false;
+        }
+
+        // Contrôle de l'ID de l'hôtel
+        if (hotelIdComboBox.getValue() == null || hotelIdComboBox.getValue() == 0) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID d'hôtel valide.");
+            return false;
+        } else if (!idExistsInDatabase("hotel", "id_hotel_h", hotelIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID de l'hôtel sélectionné n'existe pas dans la base de données.");
+            return false;
+        }
+
+        // Contrôle de l'ID de la voiture
+        if (carIdComboBox.getValue() == null || carIdComboBox.getValue() == 0) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID de voiture valide.");
+            return false;
+        } else if (!idExistsInDatabase("private_car", "id", carIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID de la voiture sélectionné n'existe pas dans la base de données.");
+            return false;
+        }
+
+        // Contrôle de l'ID du vol
+        if (flightIdComboBox.getValue() == null || flightIdComboBox.getValue() == 0) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID de vol valide.");
+            return false;
+        } else if (!idExistsInDatabase("flights", "id_flight", flightIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID du vol sélectionné n'existe pas dans la base de données.");
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * Vérifie si un ID existe dans une table spécifique de la base de données.
+     *
+     * @param tableName    Le nom de la table.
+     * @param idColumnName Le nom de la colonne ID.
+     * @param id           L'ID à vérifier.
+     * @return true si l'ID existe, false sinon.
+     */
+    private boolean idExistsInDatabase(String tableName, String idColumnName, int id) {
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + idColumnName + " = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Retourne true si l'ID existe
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la vérification de l'ID dans la table " + tableName + " : " + e.getMessage());
+        }
+        return false;
     }
 
     private boolean isValidPrice(String priceText) {
