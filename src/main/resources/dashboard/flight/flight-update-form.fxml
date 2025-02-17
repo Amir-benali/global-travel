@@ -1,72 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
+    <?import javafx.scene.layout.*?>
+    <?import javafx.scene.control.*?>
+    <?import javafx.scene.image.*?>
+    <?import javafx.geometry.Insets?>
+    <?import javafx.collections.FXCollections?>
 
-<?import java.lang.String?>
-<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.FlightUpdateForm">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <?import java.lang.String?>
+    <VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.FlightUpdateForm">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-    <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
+        <Label fx:id="formTitleLabel" text="Update Flight" styleClass="form-title"/>
 
-    <!-- Flight Number Field -->
-    <TextField fx:id="flightNumberField" promptText="Flight Number"/>
+        <!-- Flight Number Field -->
+        <TextField fx:id="flightNumberField" promptText="Flight Number" styleClass="input-field"/>
 
-    <!-- Airline ID Field -->
-    <TextField fx:id="airlineIdField" promptText="Airline ID"/>
+        <!-- Airline ID Field -->
+        <!-- Departure Airport Field -->
+        <TextField fx:id="departureAirportField" promptText="Departure Airport" styleClass="input-field"/>
 
-    <!-- Departure Airport Field -->
-    <TextField fx:id="departureAirportField" promptText="Departure Airport"/>
+        <!-- Arrival Airport Field -->
+        <TextField fx:id="arrivalAirportField" promptText="Arrival Airport" styleClass="input-field"/>
 
-    <!-- Arrival Airport Field -->
-    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport"/>
+        <VBox spacing="10">
+            <!-- Departure Date and Time -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Departure Date:"/>
+                <DatePicker fx:id="departureDatePicker" promptText="Select Date" styleClass="input-field"/>
+                <Label text="Time:"/>
+                <Spinner fx:id="departureHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
+                <Label text="Hours"/>
+                <Spinner fx:id="departureMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
+                <Label text="Minutes"/>
+            </HBox>
 
-    <!-- Departure Date Field -->
-    <DatePicker fx:id="departureDatePicker" promptText="Departure Date"/>
+            <!-- Arrival Date and Time -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Arrival Date:"/>
+                <DatePicker fx:id="arrivalDatePicker" promptText="Select Date" styleClass="input-field"/>
+                <Label text="Time:"/>
+                <Spinner fx:id="arrivalHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
+                <Label text="Hours"/>
+                <Spinner fx:id="arrivalMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
+                <Label text="Minutes"/>
+            </HBox>
+        </VBox>
 
-    <!-- Departure Time Field -->
-    <TextField fx:id="departureTimeField" promptText="Departure Time (HH:MM)"/>
+        <!-- Duration Field -->
+        <TextField fx:id="durationField" promptText="Flight Duration (Minutes)" styleClass="input-field"/>
 
-    <!-- Arrival Time Field -->
-    <TextField fx:id="arrivalTimeField" promptText="Arrival Time (HH:MM)"/>
+        <!-- Available Seats Field -->
+        <TextField fx:id="availableSeatsField" promptText="Available Seats" styleClass="input-field"/>
 
-    <!-- Duration Field -->
-    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)"/>
+        <!-- Base Price Field -->
+        <TextField fx:id="priceField" promptText="Base Price" styleClass="input-field"/>
 
-    <!-- Available Seats Field -->
-    <TextField fx:id="availableSeatsField" promptText="Available Seats"/>
+        <!-- Flight Status ComboBox -->
+        <ComboBox fx:id="statusComboBox" promptText="Select Flight Status" styleClass="input-field">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Scheduled"/>
+                    <String fx:value="Delayed"/>
+                    <String fx:value="Cancelled"/>
+                    <String fx:value="Completed"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
 
-    <!-- Base Price Field -->
-    <TextField fx:id="priceField" promptText="Base Price"/>
+        <!-- Image Selection Section -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+            <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+        </HBox>
 
-    <!-- Flight Status ComboBox -->
-    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Scheduled"/>
-                <String fx:value="DELAYED"/>
-                <String fx:value="Cancelled"/>
-                <String fx:value="COMPLETED"/>
-            </FXCollections>
-        </items>
-    </ComboBox>
+        <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
 
-    <!-- Image Selection Section -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
-        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
-    </HBox>
-
-    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
-
-    <!-- Action Buttons -->
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
-    </HBox>
-</VBox>
+        <!-- Action Buttons -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+            <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
+        </HBox>
+    </VBox>
