@@ -18,6 +18,7 @@
         <TextField fx:id="flightNumberField" promptText="Flight Number" styleClass="input-field"/>
 
         <!-- Airline ID Field -->
+        <ComboBox fx:id="airlineIdField" promptText="Select Airline" styleClass="input-field"/>
         <!-- Departure Airport Field -->
         <TextField fx:id="departureAirportField" promptText="Departure Airport" styleClass="input-field"/>
 

@@ -15,7 +15,6 @@ import com.globalTravel.models.hotel.Reservation_hotel;
 import com.globalTravel.models.user.Admin;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.services.activity.ReviewService;
-import com.globalTravel.services.activity.TypeActivityService;
 import com.globalTravel.services.car.CarDriverService;
 import com.globalTravel.services.car.OfferService;
 import com.globalTravel.services.car.PrivateCarService;

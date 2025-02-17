@@ -14,7 +14,7 @@ public class OfferService implements IService<Offer> {
     private PrivateCarService privateCarService = new PrivateCarService();
     private RouteService routeService = new RouteService();
     @Override
-    public boolean ajouter(Offer offer) {
+    public void ajouter(Offer offer) {
         String req = "INSERT INTO car_offer (description, date,price,route_id,car_id) VALUES (?,?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -30,11 +30,10 @@ public class OfferService implements IService<Offer> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(Offer offer) {
+    public void modifier(Offer offer) {
 
         String req = "UPDATE car_offer SET description=? ,date=?,price=?,route_id=?,car_id=? WHERE id=?";
         try {
@@ -52,7 +51,6 @@ public class OfferService implements IService<Offer> {
             System.out.println(e.getMessage());
         }
 
-        return false;
     }
 
     @Override
