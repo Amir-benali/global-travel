@@ -3,35 +3,13 @@ package com.globalTravel.tests;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.models.activity.TypeActivity;
-import com.globalTravel.models.car.CarDriver;
-import com.globalTravel.models.car.Offer;
-import com.globalTravel.models.car.PrivateCar;
-import com.globalTravel.models.car.Route;
-import com.globalTravel.models.flight.*;
-import com.globalTravel.models.hotel.chambre;
-import com.globalTravel.models.hotel.hotel;
-import com.globalTravel.models.hotel.reservation_hotel;
-import com.globalTravel.models.user.Admin;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.services.activity.ReviewService;
-import com.globalTravel.services.activity.TypeActivityService;
-import com.globalTravel.services.car.CarDriverService;
-import com.globalTravel.services.car.OfferService;
-import com.globalTravel.services.car.PrivateCarService;
-import com.globalTravel.services.car.RouteService;
-import com.globalTravel.services.flight.AirlineService;
-import com.globalTravel.services.flight.FlightService;
-import com.globalTravel.services.flight.TicketService;
-import com.globalTravel.services.hotel.chambreService;
-import com.globalTravel.services.hotel.hotelService;
-import com.globalTravel.services.hotel.reservation_hotelService;
-import com.globalTravel.services.user.AdminService;
 import com.globalTravel.utils.DataSource;
 
 
-import java.util.List;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,7 +20,7 @@ public class Main {
 
 // user module
 
-        //         Créer un objet Admin
+      /*  //         Créer un objet Admin
         Admin admin = new Admin(
                 0, // L'id sera auto-généré par la base de données
                 "Homme",
@@ -69,27 +47,27 @@ public class Main {
        System.out.println("Liste des Admins :");
         for (Admin a : admins) {
             System.out.println(a.getFirstName() + " " + a.getLastName());
-        }
+        }*/
 
 //Modifier un Admin
-        if (!admins.isEmpty()) {
+     /*   if (!admins.isEmpty()) {
             Admin adminToModify = admins.get(0); // Modifier le premier Admin trouvé
             adminToModify.setFirstName("Jonathan2");
             adminService.modifier(adminToModify);
             System.out.println("Admin modifié !");
-        }
+        } */
 
 //Supprimer un Admin
-        if (!admins.isEmpty()) {
+    /*    if (!admins.isEmpty()) {
             Admin adminToDelete = admins.get(0); // Supprimer le premier Admin trouvé
             adminService.supprimer(adminToDelete);
             System.out.println("Admin supprimé !");
-        }
+        }  */
 
 
 // flight module
 
-        AirlineService as=new AirlineService();
+     /*   AirlineService as=new AirlineService();
         //as.ajouter(new Airline("Tunisia", "TUN", "Tunisair"));
         as.ajouter(new Airline("France", "FR", "Airfrance"));
 
@@ -112,7 +90,9 @@ public class Main {
         //fs.supprimer(new Flight(3, "",1, "", "", "", "", 0, 0, 0.0, FlightStatus.Scheduled));
         //as.supprimer(new Airline(1, "", "", ""));
         //ts.supprimer(new Ticket(1, 3, "Abc251", TicketClass.Business, 100.0,TicketStatus.Not_Booked, "2021-12-12 12:00:00"));
+   /*
 
+      */
      //SUPPRESSION
       /*
         fs.supprimer(new Flight(7, "",1, "", "", "", "", 0, 0, 0.0, FlightStatus.Scheduled));
@@ -122,7 +102,7 @@ public class Main {
 
         //car module
 
-        OfferService offerService = new OfferService();
+       /*  OfferService offerService = new OfferService();
         PrivateCarService carService = new PrivateCarService();
         RouteService routeService = new RouteService();
         CarDriverService driverService = new CarDriverService();
@@ -157,11 +137,14 @@ public class Main {
 
         System.out.println(offerService.rechercher());
 
+       */
+
+
 
 // hotel module
 
 //Création d'une instance de hotelService
-        hotelService service = new hotelService();
+       /* hotelService service = new hotelService();
 
 //Création d'un nouvel hôtel
         hotel h1 = new hotel("Hôtel Paris", "123 Rue de la Paix", "Paris", "France", 5, "Wi-Fi, Petit-déjeuner, Salle de réunion", "0123456789, contact@hotelparis.com", "Excellent séjour, personnel très accueillant.");
@@ -195,9 +178,9 @@ public class Main {
                 2, // Nombre de chambres réservées
                 "confirmée", // Statut de la réservation
                 "Carte de crédit" // Méthode de paiement
-        );
+        );   */
 
-        // Ajout de la réservation
+      /*  // Ajout de la réservation
         serviceReservation.ajouter(reservation1);
         serviceReservation.rechercher().forEach(System.out::println);
 
@@ -237,63 +220,133 @@ public class Main {
 
         // Recherche de toutes les chambres après suppression
         System.out.println("Liste des chambres après suppression :");
-        servicech.rechercher().forEach(System.out::println);
-
-
-     // activity module
-
-        //type activity
-        TypeActivityService typeActivityService = new TypeActivityService();
-        //ajoute
-        TypeActivity newTypeActivity = new TypeActivity("Aventure", "hotel");
-        typeActivityService.ajouter(newTypeActivity);
-        // Modification
-         TypeActivity updatedTypeActivity = new TypeActivity(1, "Aventure Extrême", "voiture");
-         typeActivityService.modifier(updatedTypeActivity);
-        //Suppression
-          TypeActivity typeActivityToDelete = new TypeActivity(1, "", "");
-          typeActivityService.supprimer(typeActivityToDelete);
+        servicech.rechercher().forEach(System.out::println);   */
 
 
 
-        ///review
-         ReviewService reviewService = new ReviewService();
-        //ajoute
-         Review newReview = new Review(2,"Super expérience !", 3, LocalDateTime.now(), "Refusée");
+   ////////////////////////////////////////////review////////////////////////////////////////////////////////////////////
+
+        ////////////////////ajoute////////////////////////////
+
+      ReviewService reviewService = new ReviewService();
+      Review newReview = new Review("Super expérience !", 3, 79);
         reviewService.ajouter(newReview);
-        //modif
-        Review updatedReview = new Review(5, "Expérience incroyable ", 4, LocalDateTime.now(), "Acceptée");
-        reviewService.modifier(updatedReview);
-        // Suppression
-         Review reviewToDelete = new Review(5,"", 1,null, "");
-           reviewService.supprimer(reviewToDelete);
+
+
+        ///////////////////////modif/////////////////////////
+
+
+       int reviewIdToUpdate =17 ;
+        int activityId = 79;
+        if (reviewService.reviewExists(reviewIdToUpdate)) {
+            if (reviewService.activityExists(activityId)) {
+
+                Review updatedReview = new Review(reviewIdToUpdate, "Expérience incroyable", 0, LocalDateTime.now(), activityId);
+                reviewService.modifier(updatedReview);
+            } else {
+                System.out.println("Erreur  L'activité avec  ID " + activityId + " n'existe pas.");
+            }
+        } else {
+            System.out.println("Erreur  Aucun avis trouvé avec ID " + reviewIdToUpdate);
+        }
+
+        /////////////////////////////// Suppression///////////////////////////////////
+
+
+       int reviewIdToDelete = 17;
+        if (reviewService.reviewExists(reviewIdToDelete)) {
+            Review reviewToDelete = new Review(reviewIdToDelete, ".", 0, null, 79);
+            reviewService.supprimer(reviewToDelete);
+        } else {
+            System.out.println("Erreur : Aucun avis trouvé avec l ID " + reviewIdToDelete);
+        }
+
+
+        ///////////////////////////////////////affichage/////////////////////////////////////////
+
+       reviewService.rechercher().forEach(System.out::println);
 
 
 
-        // activity
-         ActivityService activityService = new ActivityService();
-        //ajoute
-         Calendar cal = Calendar.getInstance();
-         Date dateDebut = cal.getTime();
-        cal.set(2026, Calendar.FEBRUARY, 2, 22, 2, 2);
-        Date dateFin = cal.getTime();
-        Activity newActivity = new Activity(dateDebut, dateFin, "Excursion en montagne", "Tunis, Tunisie",
-             true, 250, true, false, true);
-         activityService.ajouter(newActivity);
-          //Modification
-          Calendar calDebut = Calendar.getInstance();
-          calDebut.set(2021, Calendar.FEBRUARY, 1, 11, 1, 1);
-        dateDebut = calDebut.getTime();
-         Calendar calFin = Calendar.getInstance();
-         calFin.set(2022, Calendar.FEBRUARY, 2, 22, 20, 20);
-        dateFin = calFin.getTime();
-         Activity updatedActivity = new Activity(9, dateDebut, dateFin, "Plongée ", "Hammamet, ",
-               false, 600, false, true, true);
-         activityService.modifier(updatedActivity);
-        // Suppression
-          Activity activityToDelete = new Activity(9, null, null, null, null, false, 0, false, false, false);
-          activityService.supprimer(activityToDelete);
-         System.out.println(activityService.rechercher());
+
+        /////////////////////////////////////////////////////////////Activity///////////////////////////////////////////////
+
+        ////////////////////////Ajoute///////////////////////////
+
+
+        ActivityService activityService = new ActivityService();
+        Calendar calendar = Calendar.getInstance();
+
+        // 🔹 Ajout d'une nouvelle activité
+        calendar.set(2025, Calendar.JANUARY, 1, 10, 1, 1);
+        Timestamp dateDebut1 = new Timestamp(calendar.getTimeInMillis());
+
+        calendar.set(2025, Calendar.FEBRUARY, 3, 22, 2, 2);
+        Timestamp dateFin1 = new Timestamp(calendar.getTimeInMillis());
+
+        Activity newActivity = new Activity(
+                dateDebut1,
+                dateFin1,
+                "Excursion en montagne",
+                "Tunis, Tunisie",
+                250,  // Prix total en TND
+                "Randonnée Tunisienne",
+                TypeActivity.WORKSHOPS,
+                28,  // ID de l'hôtel (joinHotelId)
+                1,   // ID de la voiture (joinVoitureId)
+                3    // ID du vol (joinVolsId)
+        );
+
+        activityService.ajouter(newActivity);
+        System.out.println("✅ Activité ajoutée avec succès !");
+
+        // 🔹 Modification d'une activité existante
+        calendar.set(2024, Calendar.FEBRUARY, 1, 10, 1, 10);
+        Timestamp dateDebut2 = new Timestamp(calendar.getTimeInMillis());
+
+        calendar.set(2024, Calendar.FEBRUARY, 1, 18, 22, 10);
+        Timestamp dateFin2 = new Timestamp(calendar.getTimeInMillis());
+
+        Activity updatedActivity = new Activity(
+                79, // ID existant
+                dateDebut2,
+                dateFin2,
+                "Plongée sous-marine",
+                "Hammamet, Tunisie",
+                500,  // Prix total en TND
+                "Plongée Hammamet",
+                TypeActivity.TEAM_BUILDING_ACTIVITIES,
+                28,  // ID de l'hôtel (joinHotelId)
+                1,   // ID de la voiture (joinVoitureId)
+                2    // ID du vol (joinVolsId)
+        );
+
+        activityService.modifier(updatedActivity);
+        System.out.println("✅ Activité mise à jour avec succès !");
+
+        ////////////////////////////supprimee//////////////////////
+
+
+        Activity activityToDelete = new Activity(33,null, null, null, null, 0, null, null, 28,1,2);
+        activityService.supprimer(activityToDelete);
+
+
+        /////////////////////recherche//////////////////////////
+
+        activityService.rechercher().forEach(activity -> System.out.println(activity));
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

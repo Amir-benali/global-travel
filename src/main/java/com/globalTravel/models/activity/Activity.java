@@ -1,44 +1,49 @@
 package com.globalTravel.models.activity;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Activity {
     private int id;
-    private Date dateDebut;
-    private Date dateFin;
+    private Timestamp dateDebut;
+    private Timestamp dateFin;
     private String description;
     private String localisation;
-    private boolean notification;
     private int prixTotal;
-    private boolean hotelInclus;
-    private boolean volInclus;
-    private boolean voitureIncluse;
+    private String nomActivity;
+    private TypeActivity typeActivity;
+    private int joinHotelId;
+    private int joinVoitureId;
+    private int joinVolsId;
 
-    public Activity(int id, Date dateDebut, Date dateFin, String description, String localisation,
-                    boolean notification, int prixTotal, boolean hotelInclus, boolean volInclus, boolean voitureIncluse) {
+    public Activity(int id, Timestamp dateDebut, Timestamp dateFin, String description, String localisation,
+                    int prixTotal, String nomActivity, TypeActivity typeActivity,
+                    int joinHotelId, int joinVoitureId, int joinVolsId) {
         this.id = id;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.description = description;
         this.localisation = localisation;
-        this.notification = notification;
         this.prixTotal = prixTotal;
-        this.hotelInclus = hotelInclus;
-        this.volInclus = volInclus;
-        this.voitureIncluse = voitureIncluse;
+        this.nomActivity = nomActivity;
+        this.typeActivity = typeActivity;
+        this.joinHotelId = joinHotelId;
+        this.joinVoitureId = joinVoitureId;
+        this.joinVolsId = joinVolsId;
     }
 
-    public Activity(Date dateDebut, Date dateFin, String description, String localisation,
-                    boolean notification, int prixTotal, boolean hotelInclus, boolean volInclus, boolean voitureIncluse) {
+    public Activity(Timestamp dateDebut, Timestamp dateFin, String description, String localisation,
+                    int prixTotal, String nomActivity, TypeActivity typeActivity,
+                    int joinHotelId, int joinVoitureId, int joinVolsId) {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.description = description;
         this.localisation = localisation;
-        this.notification = notification;
         this.prixTotal = prixTotal;
-        this.hotelInclus = hotelInclus;
-        this.volInclus = volInclus;
-        this.voitureIncluse = voitureIncluse;
+        this.nomActivity = nomActivity;
+        this.typeActivity = typeActivity;
+        this.joinHotelId = joinHotelId;
+        this.joinVoitureId = joinVoitureId;
+        this.joinVolsId = joinVolsId;
     }
 
     public int getId() {
@@ -49,19 +54,19 @@ public class Activity {
         this.id = id;
     }
 
-    public Date getDateDebut() {
+    public Timestamp getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(Timestamp dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public Timestamp getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(Timestamp dateFin) {
         this.dateFin = dateFin;
     }
 
@@ -81,14 +86,6 @@ public class Activity {
         this.localisation = localisation;
     }
 
-    public boolean isNotification() {
-        return notification;
-    }
-
-    public void setNotification(boolean notification) {
-        this.notification = notification;
-    }
-
     public int getPrixTotal() {
         return prixTotal;
     }
@@ -97,28 +94,44 @@ public class Activity {
         this.prixTotal = prixTotal;
     }
 
-    public boolean isHotelInclus() {
-        return hotelInclus;
+    public String getNomActivity() {
+        return nomActivity;
     }
 
-    public void setHotelInclus(boolean hotelInclus) {
-        this.hotelInclus = hotelInclus;
+    public void setNomActivity(String nomActivity) {
+        this.nomActivity = nomActivity;
     }
 
-    public boolean isVolInclus() {
-        return volInclus;
+    public TypeActivity getTypeActivity() {
+        return typeActivity;
     }
 
-    public void setVolInclus(boolean volInclus) {
-        this.volInclus = volInclus;
+    public void setTypeActivity(TypeActivity typeActivity) {
+        this.typeActivity = typeActivity;
     }
 
-    public boolean isVoitureIncluse() {
-        return voitureIncluse;
+    public int getJoinHotelId() {
+        return joinHotelId;
     }
 
-    public void setVoitureIncluse(boolean voitureIncluse) {
-        this.voitureIncluse = voitureIncluse;
+    public void setJoinHotelId(int joinHotelId) {
+        this.joinHotelId = joinHotelId;
+    }
+
+    public int getJoinVoitureId() {
+        return joinVoitureId;
+    }
+
+    public void setJoinVoitureId(int joinVoitureId) {
+        this.joinVoitureId = joinVoitureId;
+    }
+
+    public int getJoinVolsId() {
+        return joinVolsId;
+    }
+
+    public void setJoinVolsId(int joinVolsId) {
+        this.joinVolsId = joinVolsId;
     }
 
     @Override
@@ -129,11 +142,12 @@ public class Activity {
                 ", dateFin=" + dateFin +
                 ", description='" + description + '\'' +
                 ", localisation='" + localisation + '\'' +
-                ", notification=" + notification +
                 ", prixTotal=" + prixTotal +
-                ", hotelInclus=" + hotelInclus +
-                ", volInclus=" + volInclus +
-                ", voitureIncluse=" + voitureIncluse +
+                ", nomActivity='" + nomActivity + '\'' +
+                ", typeActivity=" + typeActivity +
+                ", joinHotelId=" + joinHotelId +
+                ", joinVoitureId=" + joinVoitureId +
+                ", joinVolsId=" + joinVolsId +
                 '}';
     }
 }
