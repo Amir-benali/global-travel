@@ -2,6 +2,7 @@ package com.globalTravel.controllers.flight;
 
                                    import com.globalTravel.models.flight.Flight;
                                    import com.globalTravel.models.flight.FlightStatus;
+                                   import com.globalTravel.services.flight.AirlineService;
                                    import com.globalTravel.services.flight.FlightService;
                                    import javafx.application.Platform;
                                    import javafx.fxml.FXML;
@@ -17,8 +18,9 @@ package com.globalTravel.controllers.flight;
                                    import java.time.LocalDateTime;
                                    import java.time.LocalTime;
                                    import java.util.Arrays;
+                                   import java.util.List;
 
-                                   public class FlightUpdateForm {
+public class FlightUpdateForm {
 
                                        @FXML private TextField flightNumberField; // Add this line
                                        @FXML private ComboBox<Integer> airlineIdField;
@@ -38,6 +40,7 @@ package com.globalTravel.controllers.flight;
                                        @FXML private ImageView airlineLogoPreview;
                                        @FXML private Button saveButton;
 
+                                        private AirlineService airlineService = new AirlineService();
                                        private File selectedLogoFile;
                                        private FlightService flightService = new FlightService();
                                        private Flight flightToEdit;
@@ -48,7 +51,11 @@ package com.globalTravel.controllers.flight;
                                        }
 
                                        @FXML
-                                       public void initialize() {
+                                       public void initialize(Flight flight) {
+                                           flightToEdit = flight;
+
+                                           List<Integer> airlineIds = airlineService.getAllAirlineIds();
+                                           airlineIdField.getItems().setAll(airlineIds);
                                            statusComboBox.getItems().setAll(Arrays.stream(FlightStatus.values())
                                                    .map(Enum::name)
                                                    .toList());
