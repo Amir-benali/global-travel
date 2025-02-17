@@ -4,13 +4,16 @@ import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.IActivityService;
 import com.globalTravel.services.IService;
+import com.globalTravel.services.IServiceActivity;
 import com.globalTravel.utils.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ActivityService implements IActivityService<Activity> {
+
 
     private Connection connection = DataSource.getInstance().getConnection();
 
