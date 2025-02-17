@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -56,6 +58,8 @@ public class CarGrid implements Navigatable {
         VBox carInfo = new VBox(5);
         carInfo.getStyleClass().add("car-info");
 
+        ImageView carLogoView = new ImageView(new Image("/images/carlogo.png", 200, 150, true, true));
+
         // Car details
         Label brandLabel = new Label("Brand: " + car.getBrand());
         brandLabel.getStyleClass().add("car-brand");
@@ -86,7 +90,7 @@ public class CarGrid implements Navigatable {
 
         HBox buttonHbox = new HBox(3);
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
-        carInfo.getChildren().addAll(brandLabel, modelLabel, seatsLabel, driverLabel, buttonHbox);
+        carInfo.getChildren().addAll(carLogoView,brandLabel, modelLabel, seatsLabel, driverLabel, buttonHbox);
 
         card.getChildren().addAll(carInfo);
 

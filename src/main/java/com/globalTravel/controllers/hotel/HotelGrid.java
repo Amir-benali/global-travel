@@ -10,6 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -60,10 +62,12 @@ public class HotelGrid implements Navigatable {
 
     private VBox createHotelCard(Hotel hotel) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("hotel-offer-card");
+        card.getStyleClass().add("car-offer-card");
 
         VBox hotelInfo = new VBox(5);
         hotelInfo.getStyleClass().add("hotel-info");
+        // Hotel image
+        ImageView hotelLogoView = new ImageView(new Image("/images/hotelLogo.jpg", 200, 150, true, true));
 
         // Hotel details
         Label nameLabel = new Label("Hotel: " + hotel.getNom_h());
@@ -95,7 +99,7 @@ public class HotelGrid implements Navigatable {
 
         HBox buttonHbox = new HBox(3);
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
-        hotelInfo.getChildren().addAll(nameLabel, addressLabel, cityLabel, categoryLabel, buttonHbox);
+        hotelInfo.getChildren().addAll(hotelLogoView,nameLabel, addressLabel, cityLabel, categoryLabel, buttonHbox);
 
         card.getChildren().add(hotelInfo);
 

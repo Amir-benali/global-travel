@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
@@ -20,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.globalTravel.utils.DataSource;
 
-public class ActivityUpdateForm {
+public class ActivityUpdateForm implements Navigatable {
+    private DashBoard dashBoardController;
 
     @FXML private TextField activityNameField;
     @FXML private TextField descriptionField;
@@ -39,6 +42,11 @@ public class ActivityUpdateForm {
     @FXML private ComboBox<Integer> carIdComboBox;   // ComboBox for car selection
     @FXML private ComboBox<Integer> flightIdComboBox; // ComboBox for flight selection
     @FXML private Button saveButton;
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
 
     private Activity activityToEdit;
     private Stage stage;
@@ -189,6 +197,8 @@ public class ActivityUpdateForm {
                 if (isUpdated) {
                     showAlert("Success", "Activity updated successfully.", Alert.AlertType.INFORMATION);
                     closeForm();
+                    dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
+
                 } else {
                     showAlert("Error", "Failed to update activity.", Alert.AlertType.ERROR);
                 }

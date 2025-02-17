@@ -42,46 +42,44 @@ public class TicketGrid implements Navigatable {
             ticketsGrid.getChildren().add(ticketCard);
         }
     }
-
     private VBox createTicketCard(Ticket ticket) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("ticket-offer-card");
+        card.getStyleClass().add("flight-offer-card"); // Use the same style class as flight card
 
-        ImageView ticketLogoView = new ImageView(new Image("/images/ticket_logo.jpg"));
+        ImageView ticketLogoView = new ImageView(new Image("/images/ticket.png"));
         ticketLogoView.setFitWidth(200);
         ticketLogoView.setFitHeight(150);
         ticketLogoView.setPreserveRatio(true);
 
         VBox ticketInfo = new VBox(5);
-        ticketInfo.getStyleClass().add("ticket-info");
+        ticketInfo.getStyleClass().add("flight-info"); // Use the same style class as flight card
 
         Label seatLabel = new Label("Seat: " + ticket.getSeat_number());
-        seatLabel.getStyleClass().add("ticket-title");
+        seatLabel.getStyleClass().add("flight-title"); // Use the same style class as flight card
 
         Label priceLabel = new Label("Price: $" + String.format("%.2f", ticket.getTicket_price()));
-        priceLabel.getStyleClass().add("ticket-price");
+        priceLabel.getStyleClass().add("flight-price"); // Use the same style class as flight card
 
         Button viewDetailsButton = new Button("View Details");
         viewDetailsButton.getStyleClass().add("view-details-button");
         viewDetailsButton.setOnAction(e -> handleViewDetails(ticket));
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("delete-button");
+        deleteButton.getStyleClass().add("view-details-button"); // Use the same style class as flight card
         deleteButton.setOnAction(e -> handleDeleteTicket(ticket));
 
         Button updateButton = new Button("Update");
-        updateButton.getStyleClass().add("update-button");
+        updateButton.getStyleClass().add("view-details-button"); // Use the same style class as flight card
         updateButton.setOnAction(e -> handleUpdateTicket(ticket));
 
         HBox buttonHbox = new HBox(3);
-        buttonHbox.getChildren().addAll(viewDetailsButton, updateButton, deleteButton);
+        buttonHbox.getChildren().addAll(viewDetailsButton);
         ticketInfo.getChildren().addAll(seatLabel, priceLabel, buttonHbox);
 
         card.getChildren().addAll(ticketLogoView, ticketInfo);
 
         return card;
     }
-
     private void handleViewDetails(Ticket ticket) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Ticket Details");
