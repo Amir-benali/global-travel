@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<?import java.lang.String?>
+<VBox spacing="10" styleClass="offer-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.car.OfferCreateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Add New Offer" styleClass="form-title"/>
+
+    <!-- Description Field -->
+    <VBox>
+        <TextField fx:id="descriptionField" promptText="Description"/>
+        <VBox fx:id="descriptionErrorContainer"/>
+    </VBox>
+
+    <!-- Date Field -->
+    <VBox>
+        <DatePicker fx:id="dateField" promptText="Date"/>
+        <VBox fx:id="dateErrorContainer"/>
+    </VBox>
+
+    <!-- Price Field -->
+    <VBox>
+        <TextField fx:id="priceField" promptText="Price"/>
+        <VBox fx:id="priceErrorContainer"/>
+    </VBox>
+
+    <!-- Route ComboBox -->
+    <VBox>
+        <ComboBox fx:id="routeComboBox" promptText="Select Route">
+            <items>
+                <FXCollections fx:factory="observableArrayList"/>
+            </items>
+        </ComboBox>
+        <VBox fx:id="routeErrorContainer"/>
+    </VBox>
+
+    <!-- Car ComboBox -->
+    <VBox>
+        <ComboBox fx:id="carComboBox" promptText="Select Car">
+            <items>
+                <FXCollections fx:factory="observableArrayList"/>
+            </items>
+        </ComboBox>
+        <VBox fx:id="carErrorContainer"/>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Offer" onAction="#handleSaveOffer" styleClass="save-button"/>
+    </HBox>
+</VBox>
