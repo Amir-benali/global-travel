@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<VBox spacing="10" styleClass="chambre-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.ChambreCreateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Add New Chambre" styleClass="form-title"/>
+
+    <!-- Room Type Field -->
+    <TextField fx:id="typeField" promptText="Room Type"/>
+
+    <!-- Price per Night Field -->
+    <TextField fx:id="priceField" promptText="Price per Night"/>
+
+    <!-- Availability Date Field -->
+    <DatePicker fx:id="availabilityField" promptText="Availability Date"/>
+
+    <!-- Options Field -->
+    <TextField fx:id="optionsField" promptText="Options"/>
+
+    <!-- Hotel Field -->
+    <ComboBox fx:id="hotelComboBox" promptText="Select Hotel"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Chambre" onAction="#handleSaveChambre" styleClass="save-button"/>
+    </HBox>
+</VBox>

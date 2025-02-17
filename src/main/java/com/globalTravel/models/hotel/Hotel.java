@@ -3,7 +3,7 @@ package com.globalTravel.models.hotel;
 
 
 
-public class hotel {
+public class Hotel {
 
     private int id_hotel_h;
     private String nom_h;
@@ -15,19 +15,21 @@ public class hotel {
     private String coordonnees_h;
     private String avis_h;
 
-    public hotel(int id_hotel_h, String nom_h, String adresse_h, String ville_h, String pays_h, int categorie_h, String services_h, String coordonnees_h, String avis_h) {
+    // Constructeur avec l'ID
+    public Hotel(int id_hotel_h, String nom_h, String adresse_h, String ville_h, String paysH, int categorieH, String servicesH, String coordonneesH, String avisH) {
         this.id_hotel_h = id_hotel_h;
         this.nom_h = nom_h;
         this.adresse_h = adresse_h;
         this.ville_h = ville_h;
-        this.pays_h = pays_h;
-        this.categorie_h = categorie_h;
-        this.services_h = services_h;
-        this.coordonnees_h = coordonnees_h;
-        this.avis_h = avis_h;
+        this.pays_h = paysH;
+        this.categorie_h = categorieH;
+        this.services_h = servicesH;
+        this.coordonnees_h = coordonneesH;
+        this.avis_h = avisH;
     }
 
-    public hotel(String nom_h, String adresse_h, String ville_h, String pays_h, int categorie_h, String services_h, String coordonnees_h, String avis_h) {
+    // Constructeur sans l'ID (pour insertion)
+    public Hotel(String nom_h, String adresse_h, String ville_h, String pays_h, int categorie_h, String services_h, String coordonnees_h, String avis_h) {
         this.nom_h = nom_h;
         this.adresse_h = adresse_h;
         this.ville_h = ville_h;
