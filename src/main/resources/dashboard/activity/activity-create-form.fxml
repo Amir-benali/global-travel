@@ -48,9 +48,9 @@
 
     <!-- Sélection des IDs via ComboBox -->
     <VBox spacing="5">
-        <ComboBox fx:id="hotelIdComboBox" promptText="ID Hôtel"/>
-        <ComboBox fx:id="carIdComboBox" promptText="ID Voiture"/>
-        <ComboBox fx:id="flightIdComboBox" promptText="ID Vol"/>
+        <ComboBox fx:id="hotelIdComboBox" promptText="Nom de l'Hôtel"/>
+        <ComboBox fx:id="carIdComboBox" promptText="Marque de Voiture"/>
+        <ComboBox fx:id="flightIdComboBox" promptText="Numéro de Vol"/>
     </VBox>
 
     <!-- Type d'Activité -->

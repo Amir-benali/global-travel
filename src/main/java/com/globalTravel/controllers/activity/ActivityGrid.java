@@ -4,6 +4,7 @@ import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.services.activity.ActivityService;
+import com.globalTravel.utils.DataSource;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,13 +15,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ActivityGrid implements Navigatable {
     private DashBoard dashBoardController;
-    private final ActivityService activityService = new ActivityService(); // Ajout du service
+    private final ActivityService activityService = new ActivityService();
+    private final Connection connection = DataSource.getInstance().getConnection(); // Connexion à la base de données
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -36,7 +43,7 @@ public class ActivityGrid implements Navigatable {
     }
 
     private void loadActivities() {
-        List<Activity> activities = activityService.rechercher(); // Correction de la méthode
+        List<Activity> activities = activityService.rechercher();
         activitiesGrid.getChildren().clear();
 
         for (Activity activity : activities) {
@@ -64,10 +71,17 @@ public class ActivityGrid implements Navigatable {
         Label priceLabel = createStyledLabel("Price: $" + activity.getPrixTotal(), "activity-price");
         Label typeLabel = createStyledLabel("Type: " + activity.getTypeActivity(), "activity-type");
 
-        // IDs
-        Label hotelIdLabel = createStyledLabel("Hotel ID: " + activity.getJoinHotelId(), "activity-hotel-id");
-        Label carIdLabel = createStyledLabel("Car ID: " + activity.getJoinVoitureId(), "activity-car-id");
-        Label flightIdLabel = createStyledLabel("Flight ID: " + activity.getJoinVolsId(), "activity-flight-id");
+        // Récupérer le nom de l'hôtel par son ID
+        String hotelName = getHotelNameById(activity.getJoinHotelId());
+        Label hotelNameLabel = createStyledLabel("Hotel: " + hotelName, "activity-hotel-name");
+
+        // Récupérer la marque de la voiture par son ID
+        String carBrand = getCarBrandById(activity.getJoinVoitureId());
+        Label carBrandLabel = createStyledLabel("Car Brand: " + carBrand, "activity-car-brand");
+
+        // Récupérer le numéro de vol par son ID
+        String flightNumber = getFlightNumberById(activity.getJoinVolsId());
+        Label flightNumberLabel = createStyledLabel("Flight Number: " + flightNumber, "activity-flight-number");
 
         // Action buttons
         Button updateButton = createStyledButton("Update Activity", e -> {
@@ -85,11 +99,53 @@ public class ActivityGrid implements Navigatable {
         activityInfo.getChildren().addAll(
                 activityNameLabel, descriptionLabel, localisationLabel,
                 startDateLabel, startTimeLabel, endDateLabel, endTimeLabel,
-                priceLabel, typeLabel, hotelIdLabel, carIdLabel, flightIdLabel, buttonHbox
+                priceLabel, typeLabel, hotelNameLabel, carBrandLabel, flightNumberLabel, buttonHbox
         );
 
         card.getChildren().addAll(activityInfo);
         return card;
+    }
+
+    private String getHotelNameById(int hotelId) {
+        String query = "SELECT nom_h FROM hotel WHERE id_hotel_h = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, hotelId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("nom_h");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom de l'hôtel : " + e.getMessage());
+        }
+        return "N/A";
+    }
+
+    private String getCarBrandById(int carId) {
+        String query = "SELECT brand FROM private_car WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, carId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("brand");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de la marque de la voiture : " + e.getMessage());
+        }
+        return "N/A";
+    }
+
+    private String getFlightNumberById(int flightId) {
+        String query = "SELECT flight_number FROM flights WHERE id_flight = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, flightId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("flight_number");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du numéro de vol : " + e.getMessage());
+        }
+        return "N/A";
     }
 
     // Helper method to create a stylish label
@@ -110,6 +166,20 @@ public class ActivityGrid implements Navigatable {
         return button;
     }
 
+    // Formatage de la date
+    private String formatDate(java.util.Date date) {
+        if (date == null) return "N/A";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(date);
+    }
+
+    // Formatage de l'heure
+    private String formatTime(java.util.Date date) {
+        if (date == null) return "N/A";
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return sdf.format(date);
+    }
+
     // Confirmation dialog for deletion
     private void confirmDelete(Activity activity) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -123,32 +193,20 @@ public class ActivityGrid implements Navigatable {
         }
     }
 
+    // Supprimer une activité
     private void deleteActivity(Activity activity) {
         activityService.supprimer(activity); // Correction de la méthode de suppression
         System.out.println("Deleted: " + activity);
     }
 
+    // Naviguer vers le formulaire de mise à jour
     private void navigateToUpdateActivity(Activity activity) throws IOException {
         dashBoardController.navigateTo("dashboard/activity/activity-update-form.fxml");
-        ((ActivityUpdateForm)dashBoardController.getController()).initialize(activity);
+        ((ActivityUpdateForm) dashBoardController.getController()).initialize(activity);
     }
 
     public void addActivity() {
         dashBoardController.navigateTo("dashboard/activity/activity-create-form.fxml");
-    }
-
-    // Formatage de la date
-    private String formatDate(java.util.Date date) {
-        if (date == null) return "N/A";
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(date);
-    }
-
-    // Formatage de l'heure
-    private String formatTime(java.util.Date date) {
-        if (date == null) return "N/A";
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        return sdf.format(date);
     }
 
     public void navigateToReview(ActionEvent actionEvent) {

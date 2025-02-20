@@ -14,6 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ButtonType;
+import org.controlsfx.control.Rating;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -56,7 +57,13 @@ public class ReviewGrid implements Navigatable {
 
         // Labels pour afficher les informations
         Label commentaireLabel = createStyledLabel("Commentaire: " + review.getCommentaire(), "review-commentaire");
-        Label noteLabel = createStyledLabel("Note: " + review.getNote(), "review-note");
+
+        // Affichage de la note sous forme d'étoiles
+        Rating noteRating = new Rating();
+        noteRating.setRating(review.getNote()); // Définir la note
+        noteRating.setMax(5); // Maximum de 5 étoiles
+        noteRating.setDisable(true); // Désactiver l'interaction utilisateur
+
         Label dateReviewLabel = createStyledLabel("Date de revue: " + formatDate(review.getDateReview()), "review-date");
 
         // Boutons d'action pour modifier ou supprimer la revue
@@ -73,7 +80,7 @@ public class ReviewGrid implements Navigatable {
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
 
         reviewInfo.getChildren().addAll(
-                commentaireLabel, noteLabel, dateReviewLabel, buttonHbox
+                commentaireLabel, noteRating, dateReviewLabel, buttonHbox
         );
 
         card.getChildren().addAll(reviewInfo);

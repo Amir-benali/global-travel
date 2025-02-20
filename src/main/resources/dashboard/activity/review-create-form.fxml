@@ -2,6 +2,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import org.controlsfx.control.Rating?>
 
 <VBox spacing="10" styleClass="review-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewCreateForm">
     <padding>
@@ -13,10 +14,8 @@
     <!-- Champ : Commentaire -->
     <TextField fx:id="commentaireField" promptText="Votre commentaire"/>
 
-    <!-- Champ : Note -->
-    <ComboBox fx:id="noteComboBox" promptText="Note (0 à 5)">
-        <!-- Note : Valeurs de 0 à 5 -->
-    </ComboBox>
+    <!-- Champ : Note sous forme d'étoiles -->
+    <Rating fx:id="noteRating" max="5" rating="0" />
 
     <!-- Champ : ID de l'activité (ComboBox pour l'ID de l'activité) -->
     <ComboBox fx:id="activityIdComboBox" promptText="Sélectionner l'ID de l'activité">
