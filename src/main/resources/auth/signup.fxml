@@ -6,6 +6,8 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <StackPane styleClass="signup-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.auth.Signup">
     <VBox styleClass="signup-card" maxWidth="400" maxHeight="600" alignment="CENTER" spacing="15">
         <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
@@ -16,18 +18,36 @@
         <Label text="Create an Account" styleClass="title"/>
         <TextField fx:id="fullNameField" promptText="Full Name" styleClass="input-field"/>
         <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
-        <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
+
+        <!-- Ajout du champ de sélection du genre -->
+        <ComboBox fx:id="genderComboBox" promptText="selectioner le genre" styleClass="input-field">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Homme"/>
+                    <String fx:value="Femme"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <!-- Ajout du champ pour la date de naissance -->
+        <DatePicker fx:id="birthDatePicker" promptText="Date de naissance" styleClass="input-field"/>
+
+        <!-- Ajout du champ pour le numéro de téléphone -->
+        <TextField fx:id="phoneField" promptText="Numéro de téléphone" styleClass="input-field"/>
+
         <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
         <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="input-field"/>
+
         <HBox alignment="CENTER_LEFT" spacing="10">
             <CheckBox fx:id="termsCheckBox" text="I agree to the " styleClass="terms-checkbox"/>
             <Hyperlink text="Terms and Conditions" onAction="#handleTermsAndConditions"/>
         </HBox>
+
         <Button text="Sign Up" onAction="#handleSignup" styleClass="signup-button"/>
         <Separator/>
         <HBox alignment="CENTER" spacing="10">
             <Label text="Already have an account?"/>
-            <Hyperlink text="Log In" onAction="#handleLogin"/>
+            <Hyperlink text="Log In" onAction="#navigateToLogin"/>
         </HBox>
     </VBox>
     <Circle styleClass="background-circle" radius="300" StackPane.alignment="BOTTOM_RIGHT"/>

@@ -1,164 +1,216 @@
 package com.globalTravel.controllers.hotel;
 
-import com.globalTravel.models.flight.Flight;
-import com.globalTravel.models.flight.FlightStatus;
-import javafx.application.Platform;
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.models.hotel.Hotel;
+import com.globalTravel.services.hotel.HotelService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.util.Arrays;
+public class HotelUpdateForm implements Navigatable {
 
-public class HotelUpdateForm {
-
-    @FXML private ComboBox<String> statusComboBox;
     @FXML private Label formTitleLabel;
-    @FXML private TextField flightNumberField;
-    @FXML private TextField airlineIdField;
-    @FXML private TextField departureAirportField;
-    @FXML private TextField arrivalAirportField;
-    @FXML private DatePicker departureDatePicker;
-    @FXML private TextField departureTimeField;
-    @FXML private TextField arrivalTimeField;
-    @FXML private TextField durationField;
-    @FXML private TextField availableSeatsField;
-    @FXML private TextField priceField;
-    @FXML private Label selectedImageLabel;
-    @FXML private ImageView airlineLogoPreview;
+    @FXML private TextField nameField;
+    @FXML private TextField addressField;
+    @FXML private TextField cityField;
+    @FXML private TextField countryField;
+    @FXML private Spinner<Integer> categorySpinner;
+    @FXML private TextField amenitiesField;
+    @FXML private TextField locationField;
+    @FXML private TextArea reviewField;
     @FXML private Button saveButton;
 
-    private File selectedLogoFile;
-    private Flight flightToEdit;
+    private Hotel hotelToEdit;
     private Stage stage;
-
+    private HotelService hotelService = new HotelService();
+    private DashBoard dashBoardController;
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    @FXML
-    public void initialize(Flight flightToEdit) {
-        System.out.println("Initializing FlightForm...");
+    /**
+     * Initialisation du formulaire avec l'hôtel à modifier.
+     */
+    public void initialize(Hotel hotelToEdit) {
+        System.out.println("Initializing HotelUpdateForm...");
+        // Configuration du Spinner pour la catégorie (1 à 5)
+        SpinnerValueFactory<Integer> categoryFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5, 3);
+        categorySpinner.setValueFactory(categoryFactory);
 
-        // Populate statusComboBox with FlightStatus values
-        statusComboBox.getItems().setAll(Arrays.stream(FlightStatus.values())
-                .map(Enum::name)
-                .toList());
-        if (flightToEdit != null) {
-            this.flightToEdit = flightToEdit;
+        if (hotelToEdit != null) {
+            this.hotelToEdit = hotelToEdit;
+            populateForm();
+            addListeners();
+        } else {
+            System.out.println("Aucun hôtel à modifier n'a été fourni.");
         }
-        populateForm();
-
-//        clearForm();
     }
 
-
-
-
-    private void clearForm() {
-        flightNumberField.clear();
-        airlineIdField.clear();
-        departureAirportField.clear();
-        arrivalAirportField.clear();
-        departureDatePicker.setValue(null);
-        departureTimeField.clear();
-        arrivalTimeField.clear();
-        durationField.clear();
-        availableSeatsField.clear();
-        priceField.clear();
-        selectedImageLabel.setText("No image selected");
-        airlineLogoPreview.setImage(null);
-        statusComboBox.getSelectionModel().clearSelection();
-    }
-
-    @FXML
     private void populateForm() {
-
-            System.out.println("Populating form with flight data...");
-            Platform.runLater(() -> {
-                flightNumberField.setText(flightToEdit.getFlight_number());
-                airlineIdField.setText(String.valueOf(flightToEdit.getAirline_id()));
-                departureAirportField.setText(flightToEdit.getDeparture_airport());
-                arrivalAirportField.setText(flightToEdit.getArrival_airport());
-                departureDatePicker.setValue(LocalDate.parse(flightToEdit.getDeparture_time().split(" ")[0]));
-                departureTimeField.setText(flightToEdit.getDeparture_time());
-                arrivalTimeField.setText(flightToEdit.getArrival_time());
-                durationField.setText(String.valueOf(flightToEdit.getDuration()));
-                availableSeatsField.setText(String.valueOf(flightToEdit.getAvailable_seats()));
-                priceField.setText(String.valueOf(flightToEdit.getBase_price()));
-                statusComboBox.setValue(flightToEdit.getStatus().name());
-
-//                // Load airline logo if available
-//                if (flightToEdit.getAirlineLogoPath() != null) {
-//                    File logoFile = new File(flightToEdit.getAirlineLogoPath());
-//                    if (logoFile.exists()) {
-//                        selectedLogoFile = logoFile;
-//                        selectedImageLabel.setText(logoFile.getName());
-//                        airlineLogoPreview.setImage(new Image(logoFile.toURI().toString()));
-//                    }
-//                }
-
-            });
-
+        System.out.println("Remplissage du formulaire avec les données de l'hôtel...");
+        nameField.setText(hotelToEdit.getNom_h());
+        addressField.setText(hotelToEdit.getAdresse_h());
+        cityField.setText(hotelToEdit.getVille_h());
+        countryField.setText(hotelToEdit.getPays_h());
+        categorySpinner.getValueFactory().setValue(hotelToEdit.getCategorie_h());
+        amenitiesField.setText(hotelToEdit.getServices_h());
+        locationField.setText(hotelToEdit.getCoordonnees_h());
+        reviewField.setText(hotelToEdit.getAvis_h());
     }
 
-    @FXML
-    private void handleChooseImage() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Airline Logo");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+    private void addListeners() {
+        nameField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        addressField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        cityField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        countryField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        amenitiesField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        locationField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+        reviewField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
+    }
 
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            selectedLogoFile = selectedFile;
-            selectedImageLabel.setText(selectedFile.getName());
-            airlineLogoPreview.setImage(new Image(selectedFile.toURI().toString()));
+    /**
+     * Valide le formulaire :
+     * - Les champs nom, adresse, ville, pays, services et coordonnées doivent contenir entre 3 et 30 caractères.
+     * - L'avis doit contenir entre 2 et 50 caractères.
+     */
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        // Nom (3-30)
+        String name = nameField.getText().trim();
+        if (name.isEmpty()) {
+            setFieldError(nameField, "Le nom est obligatoire.");
+            isValid = false;
+        } else if (name.length() < 3 || name.length() > 30) {
+            setFieldError(nameField, "Le nom doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(nameField);
         }
+
+        // Adresse (3-30)
+        String address = addressField.getText().trim();
+        if (address.isEmpty()) {
+            setFieldError(addressField, "L'adresse est obligatoire.");
+            isValid = false;
+        } else if (address.length() < 3 || address.length() > 30) {
+            setFieldError(addressField, "L'adresse doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(addressField);
+        }
+
+        // Ville (3-30)
+        String city = cityField.getText().trim();
+        if (city.isEmpty()) {
+            setFieldError(cityField, "La ville est obligatoire.");
+            isValid = false;
+        } else if (city.length() < 3 || city.length() > 30) {
+            setFieldError(cityField, "La ville doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(cityField);
+        }
+
+        // Pays (3-30)
+        String country = countryField.getText().trim();
+        if (country.isEmpty()) {
+            setFieldError(countryField, "Le pays est obligatoire.");
+            isValid = false;
+        } else if (country.length() < 3 || country.length() > 30) {
+            setFieldError(countryField, "Le pays doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(countryField);
+        }
+
+        // Services (3-30)
+        String amenities = amenitiesField.getText().trim();
+        if (amenities.isEmpty()) {
+            setFieldError(amenitiesField, "Les services sont obligatoires.");
+            isValid = false;
+        } else if (amenities.length() < 3 || amenities.length() > 30) {
+            setFieldError(amenitiesField, "Les services doivent contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(amenitiesField);
+        }
+
+        // Coordonnées (3-30)
+        String location = locationField.getText().trim();
+        if (location.isEmpty()) {
+            setFieldError(locationField, "La localisation est obligatoire.");
+            isValid = false;
+        } else if (location.length() < 3 || location.length() > 30) {
+            setFieldError(locationField, "La localisation doit contenir entre 3 et 30 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(locationField);
+        }
+
+        // Avis (2-50)
+        String review = reviewField.getText().trim();
+        if (review.isEmpty()) {
+            setFieldError(reviewField, "L'avis est obligatoire.");
+            isValid = false;
+        } else if (review.length() < 2 || review.length() > 50) {
+            setFieldError(reviewField, "L'avis doit contenir entre 2 et 50 caractères.");
+            isValid = false;
+        } else {
+            clearFieldError(reviewField);
+        }
+
+        saveButton.setDisable(!isValid);
+        return isValid;
+    }
+
+    private void setFieldError(Control field, String message) {
+        field.setStyle("-fx-border-color: red;");
+        field.setTooltip(new Tooltip(message));
+    }
+
+    private void clearFieldError(Control field) {
+        field.setStyle("");
+        field.setTooltip(null);
     }
 
     @FXML
-    private void handleSaveFlight() {
+    private void handleSaveHotel() {
         try {
-            String selectedStatus = statusComboBox.getValue();
-            FlightStatus status = FlightStatus.valueOf(selectedStatus);
-
-            Flight flight = new Flight(
-                    Integer.parseInt(flightNumberField.getText()),
-                    flightNumberField.getText(),
-                    Integer.parseInt(airlineIdField.getText()),
-                    departureAirportField.getText(),
-                    arrivalAirportField.getText(),
-                    departureTimeField.getText(),
-                    arrivalTimeField.getText(),
-                    Integer.parseInt(durationField.getText()),
-                    Integer.parseInt(availableSeatsField.getText()),
-                    Double.parseDouble(priceField.getText()),
-                    status
+            if (!validateForm()) {
+                return;
+            }
+            // Créer un nouvel objet Hotel avec les données mises à jour
+            Hotel updatedHotel = new Hotel(
+                    hotelToEdit.getId_hotel_h(),
+                    nameField.getText().trim(),
+                    addressField.getText().trim(),
+                    cityField.getText().trim(),
+                    countryField.getText().trim(),
+                    categorySpinner.getValue(),
+                    amenitiesField.getText().trim(),
+                    locationField.getText().trim(),
+                    reviewField.getText().trim()
             );
-
-
-                updateFlight(flight);
-
-
+            hotelService.modifier(updatedHotel);
+            System.out.println("Hôtel mis à jour avec succès !");
+            showConfirmation("Hôtel mis à jour avec succès !");
             closeForm();
+            dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         } catch (Exception e) {
-            System.err.println("Error saving flight: " + e.getMessage());
+            System.err.println("Erreur lors de la mise à jour : " + e.getMessage());
+            showError("Erreur lors de la mise à jour !");
         }
-    }
-
-
-    private void updateFlight(Flight flight) {
-        System.out.println("Updating flight: " + flight);
-        // Implement logic to update flight
     }
 
     @FXML
     private void handleCancel() {
-        clearForm();
         closeForm();
     }
 
@@ -166,5 +218,21 @@ public class HotelUpdateForm {
         if (stage != null) {
             stage.close();
         }
+    }
+
+    private void showConfirmation(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

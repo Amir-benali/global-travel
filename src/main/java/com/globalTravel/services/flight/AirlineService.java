@@ -13,7 +13,7 @@ public class AirlineService implements IService<Airline> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public boolean ajouter(Airline airline) {
+    public void ajouter(Airline airline) {
         String req = "INSERT INTO airlines (airline_name,airline_iata_code,airline_country) VALUES (?,?,?)";
         try{
             PreparedStatement pst = connection.prepareStatement(req);
@@ -25,11 +25,10 @@ public class AirlineService implements IService<Airline> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(Airline airline) {
+    public void modifier(Airline airline) {
         String req = "UPDATE airlines SET airline_name=?, airline_iata_code=?, airline_country=? WHERE airline_id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -43,7 +42,6 @@ public class AirlineService implements IService<Airline> {
             System.out.println(e.getMessage());
         }
 
-        return false;
     }
 
     @Override
@@ -75,6 +73,55 @@ public class AirlineService implements IService<Airline> {
         }
 
         return airlines;
+    }
+
+
+    public List<Integer> getAllAirlineIds() {
+        List<Integer> airlineIds = new ArrayList<>();
+        String query = "SELECT airline_id FROM airlines";
+        try (PreparedStatement pst = connection.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                airlineIds.add(rs.getInt("airline_id"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving airline IDs: " + e.getMessage());
+        }
+        return airlineIds;
+    }
+
+    public List<Airline> getAllAirlines() {
+        List<Airline> airlines = new ArrayList<>();
+        String query = "SELECT * FROM airlines";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+            while (rs.next()) {
+                airlines.add(new Airline(
+                        rs.getInt("airline_id"),
+                        rs.getString("airline_name"),
+                        rs.getString("airline_iata_code"),
+                        rs.getString("airline_country")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving airlines: " + e.getMessage());
+        }
+        return airlines;
+    }
+
+    public boolean isAirlineNameExists(String airlineName) {
+        String query = "SELECT COUNT(*) FROM airlines WHERE airline_name = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, airlineName);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking airline name: " + e.getMessage());
+        }
+        return false;
     }
 }
 

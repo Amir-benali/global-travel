@@ -15,43 +15,58 @@
     <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
 
     <!-- Flight Number Field -->
-    <TextField fx:id="flightNumberField" promptText="Flight Number"/>
+    <TextField fx:id="flightNumberField" promptText="Flight Number" styleClass="input-field"/>
 
     <!-- Airline ID Field -->
-    <TextField fx:id="airlineIdField" promptText="Airline ID"/>
+    <ComboBox fx:id="airlineIdField" promptText="Select Airline ID" styleClass="input-field"/>
 
     <!-- Departure Airport Field -->
-    <TextField fx:id="departureAirportField" promptText="Departure Airport"/>
+    <TextField fx:id="departureAirportField" promptText="Departure Airport" styleClass="input-field"/>
 
     <!-- Arrival Airport Field -->
-    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport"/>
+    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport" styleClass="input-field"/>
 
-    <!-- Departure Date Field -->
-    <DatePicker fx:id="departureDatePicker" promptText="Departure Date"/>
+    <VBox spacing="10">
+        <!-- Departure Date and Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Departure Date:"/>
+            <DatePicker fx:id="departureDatePicker" promptText="Select Date" styleClass="input-field"/>
+            <Label text="Time:"/>
+            <Spinner fx:id="departureHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
+            <Label text="Hours"/>
+            <Spinner fx:id="departureMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
+            <Label text="Minutes"/>
+        </HBox>
 
-    <!-- Departure Time Field -->
-    <TextField fx:id="departureTimeField" promptText="Departure Time (HH:MM)"/>
-
-    <!-- Arrival Time Field -->
-    <TextField fx:id="arrivalTimeField" promptText="Arrival Time (HH:MM)"/>
+        <!-- Arrival Date and Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Arrival Date:"/>
+            <DatePicker fx:id="arrivalDatePicker" promptText="Select Date" styleClass="input-field"/>
+            <Label text="Time:"/>
+            <Spinner fx:id="arrivalHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
+            <Label text="Hours"/>
+            <Spinner fx:id="arrivalMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
+            <Label text="Minutes"/>
+        </HBox>
+    </VBox>
 
     <!-- Duration Field -->
-    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)"/>
+    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)" styleClass="input-field"/>
 
     <!-- Available Seats Field -->
-    <TextField fx:id="availableSeatsField" promptText="Available Seats"/>
+    <TextField fx:id="availableSeatsField" promptText="Available Seats" styleClass="input-field"/>
 
     <!-- Base Price Field -->
-    <TextField fx:id="priceField" promptText="Base Price"/>
+    <TextField fx:id="priceField" promptText="Base Price" styleClass="input-field"/>
 
     <!-- Flight Status ComboBox -->
-    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status">
+    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status" styleClass="input-field">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Scheduled"/>
-                <String fx:value="DELAYED"/>
+                <String fx:value="Delayed"/>
                 <String fx:value="Cancelled"/>
-                <String fx:value="COMPLETED"/>
+                <String fx:value="Completed"/>
             </FXCollections>
         </items>
     </ComboBox>
@@ -63,6 +78,8 @@
     </HBox>
 
     <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+    <!-- Error Label -->
+    <Label fx:id="errorLabel" textFill="red"/>
 
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
