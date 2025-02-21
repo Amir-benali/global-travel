@@ -6,13 +6,20 @@ import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.CarDriverService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,24 +55,38 @@ public class DriverGrid implements Navigatable {
     }
 
     private VBox createDriverCard(CarDriver driver) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("driver-card");
+        VBox card = new VBox(15);
+        card.getStyleClass().addAll("driver-card", "modern-card");
+        card.setPadding(new Insets(15));
 
-        VBox driverInfo = new VBox(5);
-        driverInfo.getStyleClass().add("driver-info");
+        // Driver Image (Placeholder for now)
+        ImageView driverImageView = new ImageView(new Image("/images/carlogo.png", 300, 200, true, true));
+        driverImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
+        driverImageView.getStyleClass().add("car-image");
 
-        // Driver details
-        Label firstNameLabel = new Label("First Name: " + driver.getFirstName());
-        firstNameLabel.getStyleClass().add("driver-first-name");
 
-        Label lastNameLabel = new Label("Last Name: " + driver.getLastName());
-        lastNameLabel.getStyleClass().add("driver-last-name");
+        // Driver Info Container
+        VBox driverInfo = new VBox(10);
+        driverInfo.getStyleClass().add("car-info");
 
-        Label phoneLabel = new Label("Phone: " + driver.getPhone());
-        phoneLabel.getStyleClass().add("driver-phone");
+        // Driver Full Name
+        Label nameLabel = new Label(driver.getFirstName() + " " + driver.getLastName());
+        nameLabel.getStyleClass().add("car-brand-model");
+
+        // Driver Details Grid
+        GridPane detailsGrid = new GridPane();
+        detailsGrid.setHgap(10);
+        detailsGrid.setVgap(5);
+        detailsGrid.addRow(0, new Label("🆔"), new Label(String.valueOf(driver.getId())));
+        detailsGrid.addRow(1, new Label("📞"), new Label(driver.getPhone()));
+        detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
         Button updateButton = new Button("Update Driver");
+        updateButton.getStyleClass().addAll("modern-button", "update-button");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateDriver(driver);
@@ -73,20 +94,25 @@ public class DriverGrid implements Navigatable {
                 throw new RuntimeException(ex);
             }
         });
-        updateButton.getStyleClass().add("view-details-button");
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
+        deleteButton.getStyleClass().addAll("modern-button", "delete-button");
         deleteButton.setOnAction(e -> deleteDriver(driver));
 
-        HBox buttonHbox = new HBox(3);
-        buttonHbox.getChildren().addAll(updateButton, deleteButton);
-        driverInfo.getChildren().addAll(firstNameLabel, lastNameLabel, phoneLabel, buttonHbox);
+        buttonBox.getChildren().addAll(updateButton, deleteButton);
 
-        card.getChildren().addAll(driverInfo);
+        // Assemble all components
+        driverInfo.getChildren().addAll(nameLabel, detailsGrid);
+        card.getChildren().addAll(driverImageView, driverInfo, buttonBox);
+
+        // Add hover effect
+        card.setOnMouseEntered(e -> card.setEffect(new DropShadow(20, Color.rgb(0, 0, 0, 0.3))));
+        card.setOnMouseExited(e -> card.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.1))));
 
         return card;
     }
+
+
 
     private void deleteDriver(CarDriver driver) {
         System.out.println("Deleting: " + driver);

@@ -5,23 +5,32 @@ import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.PrivateCarService;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 public class CarGrid implements Navigatable {
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();
@@ -45,36 +54,65 @@ public class CarGrid implements Navigatable {
         cars = getCars();
 
         for (PrivateCar car : cars) {
-            VBox carCard = createCarCard(car);
+            Node carCard = createCarCard(car);
             carsGrid.getChildren().add(carCard);
         }
     }
 
 
-    private VBox createCarCard(PrivateCar car) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("car-offer-card");
+    private Node createCarCard(PrivateCar car) {
+        VBox card = new VBox(15);
+        card.getStyleClass().addAll("car-offer-card", "modern-card");
+        card.setPadding(new Insets(15));
 
-        VBox carInfo = new VBox(5);
+        // Car Image
+        String imagePath = (!car.getImage().isEmpty()) ? car.getImage() : "/images/carlogo.png";
+        Image carImage;
+
+        try {
+            if (imagePath.startsWith("http") || imagePath.startsWith("file:")) {
+                // Load external image (from Azure Blob Storage or local file system)
+                carImage = new Image(imagePath, 300, 200, false, true);
+            } else {
+                // Load internal image from resources
+                carImage = new Image(getClass().getResource(imagePath).toExternalForm(), 300, 200, false, true);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load image: " + imagePath);
+            carImage = new Image(getClass().getResource("/images/carlogo.png").toExternalForm(), 300, 200, false, true);
+        }
+
+        ImageView carImageView = new ImageView(carImage);
+        carImageView.setFitWidth(300);
+        carImageView.setFitHeight(200);
+        carImageView.setPreserveRatio(false);
+        carImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
+        carImageView.getStyleClass().add("car-image");
+
+        // Car Info Container
+        VBox carInfo = new VBox(10);
         carInfo.getStyleClass().add("car-info");
 
-        ImageView carLogoView = new ImageView(new Image("/images/carlogo.png", 200, 150, true, true));
+        // Car Brand and Model
+        Label brandModelLabel = new Label(car.getBrand() + " " + car.getModel());
+        brandModelLabel.getStyleClass().add("car-brand-model");
 
-        // Car details
-        Label brandLabel = new Label("Brand: " + car.getBrand());
-        brandLabel.getStyleClass().add("car-brand");
-
-        Label modelLabel = new Label("Model: " + car.getModel());
-        modelLabel.getStyleClass().add("car-model");
-
-        Label seatsLabel = new Label("Seats: " + car.getNum_place());
-        seatsLabel.getStyleClass().add("car-seats");
-
-        Label driverLabel = new Label("Driver: " + car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName());
-        driverLabel.getStyleClass().add("car-driver");
+        // Car Details
+        GridPane detailsGrid = new GridPane();
+        detailsGrid.setHgap(10);
+        detailsGrid.setVgap(5);
+        detailsGrid.addRow(0, new Label("🆔"), new Label(String.valueOf(car.getId())));
+        detailsGrid.addRow(1, new Label("💺"), new Label(String.valueOf(car.getNum_place())));
+        detailsGrid.addRow(2, new Label("🚘"), new Label(car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName()));
+        detailsGrid.addRow(3, new Label("💳"), new Label(String.valueOf(car.getCarDriver().getId())));
+        detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
-        Button updateButton = new Button("Update Car");
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button updateButton = new Button("Update");
+        updateButton.getStyleClass().addAll("modern-button", "update-button");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateCar(car);
@@ -82,21 +120,23 @@ public class CarGrid implements Navigatable {
                 throw new RuntimeException(ex);
             }
         });
-        updateButton.getStyleClass().add("view-details-button");
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
+        deleteButton.getStyleClass().addAll("modern-button", "delete-button");
         deleteButton.setOnAction(e -> deleteCar(car));
 
-        HBox buttonHbox = new HBox(3);
-        buttonHbox.getChildren().addAll(updateButton, deleteButton);
-        carInfo.getChildren().addAll(carLogoView,brandLabel, modelLabel, seatsLabel, driverLabel, buttonHbox);
+        buttonBox.getChildren().addAll(updateButton, deleteButton);
 
-        card.getChildren().addAll(carInfo);
+        // Assemble all components
+        carInfo.getChildren().addAll(brandModelLabel, detailsGrid);
+        card.getChildren().addAll(carImageView, carInfo, buttonBox);
+
+        // Add hover effect
+        card.setOnMouseEntered(e -> card.setEffect(new DropShadow(20, Color.rgb(0, 0, 0, 0.3))));
+        card.setOnMouseExited(e -> card.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.1))));
 
         return card;
     }
-
     private void deleteCar(PrivateCar car) {
         System.out.println("Deleting: " + car);
         Alert alert = new Alert(Alert.AlertType.WARNING);

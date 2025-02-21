@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.1.2</version> <!-- Vérifiez la dernière version sur Maven Central -->
+            <version>11.1.2</version>
         </dependency>
 
         <dependency>
@@ -42,7 +42,21 @@
                 <artifactId>jbcrypt</artifactId>
                 <version>0.4</version>
             </dependency>
-
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx</artifactId>
+            <version>8.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-storage-blob</artifactId>
+            <version>12.28.1</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -55,6 +69,7 @@
                     <mainClass>com.globalTravel.tests.MainGUI</mainClass>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

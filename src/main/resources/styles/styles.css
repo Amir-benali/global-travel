@@ -1011,3 +1011,64 @@
     -fx-text-fill: #ffffff; /* Dark gray text for today's date */
     -fx-font-weight: bold; /* Bold font for today's date */
 }
+.car-offer-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-transition: all 0.3s ease;
+}
+
+.car-image {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.car-brand-model {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.details-grid {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+}
+
+.details-grid Label {
+    -fx-font-size: 14px;
+}
+
+.details-grid Label:nth-child(odd) {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.details-grid Label:nth-child(even) {
+    -fx-text-fill: #7f8c8d;
+}
+
+.modern-button {
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.update-button {
+    -fx-background-color: #3498db;
+}
+
+.update-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-button {
+    -fx-background-color: #e74c3c;
+}
+
+.delete-button:hover {
+    -fx-background-color: #c0392b;
+}

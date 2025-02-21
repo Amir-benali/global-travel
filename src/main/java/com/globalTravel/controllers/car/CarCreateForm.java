@@ -6,18 +6,27 @@ import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.CarDriverService;
 import com.globalTravel.services.car.PrivateCarService;
+import com.globalTravel.utils.AzureBlobService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class CarCreateForm implements Navigatable {
 
+    @FXML private Label selectedImageLabel;
     @FXML private Label formTitleLabel;
     @FXML private TextField brandField;
     @FXML private TextField modelField;
@@ -32,6 +41,12 @@ public class CarCreateForm implements Navigatable {
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();
     private CarDriverService driverService = new CarDriverService();
+    private String selectedImageName;
+    private String selectedImagePath;
+    private File selectedImageFile;
+    @FXML
+    private ImageView driverImagePreview;
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
@@ -134,13 +149,18 @@ public class CarCreateForm implements Navigatable {
             return;
         }
         try {
+            handleCopyImage();
+
             CarDriver selectedDriver = driverComboBox.getValue();
+            System.out.println("test : " +this.selectedImagePath);
             PrivateCar car = new PrivateCar(
                     brandField.getText().trim(),
                     modelField.getText().trim(),
                     Integer.parseInt(numSeatsField.getText().trim()),
-                    selectedDriver
+                    selectedDriver,
+                    ""
             );
+            car.setImage(this.selectedImagePath);
             addCar(car);
             closeForm();
         } catch (Exception e) {
@@ -148,7 +168,23 @@ public class CarCreateForm implements Navigatable {
         }
     }
 
-    private void addCar(PrivateCar car) {
+    public void handleCopyImage() {
+        if (selectedImageFile != null) {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    String imagePath = AzureBlobService.uploadImage(selectedImageFile);
+                    System.out.println(imagePath);
+                    selectedImagePath=imagePath;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).join();
+
+        }
+    }
+    
+
+    private void addCar(PrivateCar car) throws IOException {
         System.out.println("Adding new car: " + car);
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Confirmation");
@@ -166,6 +202,7 @@ public class CarCreateForm implements Navigatable {
 
     }
 
+
     @FXML
     private void handleCancel() {
         clearForm();
@@ -175,6 +212,31 @@ public class CarCreateForm implements Navigatable {
     private void closeForm() {
         if (stage != null) {
             stage.close();
+        }
+    }
+
+    public void handleChooseImage(javafx.event.ActionEvent actionEvent) {
+         FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        try {
+            java.io.File selectedFile = fileChooser.showOpenDialog(stage);
+
+            if (selectedFile != null) {
+                this.selectedImageName = selectedFile.getName();
+                this.selectedImagePath = selectedFile.getAbsolutePath();
+                System.out.println("Selected file: " + selectedFile.getName());
+                this.selectedImageFile = selectedFile;
+                this.selectedImageLabel.setText(selectedFile.getName());
+                this.driverImagePreview.setImage(new javafx.scene.image.Image(selectedFile.toURI().toString()));
+            } else {
+                System.out.println("Image selection canceled.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error occurred while selecting an image: " + e.getMessage());
         }
     }
 }
