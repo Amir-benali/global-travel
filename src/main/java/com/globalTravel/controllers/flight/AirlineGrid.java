@@ -6,11 +6,10 @@ package com.globalTravel.controllers.flight;
         import com.globalTravel.services.flight.AirlineService;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
-        import javafx.scene.control.Alert;
-        import javafx.scene.control.ButtonType;
-        import javafx.scene.control.TableColumn;
-        import javafx.scene.control.TableView;
+        import javafx.scene.control.*;
         import javafx.scene.control.cell.PropertyValueFactory;
+        import javafx.scene.layout.HBox;
+        import javafx.util.Callback;
 
         import java.util.List;
 
@@ -19,6 +18,7 @@ package com.globalTravel.controllers.flight;
             private final AirlineService airlineService = new AirlineService();
 
             public void setDashBoardController(DashBoard dashBoardController) {
+                this.dashBoardController = dashBoardController;
             }
 
             @FXML
@@ -31,6 +31,8 @@ package com.globalTravel.controllers.flight;
             private TableColumn<Airline, String> codeColumn;
             @FXML
             private TableColumn<Airline, String> countryColumn;
+            @FXML
+            private TableColumn<Airline, Void> actionColumn;
 
             @FXML
             public void initialize() {
@@ -38,8 +40,52 @@ package com.globalTravel.controllers.flight;
                 nameColumn.setCellValueFactory(new PropertyValueFactory<>("airline_name"));
                 codeColumn.setCellValueFactory(new PropertyValueFactory<>("airline_code"));
                 countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+                actionColumn.setCellFactory(new Callback<>() {
+                    @Override
+                    public TableCell<Airline, Void> call(final TableColumn<Airline, Void> param) {
+                        return new TableCell<>() {
+                            private final Button editButton = new Button("Edit");
+                            private final Button deleteButton = new Button("Delete");
 
+                            {
+                                editButton.getStyleClass().add("view-details-button");
+                                deleteButton.getStyleClass().add("view-details-button");
+                                // Edit Button Action
+                                editButton.setOnAction((ActionEvent event) -> {
+                                    Airline airline = getTableView().getItems().get(getIndex());
+                                    handleEditAirline(airline);
+                                });
+
+                                // Delete Button Action
+                                deleteButton.setOnAction((ActionEvent event) -> {
+                                    Airline airline = getTableView().getItems().get(getIndex());
+                                    handleDeleteAirline(airline);
+                                });
+                            }
+
+                            @Override
+                            public void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                } else {
+                                    HBox buttons = new HBox(editButton, deleteButton);
+                                    buttons.setSpacing(5);
+                                    setGraphic(buttons);
+                                }
+                            }
+                        };
+                    }
+                });
                 loadAirlines();
+            }
+
+
+
+            private void handleEditAirline(Airline airline) {
+                dashBoardController.navigateTo("dashboard/flight/airline-update-form.fxml");
+                AirlineUpdateForm controller = (AirlineUpdateForm) dashBoardController.getController();
+                controller.setAirlineToEdit(airline);
             }
 
             private void loadAirlines() {

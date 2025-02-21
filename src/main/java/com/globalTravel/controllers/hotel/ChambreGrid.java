@@ -47,7 +47,7 @@ public class ChambreGrid implements Navigatable {
 
     private VBox createChambreCard(Chambre chambre) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("chambre-offer-card");
+        card.getStyleClass().add("car-offer-card");
 
         VBox chambreInfo = new VBox(5);
         chambreInfo.getStyleClass().add("chambre-info");

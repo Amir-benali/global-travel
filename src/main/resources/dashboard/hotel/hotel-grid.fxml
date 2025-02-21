@@ -11,13 +11,16 @@
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
                 <children>
                     <Label styleClass="section-title" text="Hotel List" />
                     <Button onAction="#navigateToChambre" styleClass="add-button" text="Chambre list" />
                     <Region HBox.hgrow="ALWAYS" />
                     <Button onAction="#addHotel" styleClass="add-button" text="+ ADD HOTEL" />
                 </children>
+                <padding>
+                    <Insets left="20.0" right="20.0" />
+                </padding>
             </HBox>
 
             <FlowPane fx:id="hotelsGrid" hgap="20" vgap="20">

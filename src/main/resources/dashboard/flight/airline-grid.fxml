@@ -24,6 +24,8 @@
                     <TableColumn fx:id="nameColumn" text="Name"/>
                     <TableColumn fx:id="codeColumn" text="Code"/>
                     <TableColumn fx:id="countryColumn" text="Country"/>
+                    <TableColumn fx:id="actionColumn" text="Action"/>
+
                 </columns>
             </TableView>
         </VBox>

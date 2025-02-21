@@ -12,7 +12,7 @@
             </padding>
 
             <!-- Header Section -->
-            <HBox alignment="CENTER_LEFT" spacing="30.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
                 <children>
                     <Label styleClass="section-title" text="Review List" style="-fx-font-family: 'Roboto', sans-serif; -fx-font-size: 28px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"/>
                     <Button onAction="#navigateToReview" styleClass="add-button" text="Review List"

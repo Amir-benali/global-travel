@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
@@ -17,7 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityCreateForm {
+public class ActivityCreateForm implements Navigatable {
+    private DashBoard dashBoardController;
 
     @FXML private ComboBox<TypeActivity> typeComboBox;
     @FXML private TextField activityNameField;
@@ -38,6 +41,10 @@ public class ActivityCreateForm {
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
 
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     private final ActivityService activityService = new ActivityService();
     private final Connection connection = DataSource.getInstance().getConnection();
     private Stage stage;
@@ -104,6 +111,7 @@ public class ActivityCreateForm {
                     statusLabel.setStyle("-fx-text-fill: green;");
                     clearForm();
                     closeForm();
+                    dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
                 } else {
                     showAlert(Alert.AlertType.ERROR, "Erreur", "L'ajout a échoué !");
                     statusLabel.setText("Erreur lors de l'ajout !");

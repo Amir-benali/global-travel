@@ -47,7 +47,7 @@ package com.globalTravel.controllers.flight;
                 VBox card = new VBox(10);
                 card.getStyleClass().add("flight-offer-card");
 
-                ImageView airlineLogoView = new ImageView(new Image("/images/logo.jpg"));
+                ImageView airlineLogoView = new ImageView(new Image("/images/flight.png"));
                 airlineLogoView.setFitWidth(200);
                 airlineLogoView.setFitHeight(150);
                 airlineLogoView.setPreserveRatio(true);
@@ -122,5 +122,13 @@ package com.globalTravel.controllers.flight;
 
             public void addFlight(ActionEvent actionEvent) {
                 dashBoardController.navigateTo("dashboard/flight/flight-create-form.fxml");
+            }
+
+            public void navigateToAirline(ActionEvent actionEvent) {
+                dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
+            }
+
+            public void navigateToTickets(ActionEvent actionEvent) {
+                dashBoardController.navigateTo("dashboard/flight/ticket-grid.fxml");
             }
         }

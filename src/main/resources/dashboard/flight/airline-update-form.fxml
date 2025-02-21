@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="airline-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.AirlineUpdateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Update Airline" styleClass="form-title"/>
+
+    <!-- Airline Name Field -->
+    <TextField fx:id="airlineNameField" promptText="Airline Name" styleClass="input-field"/>
+
+    <!-- Airline Code Field -->
+    <TextField fx:id="airlineCodeField" promptText="Airline Code" styleClass="input-field"/>
+
+    <TextField fx:id="countryField" promptText="Country" styleClass="input-field"/>
+
+    <!-- Image Selection Section -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+    </HBox>
+
+    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Airline" onAction="#handleSaveAirline" styleClass="save-button"/>
+    </HBox>
+</VBox>
