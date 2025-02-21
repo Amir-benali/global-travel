@@ -1,11 +1,14 @@
 package com.globalTravel.models.user;
 
+
+import java.sql.Date;
+
 public class Admin extends User {
     private String privileges;
 
     public Admin() {}
 
-    public Admin(int id, String genre, java.util.Date dateNaissance, String adresse, String email, String roles,
+    public Admin(int id, String genre, Date dateNaissance, String adresse, String email, String roles,
                  String password, String firstName, String lastName, String phoneNumber, String image, String statut,
                  String privileges) {
         super(id, genre, dateNaissance, adresse, email, roles, password, firstName, lastName, phoneNumber, image, statut);

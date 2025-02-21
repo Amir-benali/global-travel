@@ -1,19 +1,21 @@
 package com.globalTravel.models.flight;
 
+import java.sql.Timestamp;
+
 public class Flight {
     private int id_flight;
     private String flight_number;
     private int airline_id;
     private String departure_airport;
     private String arrival_airport;
-    private String departure_time;
-    private String arrival_time;
+    private Timestamp departure_time;
+    private Timestamp arrival_time;
     private int duration;
     private int available_seats;
     private double base_price;
     private FlightStatus status;
 
-    public Flight(int id_flight, String flight_number, int airline_id, String departure_airport, String arrival_airport, String departure_time, String arrival_time, int duration, int available_seats, double base_price, FlightStatus status) {
+    public Flight(int id_flight, String flight_number, int airline_id, String departure_airport, String arrival_airport, Timestamp departure_time, Timestamp arrival_time, int duration, int available_seats, double base_price, FlightStatus status) {
         this.id_flight = id_flight;
         this.flight_number = flight_number;
         this.airline_id = airline_id;
@@ -27,7 +29,7 @@ public class Flight {
         this.status = status;
     }
 
-    public Flight(String flight_number, int airline_id, String departure_airport, String arrival_airport, String departure_time, String arrival_time, int duration, int available_seats, double base_price, FlightStatus status) {
+    public Flight(String flight_number, int airline_id, String departure_airport, String arrival_airport, Timestamp departure_time, Timestamp arrival_time, int duration, int available_seats, double base_price, FlightStatus status) {
         this.flight_number = flight_number;
         this.airline_id = airline_id;
         this.departure_airport = departure_airport;
@@ -80,19 +82,19 @@ public class Flight {
         this.arrival_airport = arrival_airport;
     }
 
-    public String getDeparture_time() {
+    public Timestamp getDeparture_time() {
         return departure_time;
     }
 
-    public void setDeparture_time(String departure_time) {
+    public void setDeparture_time(Timestamp departure_time) {
         this.departure_time = departure_time;
     }
 
-    public String getArrival_time() {
+    public Timestamp getArrival_time() {
         return arrival_time;
     }
 
-    public void setArrival_time(String arrival_time) {
+    public void setArrival_time(Timestamp arrival_time) {
         this.arrival_time = arrival_time;
     }
 

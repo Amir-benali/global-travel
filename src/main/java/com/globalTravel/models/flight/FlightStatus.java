@@ -2,7 +2,7 @@ package com.globalTravel.models.flight;
 
 public enum FlightStatus {
     Scheduled,
-    DELAYED,
+    Delayed,
     Cancelled,
-    COMPLETED;
+    Completed;
 }
