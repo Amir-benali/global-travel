@@ -96,6 +96,7 @@ public class UserTable implements Navigatable {
                             HBox buttons = new HBox(editButton, deleteButton);
                             buttons.setSpacing(5);
                             setGraphic(buttons);
+
                         }
                     }
                 };
