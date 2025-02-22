@@ -201,7 +201,9 @@ public class ActivityUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+
         closeForm();
+        dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
     }
 
     private void closeForm() {

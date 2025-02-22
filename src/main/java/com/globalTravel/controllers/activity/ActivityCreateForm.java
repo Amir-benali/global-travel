@@ -6,18 +6,17 @@ import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.utils.DataSource;
+import com.google.api.client.auth.oauth2.Credential;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class ActivityCreateForm implements Navigatable {
     private DashBoard dashBoardController;
@@ -40,6 +39,7 @@ public class ActivityCreateForm implements Navigatable {
     @FXML private ComboBox<String> flightIdComboBox; // Affiche les numéros de vol
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
+
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -140,6 +140,9 @@ public class ActivityCreateForm implements Navigatable {
                 boolean isSaved = activityService.ajouter(activity);
 
                 if (isSaved) {
+                    // Ajouter l'événement à Google Calendar
+                    addEventToGoogleCalendar(activity);
+
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Activité ajoutée avec succès !");
                     statusLabel.setText("Activité ajoutée avec succès !");
                     statusLabel.setStyle("-fx-text-fill: green;");
@@ -158,6 +161,21 @@ public class ActivityCreateForm implements Navigatable {
             statusLabel.setStyle("-fx-text-fill: red;");
         }
     }
+    private void addEventToGoogleCalendar(Activity activity) {
+        try {
+            Credential credential = GoogleCalendarAuth.authorize();
+            GoogleCalendarService calendarService = new GoogleCalendarService(credential);
+
+            Date startDate = new Date(activity.getDateDebut().getTime());
+            Date endDate = new Date(activity.getDateFin().getTime());
+
+            calendarService.addEvent(activity.getNomActivity(), activity.getLocalisation(), activity.getDescription(), startDate, endDate);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'ajout de l'événement à Google Calendar : " + e.getMessage());
+        }
+    }
+
+
 
     private Activity createActivityFromInputs() {
         Timestamp startTimestamp = combineDateTime(startDatePicker.getValue(), startHourComboBox.getValue(), startMinuteComboBox.getValue(), startSecondComboBox.getValue());
@@ -364,6 +382,7 @@ public class ActivityCreateForm implements Navigatable {
     private void handleCancel() {
         clearForm();
         closeForm();
+        dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
     }
 
     private void clearForm() {

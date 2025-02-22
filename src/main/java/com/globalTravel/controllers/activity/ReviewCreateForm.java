@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
 import com.globalTravel.services.activity.ActivityService;
@@ -12,20 +14,27 @@ import org.controlsfx.control.Rating;
 
 import java.util.List;
 
-public class ReviewCreateForm {
+public class ReviewCreateForm implements Navigatable {
+    private DashBoard dashBoardController;
+    private Stage stage;
 
     @FXML private TextField commentaireField;
-    @FXML private Rating noteRating; // Utilisation de Rating au lieu de ComboBox
+    @FXML private Rating noteRating;
     @FXML private ComboBox<Integer> activityIdComboBox;
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
 
     private final ReviewService reviewService = new ReviewService();
     private final ActivityService activityService = new ActivityService();
-    private Stage stage;
 
+    // Méthode pour définir le Stage
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    // Méthode pour définir le DashBoardController
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
     }
 
     @FXML
@@ -108,8 +117,22 @@ public class ReviewCreateForm {
 
     @FXML
     private void handleCancel() {
+        // Effacer le formulaire
         clearForm();
-        closeForm();
+
+        // Fermer la fenêtre si le stage est initialisé
+        if (stage != null) {
+            stage.close();
+        } else {
+            System.out.println("Stage n'est pas initialisé.");
+        }
+
+        // Naviguer vers le tableau de bord si le contrôleur est initialisé
+        if (dashBoardController != null) {
+            dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
+        } else {
+            System.out.println("DashBoardController n'est pas initialisé.");
+        }
     }
 
     private void clearForm() {
@@ -119,8 +142,11 @@ public class ReviewCreateForm {
     }
 
     private void closeForm() {
+        // Fermer la fenêtre si le stage est initialisé
         if (stage != null) {
             stage.close();
+        } else {
+            System.out.println("Stage n'est pas initialisé.");
         }
     }
 }
