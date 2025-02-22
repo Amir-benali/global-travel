@@ -97,4 +97,34 @@ public List<User> rechercher() {
     }
     return users;
 }
+
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("genre"),
+                        rs.getDate("date_naissance"),
+                        rs.getString("adresse"),
+                        rs.getString("email"),
+                        rs.getString("roles"),
+                        rs.getString("password"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("phone_number"),
+                        rs.getString("image"),
+                        rs.getString("statut"),
+                        ""
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de l'utilisateur : " + e.getMessage());
+        }
+        return null;
+    }
+
+
 }
