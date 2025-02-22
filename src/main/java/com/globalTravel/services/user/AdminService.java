@@ -16,7 +16,7 @@ public class AdminService implements IService<Admin> {
     }
 
     @Override
-    public boolean ajouter(Admin admin) {
+    public void ajouter(Admin admin) {
         String sql = "INSERT INTO user (genre, date_naissance, adresse, email, roles, password, firstname, lastname, phone_number, image, statut, privileges) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -39,7 +39,6 @@ public class AdminService implements IService<Admin> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout de l'Admin : " + e.getMessage());
         }
-        return false;
     }
 
     @Override
@@ -75,7 +74,7 @@ public class AdminService implements IService<Admin> {
     }
 
     @Override
-    public boolean modifier(Admin admin) {
+    public void modifier(Admin admin) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, privileges = ? " +
                 "WHERE id = ? AND roles = 'Admin'";
 
@@ -98,7 +97,6 @@ public class AdminService implements IService<Admin> {
         } catch (SQLException e) {
             System.err.println("Erreur lors de la modification de l'Admin : " + e.getMessage());
         }
-        return false;
     }
 
     @Override

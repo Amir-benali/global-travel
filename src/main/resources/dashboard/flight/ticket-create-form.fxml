@@ -1,40 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<VBox spacing="20" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.TicketCreateForm">
-    <GridPane>
-        <HBox alignment="CENTER_LEFT" spacing="50.0">
-            <children>
-                <Label styleClass="section-title" text="Create Ticket" />
-                <Button onAction="#handleBack" styleClass="back-button" text="Back" />
-            </children>
-        </HBox>
-        <children>
-            <Label text="Flight ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-            <TextField fx:id="flightIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
 
-            <Label text="Seat Number:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-            <TextField fx:id="seatNumberField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+<?import java.lang.String?>
+<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.TicketCreateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
 
-            <Label text="Ticket Class:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-            <TextField fx:id="ticketClassField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    <Label fx:id="formTitleLabel" text="Create New Ticket" styleClass="form-title"/>
 
-            <Label text="Ticket Price:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-            <TextField fx:id="ticketPriceField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+<!--    &lt;!&ndash; Flight Selection &ndash;&gt;-->
+<!--    <ComboBox fx:id="flightIdField" promptText="Select Flight" styleClass="input-field">-->
+<!--        &lt;!&ndash; Populate this ComboBox with flight data in the controller &ndash;&gt;-->
+<!--    </ComboBox>-->
 
-            <Label text="Ticket Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-            <TextField fx:id="ticketStatusField" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    <!-- Passenger Name Field -->
+    <TextField fx:id="passengerNameField" promptText="Passenger Name" styleClass="input-field"/>
 
-            <Label text="Booking Date:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
-            <TextField fx:id="bookingDateField" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+    <!-- Passenger Email Field -->
+    <TextField fx:id="passengerEmailField" promptText="Passenger Email" styleClass="input-field"/>
 
-            <Button onAction="#handleSaveTicket" text="Save" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-            <Button onAction="#handleCancel" text="Cancel" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-        </children>
-    </GridPane>
+    <!-- Ticket Class Selection -->
+<!--    <ComboBox fx:id="ticketClassField" promptText="Select Ticket Class" styleClass="input-field">-->
+<!--        <items>-->
+<!--            <FXCollections fx:factory="observableArrayList">-->
+<!--                <String fx:value="Economy"/>-->
+<!--                <String fx:value="Business"/>-->
+<!--                <String fx:value="First Class"/>-->
+<!--            </FXCollections>-->
+<!--        </items>-->
+<!--    </ComboBox>-->
+
+    <!-- Seat Number Field -->
+    <TextField fx:id="seatNumberField" promptText="Seat Number" styleClass="input-field"/>
+
+    <!-- Price Field -->
+    <TextField fx:id="priceField" promptText="Ticket Price" styleClass="input-field"/>
+
+    <!-- Payment Status Selection -->
+    <ComboBox fx:id="paymentStatusField" promptText="Select Payment Status" styleClass="input-field">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Pending"/>
+                <String fx:value="Paid"/>
+                <String fx:value="Cancelled"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <!-- Error Label -->
+    <Label fx:id="errorLabel" textFill="red"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Save Ticket" onAction="#handleSaveTicket" styleClass="save-button"/>
+    </HBox>
 </VBox>

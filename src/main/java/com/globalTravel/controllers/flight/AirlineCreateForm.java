@@ -1,6 +1,7 @@
 package com.globalTravel.controllers.flight;
 
 import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.flight.Airline;
 import com.globalTravel.services.flight.AirlineService;
 import javafx.fxml.FXML;
@@ -13,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.sql.SQLOutput;
 
-public class AirlineCreateForm {
+public class AirlineCreateForm implements Navigatable {
 
     @FXML private TextField airlineNameField;
     @FXML private TextField airlineCodeField;
@@ -22,7 +23,7 @@ public class AirlineCreateForm {
     @FXML private ImageView airlineLogoPreview;
     @FXML private Button backButton;
 
-    private File selectedLogoFile;
+
     private AirlineService airlineService = new AirlineService();
     private Stage stage;
     private DashBoard dashBoardController;
@@ -60,6 +61,7 @@ public class AirlineCreateForm {
             showAlert(Alert.AlertType.INFORMATION, "Success", "Airline created successfully.");
             clearForm();
             closeForm();
+            dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Error creating airline: " + e.getMessage());
         }
@@ -111,9 +113,9 @@ public class AirlineCreateForm {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            selectedLogoFile = selectedFile;
-            selectedImageLabel.setText(selectedFile.getName());
-            airlineLogoPreview.setImage(new Image(selectedFile.toURI().toString()));
+            //selectedLogoFile = selectedFile;
+//            selectedImageLabel.setText(selectedFile.getName());
+//            airlineLogoPreview.setImage(new Image(selectedFile.toURI().toString()));
         }
     }
 
@@ -127,8 +129,8 @@ public class AirlineCreateForm {
         airlineNameField.clear();
         airlineCodeField.clear();
         countryField.clear();
-        selectedImageLabel.setText("No image selected");
-        airlineLogoPreview.setImage(null);
+//        selectedImageLabel.setText("No image selected");
+//        airlineLogoPreview.setImage(null);
     }
 
     private void closeForm() {

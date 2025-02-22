@@ -2,31 +2,35 @@ package com.globalTravel.controllers.hotel;
 
 import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
-import com.globalTravel.models.flight.Flight;
-import com.globalTravel.models.flight.FlightStatus;
+import com.globalTravel.models.hotel.Hotel;
+import com.globalTravel.services.hotel.HotelService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * The FlightGrid class represents a user interface component that displays a grid of flights
- * and allows users to interact with flight data. It implements the Navigatable interface, providing
+ * The HotelGrid class represents a user interface component that displays a grid of hotels
+ * and allows users to interact with hotel data. It implements the Navigatable interface, providing
  * navigation capabilities within the application.
  *
  * Responsibilities of this class include:
- * - Loading and displaying a list of flights in a grid format.
- * - Creating individual flight cards with flight details and actions such as update, view, and delete.
- * - Navigating to other views or forms within the application for updating or adding flights.
+ * - Loading and displaying a list of hotels in a grid format.
+ * - Creating individual hotel cards with hotel details and actions such as update, view, and delete.
+ * - Navigating to other views or forms within the application for updating or adding hotels.
  */
 public class HotelGrid implements Navigatable {
     private DashBoard dashBoardController;
@@ -37,119 +41,141 @@ public class HotelGrid implements Navigatable {
     }
 
     @FXML
-    private FlowPane flightsGrid;
+    private FlowPane hotelsGrid;
 
-    private List<Flight> flights;
+    private List<Hotel> hotels;
 
     @FXML
     public void initialize() {
-        loadFlights();
+        loadHotels();
     }
 
-    private void loadFlights() {
-        flights = getFlights();
+    private void loadHotels() {
+        hotelsGrid.getChildren().clear();
+        hotels = getHotels();
 
-        for (Flight flight : flights) {
-            VBox flightCard = createFlightCard(flight);
-            flightsGrid.getChildren().add(flightCard);
+        for (Hotel hotel : hotels) {
+            VBox hotelCard = createHotelCard(hotel);
+            hotelsGrid.getChildren().add(hotelCard);
         }
     }
 
-    private VBox createFlightCard(Flight flight) {
+    private VBox createHotelCard(Hotel hotel) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("flight-offer-card");
+        card.getStyleClass().add("car-offer-card");
 
-        // Add airline logo
-        ImageView airlineLogoView = new ImageView(new Image("/images/logo.jpg"));
-        airlineLogoView.setFitWidth(200);
-        airlineLogoView.setFitHeight(150);
-        airlineLogoView.setPreserveRatio(true);
+        VBox hotelInfo = new VBox(5);
+        hotelInfo.getStyleClass().add("hotel-info");
+        // Hotel image
+        ImageView hotelLogoView = new ImageView(new Image("/images/hotelLogo.jpg", 200, 150, true, true));
 
-        VBox flightInfo = new VBox(5);
-        flightInfo.getStyleClass().add("flight-info");
+        // Hotel details
+        Label nameLabel = new Label("Hotel: " + hotel.getNom_h());
+        nameLabel.getStyleClass().add("hotel-title");
 
-        // Flight details
-        Label routeLabel = new Label(flight.getDeparture_airport() + " to " + flight.getArrival_airport());
-        routeLabel.getStyleClass().add("flight-title");
+        Label addressLabel = new Label("Address: " + hotel.getAdresse_h());
+        addressLabel.getStyleClass().add("hotel-address");
 
-        Label departureTimeLabel = new Label("Departure: " + flight.getDeparture_time());
-        departureTimeLabel.getStyleClass().add("flight-departure-time");
+        Label cityLabel = new Label("City: " + hotel.getVille_h());
+        cityLabel.getStyleClass().add("hotel-city");
 
-        Label arrivalTimeLabel = new Label("Arrival: " + flight.getArrival_time());
-        arrivalTimeLabel.getStyleClass().add("flight-arrival-time");
-
-        Label priceLabel = new Label("Price: $" + String.format("%.2f", flight.getBase_price()));
-        priceLabel.getStyleClass().add("flight-price");
-
-        // Flight status display
-        Label statusLabel = new Label("Status: " + flight.getStatus().toString());
-        statusLabel.getStyleClass().add("flight-status");
-
+        Label categoryLabel = new Label("Category: " + hotel.getCategorie_h() + " Stars");
+        categoryLabel.getStyleClass().add("hotel-category");
 
         // Buttons
-        Button updateButton = new Button("update flight");
+        Button updateButton = new Button("Update Hotel");
         updateButton.setOnAction(e -> {
             try {
-                navigateToUpdateFlight(flight);
+                navigateToUpdateHotel(hotel);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
         updateButton.getStyleClass().add("view-details-button");
 
-        Button viewDetailsButton = new Button("View Details");
-        viewDetailsButton.getStyleClass().add("view-details-button");
-        viewDetailsButton.setOnAction(e -> handleViewDetails(flight));
         Button deleteButton = new Button("Delete");
         deleteButton.getStyleClass().add("view-details-button");
-        deleteButton.setOnAction(e -> {deleteFlight(flight);});
-        HBox buttonHbox = new HBox(3);
-        buttonHbox.getChildren().addAll(updateButton,deleteButton);
-        flightInfo.getChildren().addAll(routeLabel, departureTimeLabel, arrivalTimeLabel, priceLabel, statusLabel,buttonHbox );
+        deleteButton.setOnAction(e -> deleteHotel(hotel));
 
-        card.getChildren().addAll(airlineLogoView, flightInfo);
+        HBox buttonHbox = new HBox(3);
+        buttonHbox.getChildren().addAll(updateButton, deleteButton);
+        hotelInfo.getChildren().addAll(hotelLogoView,nameLabel, addressLabel, cityLabel, categoryLabel, buttonHbox);
+
+        card.getChildren().add(hotelInfo);
 
         return card;
     }
 
-    private void deleteFlight(Flight flight) {
-        System.out.println("deleting : "+ flight);
+    private void deleteHotel(Hotel hotel) {
+        if (hotel == null) {
+            // Afficher une boîte de dialogue d'erreur directement
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setTitle("Erreur");
+            errorAlert.setHeaderText(null);
+            errorAlert.setContentText("Veuillez sélectionner un hôtel à supprimer.");
+            errorAlert.showAndWait();
+            return;
+        }
+
+        // Confirmation avant suppression
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation de suppression");
+        confirmationAlert.setHeaderText("Supprimer l'hôtel ?");
+        confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer l'hôtel : " + hotel.getNom_h() + " ?");
+
+        // Attendre la réponse de l'utilisateur
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    // Appeler le service pour supprimer l'hôtel
+                    HotelService hotelService = new HotelService();
+                    hotelService.supprimer(hotel);
+                    System.out.println("Hôtel supprimé avec succès : " + hotel);
+                    loadHotels();
+                    // Afficher une boîte de dialogue de confirmation directement
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("Succès");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("L'hôtel a été supprimé avec succès !");
+                    successAlert.showAndWait();
+
+                    // Rafraîchir la liste des hôtels (si nécessaire)
+                    // refreshHotelList();
+                } catch (Exception e) {
+                    System.err.println("Erreur lors de la suppression de l'hôtel : " + e.getMessage());
+
+                    // Afficher une boîte de dialogue d'erreur directement
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Erreur");
+                    errorAlert.setHeaderText(null);
+                    errorAlert.setContentText("Erreur lors de la suppression de l'hôtel !");
+                    errorAlert.showAndWait();
+                }
+            }
+        });
     }
 
-
-    private void navigateToUpdateFlight(Flight flight) throws IOException {
+    private void navigateToUpdateHotel(Hotel hotel) throws IOException {
         dashBoardController.navigateTo("dashboard/hotel/hotel-update-form.fxml");
-        ((HotelUpdateForm)dashBoardController.getController()).initialize(flight);
+        ((HotelUpdateForm) dashBoardController.getController()).initialize(hotel);
     }
 
-    private void handleViewDetails(Flight flight) {
-        // Implement view details logic here
+    private List<Hotel> getHotels() {
+        HotelService hotelService = new HotelService();
+        return hotelService.rechercher();
     }
 
-    private List<Flight> getFlights() {
-        return Arrays.asList(
-                new Flight(
-                        101,
-                        "AB1234",
-                        1,
-                        "JFK",
-                        "LAX",
-                        "2025-02-20 10:00",
-                        "2025-02-20 13:00",
-                        300,
-                        150,
-                        250.50,
-                        FlightStatus.Scheduled
-                )
-        );
-    }
 
     /**
-     * Navigates to the flight form view to add a new flight.
+     * Navigates to the hotel form view to add a new hotel.
      *
      * @param actionEvent the action event that triggered this method
      */
-    public void addFlight(ActionEvent actionEvent) {
+    public void addHotel(ActionEvent actionEvent) {
         dashBoardController.navigateTo("dashboard/hotel/hotel-create-form.fxml");
+    }
+
+    public void navigateToChambre(ActionEvent actionEvent) {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
     }
 }

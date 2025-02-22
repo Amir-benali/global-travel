@@ -56,22 +56,6 @@ package com.globalTravel.controllers;
             }
         }
 
-        public void navigateTo(String fxmlPath, Flight flight) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlPath));
-                Parent root = loader.load();
-
-                if (fxmlPath.equals("dashboard/flight/flight-update-form.fxml")) {
-                    FlightUpdateForm controller = loader.getController();
-                    controller.setFlightToEdit(flight);
-                }
-
-                mainContainer.setCenter(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         // Helper method to handle button selection
         private void handleButtonSelection(Button clickedButton) {
             // Remove the "selected" style class from the previously selected button

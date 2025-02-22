@@ -47,7 +47,7 @@ package com.globalTravel.controllers.flight;
                 VBox card = new VBox(10);
                 card.getStyleClass().add("flight-offer-card");
 
-                ImageView airlineLogoView = new ImageView(new Image("/images/logo.jpg"));
+                ImageView airlineLogoView = new ImageView(new Image("/images/flight.png"));
                 airlineLogoView.setFitWidth(200);
                 airlineLogoView.setFitHeight(150);
                 airlineLogoView.setPreserveRatio(true);
@@ -66,11 +66,11 @@ package com.globalTravel.controllers.flight;
                 viewDetailsButton.setOnAction(e -> handleViewDetails(flight));
 
                 Button deleteButton = new Button("Delete");
-                deleteButton.getStyleClass().add("delete-button");
+                deleteButton.getStyleClass().add("view-details-button");
                 deleteButton.setOnAction(e -> handleDeleteFlight(flight));
 
                 Button updateButton = new Button("Update");
-                updateButton.getStyleClass().add("update-button");
+                updateButton.getStyleClass().add("view-details-button");
                 updateButton.setOnAction(e -> handleUpdateFlight(flight));
 
                 HBox buttonHbox = new HBox(3);
@@ -114,10 +114,21 @@ package com.globalTravel.controllers.flight;
             }
 
             private void handleUpdateFlight(Flight flight) {
-                dashBoardController.navigateTo("dashboard/flight/flight-update-form.fxml", flight);
+                dashBoardController.navigateTo("dashboard/flight/flight-update-form.fxml");
+                FlightUpdateForm controller = (FlightUpdateForm) dashBoardController.getController();
+                controller.initialize(flight);
+
             }
 
             public void addFlight(ActionEvent actionEvent) {
                 dashBoardController.navigateTo("dashboard/flight/flight-create-form.fxml");
+            }
+
+            public void navigateToAirline(ActionEvent actionEvent) {
+                dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
+            }
+
+            public void navigateToTickets(ActionEvent actionEvent) {
+                dashBoardController.navigateTo("dashboard/flight/ticket-grid.fxml");
             }
         }

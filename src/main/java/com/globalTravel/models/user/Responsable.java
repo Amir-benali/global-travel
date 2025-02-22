@@ -1,11 +1,13 @@
 package com.globalTravel.models.user;
 
+import java.sql.Date;
+
 public class Responsable extends User {
     private String departement;
 
     public Responsable() {}
 
-    public Responsable(int id, String genre, java.util.Date dateNaissance, String adresse, String email, String roles,
+    public Responsable(int id, String genre, Date dateNaissance, String adresse, String email, String roles,
                        String password, String firstName, String lastName, String phoneNumber, String image, String statut,
                        String departement) {
         super(id, genre, dateNaissance, adresse, email, roles, password, firstName, lastName, phoneNumber, image, statut);

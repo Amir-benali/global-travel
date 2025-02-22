@@ -17,7 +17,7 @@ public class CarDriverService implements IService<CarDriver> {
     private Connection connection = DataSource.getInstance().getConnection();
 
     @Override
-    public boolean ajouter(CarDriver carDriver) {
+    public void ajouter(CarDriver carDriver) {
         String req = "INSERT INTO car_driver (first_name, last_name ,phone) VALUES (?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -30,11 +30,10 @@ public class CarDriverService implements IService<CarDriver> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
-    public boolean modifier(CarDriver carDriver) {
+    public void modifier(CarDriver carDriver) {
         String req = "UPDATE car_driver SET first_name=? ,last_name=?,phone=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
@@ -48,7 +47,6 @@ public class CarDriverService implements IService<CarDriver> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
     }
 
     @Override
