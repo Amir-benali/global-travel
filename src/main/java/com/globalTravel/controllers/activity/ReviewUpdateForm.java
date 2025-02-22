@@ -17,7 +17,7 @@ import java.util.List;
 public class ReviewUpdateForm implements Navigatable  {
 
     @FXML
-    private TextField commentaireField;
+    private TextArea commentaireField;
 
     @FXML
     private Rating noteRating; // Utilisation de Rating au lieu de ComboBox

@@ -26,7 +26,7 @@ public class ActivityUpdateForm implements Navigatable {
     private DashBoard dashBoardController;
 
     @FXML private TextField activityNameField;
-    @FXML private TextField descriptionField;
+    @FXML private TextArea descriptionField;
     @FXML private TextField locationField;
     @FXML private DatePicker startDatePicker;
     @FXML private ComboBox<String> startHourComboBox;

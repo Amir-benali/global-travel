@@ -18,7 +18,7 @@ public class ReviewCreateForm implements Navigatable {
     private DashBoard dashBoardController;
     private Stage stage;
 
-    @FXML private TextField commentaireField;
+    @FXML private TextArea commentaireField;
     @FXML private Rating noteRating;
     @FXML private ComboBox<Integer> activityIdComboBox;
     @FXML private Button saveButton;
