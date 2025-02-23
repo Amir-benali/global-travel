@@ -10,7 +10,7 @@ public class EmailService {
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
     private static final String EMAIL_FROM = "rayenneji1919@gmail.com";
-    private static final String EMAIL_PASSWORD = "evjn plxs irxt mwxa";
+    private static final String EMAIL_PASSWORD = "sbye zvvy hczg ahfw"; // Utilise un mot de passe d'application
 
     public static void sendResetEmail(String toEmail, String resetToken) {
         // Configuration des propriétés SMTP
@@ -48,6 +48,15 @@ public class EmailService {
         } catch (MessagingException e) {
             e.printStackTrace();
             System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
+
+            // Afficher des informations supplémentaires sur l'erreur
+            if (e instanceof AuthenticationFailedException) {
+                System.err.println("Échec de l'authentification SMTP. Vérifiez l'email et le mot de passe.");
+            } else if (e instanceof SendFailedException) {
+                System.err.println("Échec de l'envoi de l'email. Vérifiez l'adresse email du destinataire.");
+            } else {
+                System.err.println("Erreur inconnue lors de l'envoi de l'email.");
+            }
         }
     }
 }
