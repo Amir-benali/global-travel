@@ -47,8 +47,10 @@
         <Button text="Choose car image" onAction="#handleChooseImage" styleClass="choose-image-button"/>
         <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
     </HBox>
+    <VBox fx:id="carImageErrorContainer"/>
 
     <ImageView fx:id="driverImagePreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
+
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>

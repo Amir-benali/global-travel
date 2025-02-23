@@ -15,7 +15,6 @@
         <HBox alignment="CENTER_LEFT" spacing="20">
             <Label text="Offer Details" styleClass="page-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="editButton" text="Edit Offer" styleClass="action-button, edit-button"/>
         </HBox>
 
         <HBox spacing="30" alignment="CENTER_LEFT">

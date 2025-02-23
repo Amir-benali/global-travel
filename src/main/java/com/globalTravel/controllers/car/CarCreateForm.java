@@ -16,16 +16,15 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class CarCreateForm implements Navigatable {
 
+    @FXML private VBox carImageErrorContainer;
     @FXML private Label selectedImageLabel;
     @FXML private Label formTitleLabel;
     @FXML private TextField brandField;
@@ -37,6 +36,7 @@ public class CarCreateForm implements Navigatable {
     @FXML private VBox modelErrorContainer;
     @FXML private VBox numSeatsErrorContainer;
     @FXML private VBox driverErrorContainer;
+    @FXML private ImageView driverImagePreview;
 
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();
@@ -44,15 +44,14 @@ public class CarCreateForm implements Navigatable {
     private String selectedImageName;
     private String selectedImagePath;
     private File selectedImageFile;
-    @FXML
-    private ImageView driverImagePreview;
+
+    private Stage stage;
+    private List<CarDriver> drivers;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
-    private Stage stage;
-    private List<CarDriver> drivers;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -114,11 +113,21 @@ public class CarCreateForm implements Navigatable {
             markFieldAsInvalid(driverComboBox, driverErrorContainer, "Driver is required.");
             isValid = false;
         }
+
+        // Image validation
+        carImageErrorContainer.getChildren().clear(); // Clear previous error messages
+        if (selectedImageFile == null) {
+            markFieldAsInvalid(null, carImageErrorContainer, "Image selection is required.");
+            isValid = false;
+        }
+
         return isValid;
     }
 
     private void markFieldAsInvalid(Control field, VBox errorContainer, String errorMessage) {
-        field.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+        if (field != null) {
+            field.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+        }
         Text errorText = new Text(errorMessage);
         errorText.setFill(Color.RED);
         errorContainer.getChildren().add(errorText);
@@ -134,6 +143,7 @@ public class CarCreateForm implements Navigatable {
         modelErrorContainer.getChildren().clear();
         numSeatsErrorContainer.getChildren().clear();
         driverErrorContainer.getChildren().clear();
+        carImageErrorContainer.getChildren().clear();
     }
 
     private void clearForm() {
@@ -141,6 +151,8 @@ public class CarCreateForm implements Navigatable {
         modelField.clear();
         numSeatsField.clear();
         driverComboBox.getSelectionModel().clearSelection();
+        selectedImageLabel.setText("No image selected");
+        carImageErrorContainer.getChildren().clear();
     }
 
     @FXML
@@ -152,7 +164,8 @@ public class CarCreateForm implements Navigatable {
             handleCopyImage();
 
             CarDriver selectedDriver = driverComboBox.getValue();
-            System.out.println("test : " +this.selectedImagePath);
+            System.out.println("Selected Image Path: " + this.selectedImagePath);
+
             PrivateCar car = new PrivateCar(
                     brandField.getText().trim(),
                     modelField.getText().trim(),
@@ -174,15 +187,13 @@ public class CarCreateForm implements Navigatable {
                 try {
                     String imagePath = AzureBlobService.uploadImage(selectedImageFile);
                     System.out.println(imagePath);
-                    selectedImagePath=imagePath;
+                    selectedImagePath = imagePath;
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }).join();
-
         }
     }
-    
 
     private void addCar(PrivateCar car) throws IOException {
         System.out.println("Adding new car: " + car);
@@ -191,17 +202,11 @@ public class CarCreateForm implements Navigatable {
         alert.setHeaderText("Are you sure you want to add this car?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() != ButtonType.OK) {
-
             return;
         }
         carService.ajouter(car);
         dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
-
-
-
-
     }
-
 
     @FXML
     private void handleCancel() {
@@ -216,27 +221,24 @@ public class CarCreateForm implements Navigatable {
     }
 
     public void handleChooseImage(javafx.event.ActionEvent actionEvent) {
-         FileChooser fileChooser = new FileChooser();
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Image");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
 
         try {
-            java.io.File selectedFile = fileChooser.showOpenDialog(stage);
-
+            File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null) {
                 this.selectedImageName = selectedFile.getName();
                 this.selectedImagePath = selectedFile.getAbsolutePath();
-                System.out.println("Selected file: " + selectedFile.getName());
                 this.selectedImageFile = selectedFile;
-                this.selectedImageLabel.setText(selectedFile.getName());
-                this.driverImagePreview.setImage(new javafx.scene.image.Image(selectedFile.toURI().toString()));
-            } else {
-                System.out.println("Image selection canceled.");
+                selectedImageLabel.setText(selectedFile.getName());
+                driverImagePreview.setImage(new javafx.scene.image.Image(selectedFile.toURI().toString()));
+                carImageErrorContainer.getChildren().clear(); // Clear image error if selected
             }
         } catch (Exception e) {
-            System.err.println("Error occurred while selecting an image: " + e.getMessage());
+            System.err.println("Error selecting image: " + e.getMessage());
         }
     }
 }

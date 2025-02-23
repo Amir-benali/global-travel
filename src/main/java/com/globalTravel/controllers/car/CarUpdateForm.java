@@ -168,6 +168,9 @@ public class CarUpdateForm implements Navigatable {
             if (selectedImagePath != null) {
                 car.setImage(selectedImagePath);
             }
+            else {
+                car.setImage(carToEdit.getImage());
+            }
             updateCar(car);
             closeForm();
         } catch (Exception e) {
@@ -179,7 +182,7 @@ public class CarUpdateForm implements Navigatable {
         System.out.println("Updating car: " + car);
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Confirmation");
-        alert.setHeaderText("Are you sure you want to add this car?");
+        alert.setHeaderText("Are you sure you want to update this car?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() != ButtonType.OK) {
 

@@ -71,10 +71,8 @@ public class CarGrid implements Navigatable {
 
         try {
             if (imagePath.startsWith("http") || imagePath.startsWith("file:")) {
-                // Load external image (from Azure Blob Storage or local file system)
                 carImage = new Image(imagePath, 300, 200, false, true);
             } else {
-                // Load internal image from resources
                 carImage = new Image(getClass().getResource(imagePath).toExternalForm(), 300, 200, false, true);
             }
         } catch (Exception e) {
@@ -97,14 +95,23 @@ public class CarGrid implements Navigatable {
         Label brandModelLabel = new Label(car.getBrand() + " " + car.getModel());
         brandModelLabel.getStyleClass().add("car-brand-model");
 
-        // Car Details
+        // Car Details Grid (2x2 Layout)
         GridPane detailsGrid = new GridPane();
-        detailsGrid.setHgap(10);
-        detailsGrid.setVgap(5);
-        detailsGrid.addRow(0, new Label("🆔"), new Label(String.valueOf(car.getId())));
-        detailsGrid.addRow(1, new Label("💺"), new Label(String.valueOf(car.getNum_place())));
-        detailsGrid.addRow(2, new Label("🚘"), new Label(car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName()));
-        detailsGrid.addRow(3, new Label("💳"), new Label(String.valueOf(car.getCarDriver().getId())));
+        detailsGrid.setHgap(15);
+        detailsGrid.setVgap(10);
+
+        // Row 1
+        detailsGrid.add(createIcon(FontAwesomeIcon.NAVICON, Color.BLUE), 0, 0);
+        detailsGrid.add(new Label("ID: " + car.getId()), 1, 0);
+        detailsGrid.add(createIcon(FontAwesomeIcon.USER, Color.GREEN), 2, 0);
+        detailsGrid.add(new Label("Seats: " + car.getNum_place()), 3, 0);
+
+        // Row 2
+        detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.ORANGE), 0, 1);
+        detailsGrid.add(new Label("Driver: " + ((car.getCarDriver() != null) ? car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName() : "N/A")), 1, 1);
+        detailsGrid.add(createIcon(FontAwesomeIcon.CREDIT_CARD, Color.RED), 2, 1);
+        detailsGrid.add(new Label("Driver ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
+
         detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
@@ -137,6 +144,15 @@ public class CarGrid implements Navigatable {
 
         return card;
     }
+
+    // Utility method to create FontAwesome icons with color
+    private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
+        iconView.setGlyphSize(20); // Increased size
+        iconView.setFill(color); // Set color
+        return iconView;
+    }
+
     private void deleteCar(PrivateCar car) {
         System.out.println("Deleting: " + car);
         Alert alert = new Alert(Alert.AlertType.WARNING);

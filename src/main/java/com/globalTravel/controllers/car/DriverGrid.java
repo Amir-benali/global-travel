@@ -4,6 +4,8 @@ import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.CarDriverService;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -56,14 +58,13 @@ public class DriverGrid implements Navigatable {
 
     private VBox createDriverCard(CarDriver driver) {
         VBox card = new VBox(15);
-        card.getStyleClass().addAll("driver-card", "modern-card");
+        card.getStyleClass().addAll("car-offer-card", "modern-card");
         card.setPadding(new Insets(15));
 
-        // Driver Image (Placeholder for now)
+        // Driver Image (Placeholder)
         ImageView driverImageView = new ImageView(new Image("/images/carlogo.png", 300, 200, true, true));
         driverImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
         driverImageView.getStyleClass().add("car-image");
-
 
         // Driver Info Container
         VBox driverInfo = new VBox(10);
@@ -73,12 +74,17 @@ public class DriverGrid implements Navigatable {
         Label nameLabel = new Label(driver.getFirstName() + " " + driver.getLastName());
         nameLabel.getStyleClass().add("car-brand-model");
 
-        // Driver Details Grid
+        // Driver Details Grid (2 Rows x 2 Columns)
         GridPane detailsGrid = new GridPane();
-        detailsGrid.setHgap(10);
-        detailsGrid.setVgap(5);
-        detailsGrid.addRow(0, new Label("🆔"), new Label(String.valueOf(driver.getId())));
-        detailsGrid.addRow(1, new Label("📞"), new Label(driver.getPhone()));
+        detailsGrid.setHgap(15);
+        detailsGrid.setVgap(10);
+
+        detailsGrid.add(createIcon(FontAwesomeIcon.ID_CARD, Color.BLUE), 0, 0);
+        detailsGrid.add(new Label(String.valueOf(driver.getId())), 1, 0);
+
+        detailsGrid.add(createIcon(FontAwesomeIcon.PHONE, Color.GREEN), 0, 1);
+        detailsGrid.add(new Label(driver.getPhone()), 1, 1);
+
         detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
@@ -112,6 +118,13 @@ public class DriverGrid implements Navigatable {
         return card;
     }
 
+    // Utility method to create FontAwesome icons with color
+    private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
+        iconView.setGlyphSize(20); // Increased size
+        iconView.setFill(color); // Set color
+        return iconView;
+    }
 
 
     private void deleteDriver(CarDriver driver) {

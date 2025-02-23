@@ -34,7 +34,6 @@ public class OfferDetails implements Navigatable {
     @FXML private Label carModelLabel;
     @FXML private Label carSeatsLabel;
     @FXML private Label carDriverLabel;
-    @FXML private Button editButton;
     @FXML private Button backButton;
     @FXML private Button bookButton;
 
@@ -43,7 +42,6 @@ public class OfferDetails implements Navigatable {
     @FXML
     public void initialize(Offer offer) {
         setOffer(offer);
-        editButton.setOnAction(event -> onEditClicked());
         backButton.setOnAction(event -> onBackClicked());
         bookButton.setOnAction(event -> onBookClicked());
     }
@@ -67,13 +65,25 @@ public class OfferDetails implements Navigatable {
                 routeToLabel.setText(route.getLocation_destination());
                 routeDistanceLabel.setText("10" + " km");
             }
+            else {
+                routeLabel.setText("No route assigned");
+                routeFromLabel.setText("No route assigned");
+                routeToLabel.setText("No route assigned");
+                routeDistanceLabel.setText("No route assigned");
+            }
 
             PrivateCar car = offer.getCar();
             if (car != null) {
                 carBrandLabel.setText(car.getBrand());
                 carModelLabel.setText(car.getModel());
                 carSeatsLabel.setText(String.valueOf(car.getNum_place()));
-                carDriverLabel.setText(car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName());
+                carDriverLabel.setText((car.getCarDriver()!= null) ? car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName(): "No driver assigned");
+            }
+            else {
+                carBrandLabel.setText("No car assigned");
+                carModelLabel.setText("No car assigned");
+                carSeatsLabel.setText("No car assigned");
+                carDriverLabel.setText("No driver assigned");
             }
 
             // Load a specific image for the offer if available
@@ -81,10 +91,6 @@ public class OfferDetails implements Navigatable {
         }
     }
 
-    private void onEditClicked() {
-        // TODO: Implement edit functionality
-        System.out.println("Edit button clicked");
-    }
 
     private void onBackClicked() {
         // TODO: Implement navigation back to previous screen

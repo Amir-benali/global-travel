@@ -1,3 +1,4 @@
+
 /* Main Styles */
 .root {
     -fx-font-family: 'Segoe UI', Arial, sans-serif;
@@ -1299,4 +1300,18 @@
     -fx-background-radius: 5px;
     -fx-border-color: #e9ecef;
     -fx-border-radius: 5px;
+}
+
+/* Icon Specific Styles */
+.font-awesome-icon {
+    -fx-fill: #333333;
+}
+
+/* Custom Color Scheme for Icons */
+.font-awesome-icon-blue {
+    -fx-fill: #007BFF;
+}
+
+.font-awesome-icon-green {
+    -fx-fill: #28a745;
 }

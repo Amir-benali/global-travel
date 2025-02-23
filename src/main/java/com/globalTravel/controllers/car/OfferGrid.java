@@ -4,6 +4,8 @@ import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.car.Offer;
 import com.globalTravel.services.car.OfferService;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -14,6 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
@@ -58,26 +61,12 @@ public class OfferGrid implements Navigatable {
         card.getStyleClass().addAll("offer-card", "modern-card");
         card.setPadding(new Insets(15));
 
-        // Offer Image (assuming offer has an image field)
-        String imagePath = "/images/carlogo.png";
-        Image offerImage;
-        offerImage = new Image(imagePath, 300, 200, false, true);
-
-//        try {
-//            if (imagePath.startsWith("http") || imagePath.startsWith("file:")) {
-//                // Load external image (from Azure Blob Storage or local file system)
-//                offerImage = new Image(imagePath, 300, 200, false, true);
-//            } else {
-//                // Load internal image from resources
-//                offerImage = new Image(getClass().getResource(imagePath).toExternalForm(), 300, 200, false, true);
-//            }
-//        } catch (Exception e) {
-//            System.err.println("Failed to load image: " + imagePath);
-//            offerImage = new Image(getClass().getResource("/images/offerlogo.png").toExternalForm(), 300, 200, false, true);
-//        }
+        // Offer Image
+        String imagePath = "/images/carlogo.png"; // Default image
+        Image offerImage = new Image(imagePath, 325, 200, false, true);
 
         ImageView offerImageView = new ImageView(offerImage);
-        offerImageView.setFitWidth(300);
+        offerImageView.setFitWidth(325);
         offerImageView.setFitHeight(200);
         offerImageView.setPreserveRatio(false);
         offerImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
@@ -87,25 +76,26 @@ public class OfferGrid implements Navigatable {
         VBox offerInfo = new VBox(10);
         offerInfo.getStyleClass().add("offer-info");
 
-        // Offer Description
-        Label descriptionLabel = new Label("📝 " + offer.getDescription());
-        descriptionLabel.getStyleClass().add("offer-description");
+        // Offer Details Grid (3 Rows x 2 Columns)
+        GridPane detailsGrid = new GridPane();
+        detailsGrid.setHgap(15);
+        detailsGrid.setVgap(10);
 
-        // Offer Date
-        Label dateLabel = new Label("📅 " + offer.getDate());
-        dateLabel.getStyleClass().add("offer-date");
+        detailsGrid.add(createIcon(FontAwesomeIcon.FILE_TEXT, Color.BLUE), 0, 0);
+        detailsGrid.add(new Label(offer.getDescription()), 1, 0);
 
-        // Offer Price
-        Label priceLabel = new Label("💲 " + offer.getPrice());
-        priceLabel.getStyleClass().add("offer-price");
+        detailsGrid.add(createIcon(FontAwesomeIcon.CALENDAR, Color.GREEN), 0, 1);
+        detailsGrid.add(new Label(offer.getDate().toString()), 1, 1);
 
-        // Offer Route
-        Label routeLabel = new Label("🛣️ Route ID: " + offer.getRoute().getId());
-        routeLabel.getStyleClass().add("offer-route");
+        detailsGrid.add(createIcon(FontAwesomeIcon.DOLLAR, Color.ORANGE), 2, 0);
+        detailsGrid.add(new Label("$" + offer.getPrice()), 3, 0);
 
-        // Offer Car
-        Label carLabel = new Label("🚗 " + offer.getCar().getBrand() + " " + offer.getCar().getModel());
-        carLabel.getStyleClass().add("offer-car");
+
+
+        detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.PURPLE), 2, 1);
+        detailsGrid.add(new Label(offer.getCar().getBrand() + " " + offer.getCar().getModel()), 3, 1);
+
+        detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
         HBox buttonBox = new HBox(10);
@@ -129,10 +119,10 @@ public class OfferGrid implements Navigatable {
         deleteButton.getStyleClass().addAll("modern-button", "delete-button");
         deleteButton.setOnAction(e -> deleteOffer(offer));
 
-        buttonBox.getChildren().addAll(detailsButton,updateButton, deleteButton);
+        buttonBox.getChildren().addAll(detailsButton, updateButton, deleteButton);
 
         // Assemble all components
-        offerInfo.getChildren().addAll(descriptionLabel, dateLabel, priceLabel, routeLabel, carLabel);
+        offerInfo.getChildren().addAll(detailsGrid);
         card.getChildren().addAll(offerImageView, offerInfo, buttonBox);
 
         // Add hover effect
@@ -141,6 +131,16 @@ public class OfferGrid implements Navigatable {
 
         return card;
     }
+
+    // Utility method to create FontAwesome icons with color
+    private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
+        iconView.setGlyphSize(20); // Increased size
+        iconView.setFill(color); // Set color
+        return iconView;
+    }
+
+
 
     private void showOfferDetails(Offer offer) {
         dashBoardController.navigateTo("dashboard/car/offer-details.fxml");

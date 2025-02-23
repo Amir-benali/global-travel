@@ -5,6 +5,8 @@ import javafx.scene.control.*;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebEngine;
 import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -12,7 +14,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class OfferBookForm {
 
@@ -26,21 +27,16 @@ public class OfferBookForm {
 
     private WebEngine webEngine;
     private RouteMap routeMap;
-
-    private double[] startCoords = null; // Store start coordinates
-    private double[] destCoords = null; // Store destination coordinates
-
-    private final String apiKey = "cdd53807abc4440ea771e2beb6598c08"; // Replace with your OpenCage API key
+    private double[] startCoords = null;
+    private double[] destCoords = null;
+    private final String apiKey = "cdd53807abc4440ea771e2beb6598c08";
 
     @FXML
     public void initialize() {
         routeMap = new RouteMap();
         webEngine = mapWebView.getEngine();
-
-        // Load the map
         webEngine.loadContent(routeMap.getHtmlContent());
 
-        // Set up a listener for when the page is fully loaded
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) webEngine.executeScript("window");
@@ -49,11 +45,9 @@ public class OfferBookForm {
             }
         });
 
-        // Add listeners to address fields for suggestions
         startLocationField.textProperty().addListener((obs, oldVal, newVal) -> fetchSuggestions(newVal, startSuggestions));
         destinationField.textProperty().addListener((obs, oldVal, newVal) -> fetchSuggestions(newVal, destinationSuggestions));
 
-        // Handle selection of suggestions
         startSuggestions.setOnMouseClicked(e -> {
             String selected = startSuggestions.getSelectionModel().getSelectedItem();
             if (selected != null) {
@@ -80,19 +74,15 @@ public class OfferBookForm {
         }
 
         try {
-            // Encode the query to handle spaces and special characters
-            String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
+            String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
             String url = String.format("https://api.opencagedata.com/geocode/v1/json?q=%s&key=%s&limit=5", encodedQuery, apiKey);
 
             HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
                     .thenAccept(response -> {
-                        // Parse the response and extract suggestions
                         String[] addresses = parseAddressSuggestions(response);
                         javafx.application.Platform.runLater(() -> {
                             suggestions.getItems().clear();
@@ -110,23 +100,23 @@ public class OfferBookForm {
     }
 
     private String[] parseAddressSuggestions(String jsonResponse) {
-        // Parse the JSON response to extract address suggestions
-        return Arrays.stream(jsonResponse.split("\"formatted\":\"")) // Extract formatted addresses
-                .skip(1) // Skip the first split result
-                .map(line -> line.split("\"")[0]) // Extract the address
-                .toArray(String[]::new);
+        JSONObject json = new JSONObject(jsonResponse);
+        JSONArray results = json.getJSONArray("results");
+
+        String[] addresses = new String[results.length()];
+        for (int i = 0; i < results.length(); i++) {
+            addresses[i] = results.getJSONObject(i).getString("formatted");
+        }
+        return addresses;
     }
 
     private void fetchCoordinates(String address, boolean isStart) {
         try {
-            // Encode the address to handle spaces and special characters
-            String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
+            String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8);
             String url = String.format("https://api.opencagedata.com/geocode/v1/json?q=%s&key=%s", encodedAddress, apiKey);
 
             HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
@@ -134,12 +124,9 @@ public class OfferBookForm {
                         double[] coords = parseCoordinates(response);
                         if (coords != null) {
                             javafx.application.Platform.runLater(() -> {
-                                if (isStart) {
-                                    startCoords = coords; // Store start coordinates
-                                } else {
-                                    destCoords = coords; // Store destination coordinates
-                                }
-                                updateMap(); // Update the map with both coordinates
+                                if (isStart) startCoords = coords;
+                                else destCoords = coords;
+                                updateMap();
                             });
                         }
                     })
@@ -153,33 +140,29 @@ public class OfferBookForm {
     }
 
     private double[] parseCoordinates(String jsonResponse) {
-        // Parse the JSON response to extract latitude and longitude
-        String[] parts = jsonResponse.split("\"geometry\":\\{\"lat\":");
-        if (parts.length > 1) {
-            double lat = Double.parseDouble(parts[1].split(",")[0]);
-            double lng = Double.parseDouble(parts[1].split("\"lng\":")[1].split("}")[0]);
-            return new double[]{lng, lat}; // OpenCage returns [lat, lng], but we need [lng, lat]
+        JSONObject json = new JSONObject(jsonResponse);
+        JSONArray results = json.getJSONArray("results");
+        if (results.length() > 0) {
+            JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
+            return new double[]{geometry.getDouble("lng"), geometry.getDouble("lat")};
         }
         return null;
     }
 
     private void updateMap() {
         if (startCoords != null && destCoords != null) {
-            String script = String.format("getRoute([%f, %f], [%f, %f]);",
-                    startCoords[0], startCoords[1], destCoords[0], destCoords[1]);
+            String script = String.format("getRoute([%f, %f], [%f, %f]);", startCoords[0], startCoords[1], destCoords[0], destCoords[1]);
             webEngine.executeScript(script);
         }
     }
 
     @FXML
     private void handleBooking() {
-        // Implement booking logic here
         System.out.println("Booking requested");
     }
 
     @FXML
     private void handleCancel() {
-        // Implement cancel logic here
         System.out.println("Booking cancelled");
     }
 }
