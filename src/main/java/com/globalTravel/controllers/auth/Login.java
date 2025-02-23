@@ -38,13 +38,11 @@ public class Login {
 
     @FXML
     public void initialize() {
-        // Charger les informations sauvegardées au démarrage
+        // Charger l'email sauvegardé au démarrage (ne pas charger le mot de passe)
         String savedEmail = prefs.get("email", "");
-        String savedPassword = prefs.get("password", "");
 
-        if (!savedEmail.isEmpty() && !savedPassword.isEmpty()) {
+        if (!savedEmail.isEmpty()) {
             emailField.setText(savedEmail);
-            passwordField.setText(savedPassword);
             rememberMeCheckBox.setSelected(true); // Cochez la case "Remember Me"
         }
     }
@@ -94,10 +92,10 @@ public class Login {
                 if (isCorrectPassword) {
                     User user = userService.getUserByEmail(email);
                     if (user != null) {
-                        // Sauvegarder les informations si "Remember Me" est coché
+                        // Sauvegarder uniquement l'email si "Remember Me" est coché
                         if (rememberMeCheckBox.isSelected()) {
-                            prefs.put("email", email);
-                            prefs.put("password", password);
+                            prefs.put("email", email); // Sauvegarder l'email
+                            prefs.remove("password"); // Supprimer le mot de passe s'il était sauvegardé
                         } else {
                             // Supprimer les informations si "Remember Me" n'est pas coché
                             prefs.remove("email");
