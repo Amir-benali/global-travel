@@ -20,6 +20,8 @@ public class MainGUI extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles/FlightStyle.css").toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("global-travel");
         primaryStage.show();

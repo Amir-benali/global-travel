@@ -123,5 +123,19 @@ public class AirlineService implements IService<Airline> {
         }
         return false;
     }
+
+    public List<String> getAllAirlineNames() {
+        List<String> airlineNames = new ArrayList<>();
+        String query = "SELECT airline_name FROM airlines";
+        try (PreparedStatement pst = connection.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                airlineNames.add(rs.getString("airline_name"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving airline names: " + e.getMessage());
+        }
+        return airlineNames;
+    }
 }
 
