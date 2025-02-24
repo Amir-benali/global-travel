@@ -7,10 +7,9 @@ import com.globalTravel.utils.DataSource;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -24,26 +23,33 @@ public class Login {
 
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
-    @FXML private CheckBox rememberMeCheckBox; // Référence à la CheckBox "Remember Me"
+    @FXML private TextField visiblePasswordField;
+    @FXML private ImageView togglePasswordIcon;
+    @FXML private CheckBox rememberMeCheckBox;
 
     private Connection conn;
     private UserService userService;
-    private Preferences prefs; // Pour stocker les préférences utilisateur
+    private Preferences prefs;
+    private boolean isPasswordVisible = false;
 
     public Login() {
         conn = DataSource.getInstance().getConnection();
         userService = new UserService();
-        prefs = Preferences.userNodeForPackage(Login.class); // Initialisation des préférences
+        prefs = Preferences.userNodeForPackage(Login.class);
     }
 
     @FXML
     public void initialize() {
-        // Charger l'email sauvegardé au démarrage (ne pas charger le mot de passe)
-        String savedEmail = prefs.get("email", "");
+        // Assurez-vous que le champ passwordField est visible au démarrage
+        passwordField.setVisible(true);
+        visiblePasswordField.setVisible(false);
+        visiblePasswordField.setManaged(false);
 
+        // Charger l'email sauvegardé
+        String savedEmail = prefs.get("email", "");
         if (!savedEmail.isEmpty()) {
             emailField.setText(savedEmail);
-            rememberMeCheckBox.setSelected(true); // Cochez la case "Remember Me"
+            rememberMeCheckBox.setSelected(true);
         }
     }
 
@@ -59,10 +65,8 @@ public class Login {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/dashboard.fxml"));
             Parent root = loader.load();
-
             DashBoard dashboardController = loader.getController();
-            dashboardController.setCurrentUser(user); // Passer l'utilisateur connecté
-
+            dashboardController.setCurrentUser(user);
             emailField.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +77,7 @@ public class Login {
     @FXML
     private void handleLogin() {
         String email = emailField.getText().trim();
-        String password = passwordField.getText().trim();
+        String password = isPasswordVisible ? visiblePasswordField.getText().trim() : passwordField.getText().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
             showAlert("Erreur", "Veuillez remplir tous les champs.", Alert.AlertType.WARNING);
@@ -92,14 +96,10 @@ public class Login {
                 if (isCorrectPassword) {
                     User user = userService.getUserByEmail(email);
                     if (user != null) {
-                        // Sauvegarder uniquement l'email si "Remember Me" est coché
                         if (rememberMeCheckBox.isSelected()) {
-                            prefs.put("email", email); // Sauvegarder l'email
-                            prefs.remove("password"); // Supprimer le mot de passe s'il était sauvegardé
+                            prefs.put("email", email);
                         } else {
-                            // Supprimer les informations si "Remember Me" n'est pas coché
                             prefs.remove("email");
-                            prefs.remove("password");
                         }
                         navigateToDashboard(user);
                     } else {
@@ -115,6 +115,26 @@ public class Login {
             e.printStackTrace();
             showAlert("Erreur", "Problème de connexion à la base de données.", Alert.AlertType.ERROR);
         }
+    }
+
+    @FXML
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            visiblePasswordField.setVisible(false);
+            visiblePasswordField.setManaged(false);
+            togglePasswordIcon.setImage(new Image(getClass().getResourceAsStream("/images/eye-closed.png")));
+        } else {
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.setVisible(true);
+            visiblePasswordField.setManaged(true);
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            togglePasswordIcon.setImage(new Image(getClass().getResourceAsStream("/images/eye-outline.png")));
+        }
+        isPasswordVisible = !isPasswordVisible;
     }
 
     @FXML
@@ -136,3 +156,5 @@ public class Login {
         emailField.getScene().setRoot(root);
     }
 }
+
+
