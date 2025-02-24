@@ -7,5 +7,4 @@ public enum TypeActivity {
     TEAM_BUILDING_ACTIVITIES,
     LEISURE
 
-
 }
