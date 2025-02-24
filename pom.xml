@@ -42,6 +42,12 @@
         <!-- Dépendance pour ControlsFX -->
 
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>11.1.2</version>
@@ -111,10 +117,13 @@
             <artifactId>fontawesomefx-fontawesome</artifactId>
             <version>4.7.0-9.1.2</version>
         </dependency>
-
+        
+      <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
+          </dependency>
+
         <!-- Dépendance pour Apache HttpClient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

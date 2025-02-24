@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
+            <?import javafx.scene.layout.*?>
+            <?import javafx.scene.control.*?>
+            <?import javafx.geometry.Insets?>
 
+<?import java.net.URL?>
 <ScrollPane fitToWidth="true" styleClass="flights-grid-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.FlightGrid">
-    <content>
-    <VBox spacing="20">
-    <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
-    </padding>
+                <content>
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
 
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
+                            <children>
+                                <Label styleClass="section-title" text="Flight List" />
+                                <Button onAction="#navigateToAirline" styleClass="view-details-button" text="Airline List" />
+                                <Button onAction="#navigateToTickets" styleClass="view-details-button" text="Ticket List" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button onAction="#addFlight" styleClass="add-button" text="+ AJOUTER" />
+                            </children>
+                            <padding>
+                                <Insets left="20.0" right="20.0" />
+                            </padding>
+                        </HBox>
 
-        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
-        <children>
-            <Label styleClass="section-title" text="Flight List" />
-            <Button onAction="#navigateToAirline" styleClass="view-details-button" text="Airline List" />
-            <Button onAction="#navigateToTickets" styleClass="view-details-button" text="Ticket List" />
+                        <stylesheets>
+                            <URL value="@/styles/FlightStyle.css"/>
+                        </stylesheets>
 
-            <Region HBox.hgrow="ALWAYS" />
-            <Button onAction="#addFlight" styleClass="add-button" text="+ AJOUTER" />
-        </children>
-            <padding>
-                <Insets left="20.0" right="20.0" />
-            </padding>
-    </HBox>
-    <FlowPane fx:id="flightsGrid" hgap="20" vgap="20">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
-    </FlowPane>
-    </VBox>
-    </content>
-</ScrollPane>
+                        <VBox fx:id="flightsGrid" styleClass="flights-grid" spacing="30">
+                            <padding>
+                                <Insets top="30" right="20" bottom="30" left="20"/>
+                            </padding>
+                        </VBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
