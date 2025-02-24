@@ -4,244 +4,252 @@ import com.globalTravel.controllers.DashBoard;
 import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.HotelService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HotelCreateForm implements Navigatable {
 
-    @FXML private Label formTitleLabel;
+    @FXML private ComboBox<String> languageComboBox;
+    @FXML private TextArea translatedReviewTextArea;
+    @FXML private Button translateButton;
+
     @FXML private TextField hotelNameField;
     @FXML private TextField addressField;
-    @FXML private TextField cityField;
-    @FXML private TextField countryField;
-    @FXML private TextField categoryField;
+    @FXML private ComboBox<String> countryComboBox;
+    @FXML private ComboBox<String> cityComboBox;
+    @FXML private ComboBox<Integer> categoryField; // Changé en ComboBox<Integer>
     @FXML private TextField servicesField;
     @FXML private TextField coordinatesField;
     @FXML private TextArea reviewsField;
     @FXML private Button saveButton;
     @FXML private Button cancelButton;
+
+    @FXML private ComboBox<String> emojiComboBox;
+    @FXML private Button emojiButton;
+
+
     private DashBoard dashBoardController;
-    @Override
-    public void setDashBoardController(DashBoard dashBoardController) {
-        this.dashBoardController = dashBoardController;
-    }
     private HotelService hotelService = new HotelService();
     private Stage stage;
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+    // Map pour stocker les villes par pays
+    private Map<String, ObservableList<String>> citiesByCountry = new HashMap<>();
 
     @FXML
     public void initialize() {
         System.out.println("Initializing HotelCreateForm...");
-        addListeners();
+        loadCountries();
+        loadCitiesFromCSV(); // Charger les villes depuis le fichier CSV
+        countryComboBox.setOnAction(event -> onCountrySelected());
+
+        // Initialiser la ComboBox pour la catégorie (1-7)
+        ObservableList<Integer> categories = FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7);
+        categoryField.setItems(categories);
+
+        // Initialiser la ComboBox pour les langues de traduction
+        languageComboBox.setItems(FXCollections.observableArrayList("en", "fr", "es", "de"));
+
+        // Ajout d'emojis courants dans la ComboBox
+        ObservableList<String> emojis = FXCollections.observableArrayList("😀", "😍", "😎", "😢", "😡", "👍", "👎", "⭐", "🔥", "💯");
+        emojiComboBox.setItems(emojis);
+
+        // Sélectionner le premier emoji par défaut
+        emojiComboBox.getSelectionModel().selectFirst();
+    }
+    @FXML
+    private void handleInsertEmoji() {
+        String selectedEmoji = emojiComboBox.getValue();
+        if (selectedEmoji != null) {
+            reviewsField.appendText(selectedEmoji + " ");
+        }
     }
 
-    private void addListeners() {
-        hotelNameField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        addressField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        cityField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        countryField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        categoryField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        servicesField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        coordinatesField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        reviewsField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-    }
 
-    /**
-     * Valide le formulaire :
-     * - Les champs (nom, adresse, ville, pays, services, coordonnées) doivent contenir entre 3 et 30 caractères.
-     * - Le champ d'avis (reviews) doit contenir entre 2 et 50 caractères.
-     * - La catégorie doit être un nombre entre 1 et 5.
-     */
-    private boolean validateForm() {
-        boolean isValid = true;
+    // Méthode pour charger les pays (REST Countries API)
+    private void loadCountries() {
+        String apiUrl = "https://restcountries.com/v3.1/all";
+        ObservableList<String> countriesList = FXCollections.observableArrayList();
 
-        // Nom (3-30)
-        String name = hotelNameField.getText().trim();
-        if (name.isEmpty()) {
-            setFieldError(hotelNameField, "Le nom est obligatoire.");
-            isValid = false;
-        } else if (name.length() < 3 || name.length() > 30) {
-            setFieldError(hotelNameField, "Le nom doit contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(hotelNameField);
-        }
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(apiUrl);
+            CloseableHttpResponse response = httpClient.execute(request);
 
-        // Adresse (3-30)
-        String address = addressField.getText().trim();
-        if (address.isEmpty()) {
-            setFieldError(addressField, "L'adresse est obligatoire.");
-            isValid = false;
-        } else if (address.length() < 3 || address.length() > 30) {
-            setFieldError(addressField, "L'adresse doit contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(addressField);
-        }
+            String jsonResponse = EntityUtils.toString(response.getEntity());
+            JsonArray jsonArray = JsonParser.parseString(jsonResponse).getAsJsonArray();
 
-        // Ville (3-30)
-        String city = cityField.getText().trim();
-        if (city.isEmpty()) {
-            setFieldError(cityField, "La ville est obligatoire.");
-            isValid = false;
-        } else if (city.length() < 3 || city.length() > 30) {
-            setFieldError(cityField, "La ville doit contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(cityField);
-        }
-
-        // Pays (3-30)
-        String country = countryField.getText().trim();
-        if (country.isEmpty()) {
-            setFieldError(countryField, "Le pays est obligatoire.");
-            isValid = false;
-        } else if (country.length() < 3 || country.length() > 30) {
-            setFieldError(countryField, "Le pays doit contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(countryField);
-        }
-
-        // Catégorie : doit être un nombre entre 1 et 5
-        String category = categoryField.getText().trim();
-        if (category.isEmpty() || !category.matches("\\d+")) {
-            setFieldError(categoryField, "La catégorie doit être un nombre.");
-            isValid = false;
-        } else {
-            int catValue = Integer.parseInt(category);
-            if (catValue < 1 || catValue > 5) {
-                setFieldError(categoryField, "La catégorie doit être comprise entre 1 et 5.");
-                isValid = false;
-            } else {
-                clearFieldError(categoryField);
+            for (JsonElement element : jsonArray) {
+                JsonObject country = element.getAsJsonObject();
+                String countryName = country.get("name").getAsJsonObject().get("common").getAsString();
+                countriesList.add(countryName);
             }
-        }
 
-        // Services (3-30)
-        String services = servicesField.getText().trim();
-        if (services.isEmpty()) {
-            setFieldError(servicesField, "Les services sont obligatoires.");
-            isValid = false;
-        } else if (services.length() < 3 || services.length() > 30) {
-            setFieldError(servicesField, "Les services doivent contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(servicesField);
+            countryComboBox.setItems(countriesList);
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement des pays : " + e.getMessage());
+            showError("Erreur lors du chargement des pays. Vérifiez votre connexion Internet.");
         }
-
-        // Coordonnées (3-30)
-        String coordinates = coordinatesField.getText().trim();
-        if (coordinates.isEmpty()) {
-            setFieldError(coordinatesField, "Les coordonnées sont obligatoires.");
-            isValid = false;
-        } else if (coordinates.length() < 3 || coordinates.length() > 30) {
-            setFieldError(coordinatesField, "Les coordonnées doivent contenir entre 3 et 30 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(coordinatesField);
-        }
-
-        // Avis (2-50)
-        String reviews = reviewsField.getText().trim();
-        if (reviews.isEmpty()) {
-            setFieldError(reviewsField, "Les avis sont obligatoires.");
-            isValid = false;
-        } else if (reviews.length() < 2 || reviews.length() > 50) {
-            setFieldError(reviewsField, "Les avis doivent contenir entre 2 et 50 caractères.");
-            isValid = false;
-        } else {
-            clearFieldError(reviewsField);
-        }
-
-        saveButton.setDisable(!isValid);
-        return isValid;
     }
 
-    private void setFieldError(TextField field, String message) {
-        field.setStyle("-fx-border-color: red;");
-        field.setTooltip(new Tooltip(message));
+    // Méthode pour charger les villes depuis le fichier CSV
+    private void loadCitiesFromCSV() {
+        try (InputStream inputStream = getClass().getResourceAsStream("/worldcities.csv");
+             CSVReader reader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                // Vérifier que la ligne contient suffisamment de colonnes
+                if (nextLine.length >= 5) {
+                    String cityName = nextLine[0]; // Nom de la ville
+                    String countryName = nextLine[4]; // Nom du pays
+
+                    // Ajouter la ville à la liste des villes du pays
+                    citiesByCountry.computeIfAbsent(countryName, k -> FXCollections.observableArrayList()).add(cityName);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement des villes depuis le fichier CSV : " + e.getMessage());
+            showError("Erreur lors du chargement des villes. Vérifiez le fichier CSV.");
+        } catch (CsvValidationException e) {
+            System.err.println("Erreur de validation CSV : " + e.getMessage());
+            showError("Erreur de validation CSV. Vérifiez le format du fichier CSV.");
+        }
     }
 
-    private void setFieldError(TextArea field, String message) {
-        field.setStyle("-fx-border-color: red;");
-        field.setTooltip(new Tooltip(message));
+    // Méthode pour charger les villes en fonction du pays sélectionné
+    private void loadCitiesForCountry(String countryName) {
+        ObservableList<String> cityList = citiesByCountry.getOrDefault(countryName, FXCollections.observableArrayList());
+        cityComboBox.setItems(cityList);
     }
 
-    private void clearFieldError(TextField field) {
-        field.setStyle("");
-        field.setTooltip(null);
-    }
-
-    private void clearFieldError(TextArea field) {
-        field.setStyle("");
-        field.setTooltip(null);
+    @FXML
+    private void onCountrySelected() {
+        String selectedCountry = countryComboBox.getValue();
+        if (selectedCountry != null) {
+            loadCitiesForCountry(selectedCountry);
+        }
     }
 
     @FXML
     private void handleSaveHotel() {
-        try {
-            if (!validateForm()) {
-                return;
-            }
+        if (!validateForm()) return;
 
-            Hotel hotel = new Hotel(
-                    hotelNameField.getText().trim(),
-                    addressField.getText().trim(),
-                    cityField.getText().trim(),
-                    countryField.getText().trim(),
-                    Integer.parseInt(categoryField.getText().trim()),
-                    servicesField.getText().trim(),
-                    coordinatesField.getText().trim(),
-                    reviewsField.getText().trim()
-            );
+        String selectedCountry = countryComboBox.getValue();
+        String selectedCity = cityComboBox.getValue();
+        Integer selectedCategory = categoryField.getValue(); // Récupérer la valeur sélectionnée
 
-            hotelService.ajouter(hotel);
-            showConfirmation("Hôtel créé avec succès !");
-            closeForm();
-            dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
-        } catch (Exception e) {
-            System.err.println("Error saving hotel: " + e.getMessage());
-            showError("Erreur lors de la création de l'hôtel !");
+        Hotel hotel = new Hotel(
+                hotelNameField.getText().trim(),
+                addressField.getText().trim(),
+                selectedCity,
+                selectedCountry,
+                selectedCategory, // Utiliser la valeur de la ComboBox
+                servicesField.getText().trim(),
+                coordinatesField.getText().trim(),
+                reviewsField.getText().trim()
+        );
+
+        hotelService.ajouter(hotel);
+        showConfirmation("Hôtel créé avec succès !");
+        closeForm();
+    }
+
+    // Validation du formulaire
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        // Validation du nom de l'hôtel
+        if (hotelNameField.getText().trim().isEmpty() || hotelNameField.getText().trim().length() <= 5) {
+            setFieldError(hotelNameField, "Le nom de l'hôtel est requis et doit contenir plus de 5 caractères.");
+            isValid = false;
         }
+
+        // Validation de l'adresse
+        if (addressField.getText().trim().isEmpty() || addressField.getText().trim().length() <= 5) {
+            setFieldError(addressField, "L'adresse est requise et doit contenir plus de 5 caractères.");
+            isValid = false;
+        }
+
+        // Validation des services
+        if (servicesField.getText().trim().isEmpty() || servicesField.getText().trim().length() <= 5) {
+            setFieldError(servicesField, "Les services sont requis et doivent contenir plus de 5 caractères.");
+            isValid = false;
+        }
+
+        // Validation des coordonnées
+        if (coordinatesField.getText().trim().isEmpty() || coordinatesField.getText().trim().length() <= 5) {
+            setFieldError(coordinatesField, "Les coordonnées sont requises et doivent contenir plus de 5 caractères.");
+            isValid = false;
+        }
+
+        // Validation des avis des clients
+        if (reviewsField.getText().trim().isEmpty() || reviewsField.getText().trim().length() <= 5) {
+            setFieldError(reviewsField, "Les avis des clients sont requis et doivent contenir plus de 5 caractères.");
+            isValid = false;
+        }
+
+        // Validation du pays
+        if (countryComboBox.getValue() == null) {
+            setFieldError(countryComboBox, "Choisissez un pays.");
+            isValid = false;
+        }
+
+        // Validation de la ville
+        if (cityComboBox.getValue() == null) {
+            setFieldError(cityComboBox, "Choisissez une ville.");
+            isValid = false;
+        }
+
+        // Validation de la catégorie (1-7)
+        if (categoryField.getValue() == null) {
+            setFieldError(categoryField, "Choisissez une catégorie entre 1 et 7.");
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // Méthode pour afficher les erreurs de validation
+    private void setFieldError(Control field, String message) {
+        field.setStyle("-fx-border-color: red;");
+        Tooltip tooltip = new Tooltip(message);
+        Tooltip.install(field, tooltip);
     }
 
     @FXML
     private void handleCancel() {
-        clearForm();
         closeForm();
-    }
-
-    private void clearForm() {
-        hotelNameField.clear();
-        addressField.clear();
-        cityField.clear();
-        countryField.clear();
-        categoryField.clear();
-        servicesField.clear();
-        coordinatesField.clear();
-        reviewsField.clear();
     }
 
     private void closeForm() {
         if (stage != null) {
-            stage.close();
+            stage.close();  // Ferme la fenêtre (Stage)
         }
     }
 
     private void showConfirmation(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Succès");
-        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -249,8 +257,26 @@ public class HotelCreateForm implements Navigatable {
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erreur");
-        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
+
+    @FXML
+    private void handleTranslate() {
+        String textToTranslate = reviewsField.getText(); // Récupère l'avis existant
+        String targetLanguage = languageComboBox.getValue(); // Récupère la langue sélectionnée
+
+        if (textToTranslate.isEmpty() || targetLanguage == null) {
+            translatedReviewTextArea.setText("Veuillez entrer un avis et choisir une langue.");
+            return;
+        }
+
+        String translatedText = TranslationService.translate(textToTranslate, "auto", targetLanguage);
+        translatedReviewTextArea.setText(translatedText);
     }
 }
