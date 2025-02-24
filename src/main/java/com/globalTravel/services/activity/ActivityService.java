@@ -3,17 +3,13 @@ package com.globalTravel.services.activity;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.IActivityService;
-import com.globalTravel.services.IService;
-import com.globalTravel.services.IServiceActivity;
 import com.globalTravel.utils.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ActivityService implements IActivityService<Activity> {
-
 
     private Connection connection = DataSource.getInstance().getConnection();
 
@@ -102,7 +98,44 @@ public class ActivityService implements IActivityService<Activity> {
         }
         return activities;
     }
-    //converture  string par enum
+
+    /**
+     * Recherche des activités par nom.
+     *
+     * @param nomActivity Le nom de l'activité à rechercher.
+     * @return Une liste d'activités correspondant au nom recherché.
+     */
+    public List<Activity> rechercherParNom(String nomActivity) {
+        List<Activity> activities = new ArrayList<>();
+        String req = "SELECT * FROM activity WHERE nomActivity LIKE ?"; // Requête SQL pour filtrer par nom
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setString(1, "%" + nomActivity + "%"); // Ajoute le wildcard % pour une recherche partielle
+            ResultSet rs = pst.executeQuery();
+
+            // Parcourt les résultats et les mappe à des objets Activity
+            while (rs.next()) {
+                Activity activity = new Activity(
+                        rs.getInt("id"),
+                        rs.getTimestamp("dateDebut"),
+                        rs.getTimestamp("dateFin"),
+                        rs.getString("description"),
+                        rs.getString("localisation"),
+                        rs.getInt("prixTotal"),
+                        rs.getString("nomActivity"),
+                        getTypeActivityFromString(rs.getString("typeActivity")),
+                        rs.getInt("joinHotelId"),
+                        rs.getInt("joinVoitureId"),
+                        rs.getInt("joinVolsId")
+                );
+                activities.add(activity);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche des activités par nom : " + e.getMessage());
+        }
+        return activities;
+    }
+
+    // Convertit une chaîne de caractères en enum TypeActivity
     private TypeActivity getTypeActivityFromString(String typeActivityString) {
         try {
             return TypeActivity.valueOf(typeActivityString);
@@ -110,7 +143,6 @@ public class ActivityService implements IActivityService<Activity> {
             System.out.println("Type d'activité invalide: " + typeActivityString);
             return null;
         }
-
     }
 
     public boolean existsById(int id) {
@@ -126,15 +158,4 @@ public class ActivityService implements IActivityService<Activity> {
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
 }

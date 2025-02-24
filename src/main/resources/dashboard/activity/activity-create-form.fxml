@@ -4,64 +4,90 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Pos?>
 <?import com.globalTravel.models.activity.TypeActivity?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import java.net.URL?>
 
-<VBox spacing="10" styleClass="activity-form" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityCreateForm">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+<ScrollPane fitToWidth="true" fitToHeight="true" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityCreateForm">
+    <!-- Lier le fichier CSS pour le style -->
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
 
-    <Label fx:id="formTitleLabel" text="Ajouter une nouvelle activité" styleClass="form-title"/>
+    <VBox spacing="20" styleClass="activity-form" alignment="CENTER">
+        <!-- Espacement autour du formulaire -->
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-    <VBox spacing="5">
-        <!-- Champ : Nom de l'Activité -->
-        <TextField fx:id="activityNameField" promptText="Nom de l'activité"/>
-
-        <!-- Champ : Description -->
-        <TextArea fx:id="descriptionField" promptText="Description"/>
-
-        <!-- Champ : Localisation -->
-        <TextField fx:id="localisationField" promptText="Localisation"/>
-    </VBox>
-
-    <!-- Section : Date et Heure de début -->
-    <VBox spacing="5">
-        <DatePicker fx:id="startDatePicker" promptText="Date de début"/>
-        <HBox spacing="10" alignment="CENTER">
-            <ComboBox fx:id="startHourComboBox" promptText="Heure"/>
-            <ComboBox fx:id="startMinuteComboBox" promptText="Minute"/>
-            <ComboBox fx:id="startSecondComboBox" promptText="Seconde"/>
+        <!-- Titre du formulaire avec icône -->
+        <HBox alignment="CENTER" spacing="10">
+            <ImageView fitHeight="50" fitWidth="50">
+                <Image url="@/icons/activity-icon.png"/> <!-- Icône pour l'activité -->
+            </ImageView>
+            <Label fx:id="formTitleLabel" text="New Activity" styleClass="form-title-activty"/>
         </HBox>
-    </VBox>
 
-    <!-- Section : Date et Heure de fin -->
-    <VBox spacing="5">
-        <DatePicker fx:id="endDatePicker" promptText="Date de fin"/>
-        <HBox spacing="10" alignment="CENTER">
-            <ComboBox fx:id="endHourComboBox" promptText="Heure"/>
-            <ComboBox fx:id="endMinuteComboBox" promptText="Minute"/>
-            <ComboBox fx:id="endSecondComboBox" promptText="Seconde"/>
+        <!-- Section : Informations de base -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Informations de base" styleClass="section-label-activty"/>
+            <TextField fx:id="activityNameField" promptText="Nom de l'activité" styleClass="form-field-activty"/>
+            <TextArea fx:id="descriptionField" promptText="Description" styleClass="description-field-activty"/>
+            <TextField fx:id="localisationField" promptText="Localisation" styleClass="form-field-activty"/>
+        </VBox>
+
+        <!-- Section : Date et Heure de début -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Date et Heure de début" styleClass="section-label-activty"/>
+            <DatePicker fx:id="startDatePicker" promptText="Date de début" styleClass="form-field-activty"/>
+            <HBox spacing="10" alignment="CENTER">
+                <ComboBox fx:id="startHourComboBox" promptText="Heure" styleClass="time-combo-activty"/>
+                <ComboBox fx:id="startMinuteComboBox" promptText="Minute" styleClass="time-combo-activty"/>
+                <ComboBox fx:id="startSecondComboBox" promptText="Seconde" styleClass="time-combo-activty"/>
+            </HBox>
+        </VBox>
+
+        <!-- Section : Date et Heure de fin -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Date et Heure de fin" styleClass="section-label-activty"/>
+            <DatePicker fx:id="endDatePicker" promptText="Date de fin" styleClass="form-field-activty"/>
+            <HBox spacing="10" alignment="CENTER">
+                <ComboBox fx:id="endHourComboBox" promptText="Heure" styleClass="time-combo-activty"/>
+                <ComboBox fx:id="endMinuteComboBox" promptText="Minute" styleClass="time-combo-activty"/>
+                <ComboBox fx:id="endSecondComboBox" promptText="Seconde" styleClass="time-combo-activty"/>
+            </HBox>
+        </VBox>
+
+        <!-- Section : Prix -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Prix" styleClass="section-label-activty"/>
+            <TextField fx:id="priceField" promptText="Prix" styleClass="form-field-activty"/>
+        </VBox>
+
+        <!-- Section : Sélection des IDs -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Sélection des Hotel-Voiture-Vols" styleClass="section-label-activty"/>
+            <ComboBox fx:id="hotelIdComboBox" promptText="Nom de l'Hôtel" styleClass="form-field-activty"/>
+            <ComboBox fx:id="carIdComboBox" promptText="Marque de Voiture" styleClass="form-field-activty"/>
+            <ComboBox fx:id="flightIdComboBox" promptText="Numéro de Vol" styleClass="form-field-activty"/>
+        </VBox>
+
+        <!-- Section : Type d'Activité -->
+        <VBox spacing="10" styleClass="form-section-activty">
+            <Label text="Type d'Activité" styleClass="section-label-activty"/>
+            <ComboBox fx:id="typeComboBox" promptText="Type d'Activité" styleClass="form-field-activty"/>
+        </VBox>
+
+        <!-- Boutons d'action -->
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <!-- Bouton Annuler sans icône -->
+            <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button-activty" />
+
+            <!-- Bouton Enregistrer sans icône -->
+            <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveActivity" styleClass="save-button-activty" />
         </HBox>
+
+        <!-- Label pour afficher le statut (Succès, Erreur, etc.) -->
+        <Label fx:id="statusLabel" text="" styleClass="status-label-activty"/>
     </VBox>
-
-    <!-- Champ : Prix -->
-    <TextField fx:id="priceField" promptText="Prix"/>
-
-    <!-- Sélection des IDs via ComboBox -->
-    <VBox spacing="5">
-        <ComboBox fx:id="hotelIdComboBox" promptText="ID Hôtel"/>
-        <ComboBox fx:id="carIdComboBox" promptText="ID Voiture"/>
-        <ComboBox fx:id="flightIdComboBox" promptText="ID Vol"/>
-    </VBox>
-
-    <!-- Type d'Activité -->
-    <ComboBox fx:id="typeComboBox" promptText="Type d'Activité"/>
-
-    <!-- Boutons d'action -->
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveActivity" styleClass="save-button"/>
-    </HBox>
-
-    <!-- Label pour afficher le statut (Succès, Erreur, etc.) -->
-    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
-</VBox>
+</ScrollPane>

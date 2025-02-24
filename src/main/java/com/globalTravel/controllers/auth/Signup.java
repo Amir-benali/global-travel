@@ -17,7 +17,8 @@ import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class Signup {
-    @FXML private TextField fullNameField;
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private ComboBox<String> genderComboBox;
     @FXML private DatePicker birthDatePicker;
@@ -42,7 +43,8 @@ public class Signup {
 
     @FXML
     private void handleSignup() {
-        String fullName = fullNameField.getText().trim();
+        String firstName = firstNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
         String email = emailField.getText().trim();
         String gender = genderComboBox.getValue();
         LocalDate birthDate = birthDatePicker.getValue();
@@ -52,14 +54,14 @@ public class Signup {
         boolean agreedToTerms = termsCheckBox.isSelected();
 
         // Vérification des champs vides
-        if (fullName.isEmpty() || email.isEmpty() || gender == null || birthDate == null || phoneNumber.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || gender == null || birthDate == null || phoneNumber.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showAlert("Erreur", "Tous les champs sont obligatoires.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Vérification du format de full name
-        if (!(fullName.trim().contains(" ") && fullName.trim().split("\\s+").length >= 2)){
-            showAlert("Erreur", "Veuillez entrer un fullname valide.", Alert.AlertType.ERROR);
+        // Vérification de la date de naissance
+        if (!isValidBirthDate(birthDate)) {
+            showAlert("Erreur", "Vous devez avoir au moins 18 ans et la date de naissance ne peut pas être dans le futur.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -98,10 +100,6 @@ public class Signup {
             return;
         }
 
-        String[] parts = fullName.trim().split("\\s+", 2);
-        String firstName = parts[0];
-        String lastName = parts[1];
-
         // Hash du mot de passe avec BCrypt
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
@@ -127,6 +125,15 @@ public class Signup {
             e.printStackTrace();
             showAlert("Erreur", "Échec de l'inscription. Essayez encore.", Alert.AlertType.ERROR);
         }
+    }
+
+    // Méthode pour valider la date de naissance
+    private boolean isValidBirthDate(LocalDate birthDate) {
+        LocalDate today = LocalDate.now();
+        LocalDate minBirthDate = today.minusYears(18); // L'utilisateur doit avoir au moins 18 ans
+
+        // Vérifier que la date de naissance n'est pas dans le futur et que l'utilisateur a au moins 18 ans
+        return !birthDate.isAfter(today) && !birthDate.isAfter(minBirthDate);
     }
 
     private boolean isValidEmail(String email) {

@@ -2,33 +2,67 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import java.net.URL?>
+<?import org.controlsfx.control.Rating?>
 
-<VBox spacing="10" styleClass="review-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewCreateForm">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+<ScrollPane fitToWidth="true" fitToHeight="true" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewCreateForm">
+    <!-- Lier le fichier CSS pour le style -->
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
 
-    <Label fx:id="formTitleLabel" text="Ajouter une critique" styleClass="form-title"/>
+    <VBox spacing="20" styleClass="review-form" alignment="CENTER">
+        <!-- Espacement autour du formulaire -->
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
 
-    <!-- Champ : Commentaire -->
-    <TextField fx:id="commentaireField" promptText="Votre commentaire"/>
+        <!-- Titre du formulaire avec icône -->
+        <HBox alignment="TOP_CENTER" spacing="10">
+            <ImageView fitHeight="50" fitWidth="50">
+                <Image url="@/icons/review-icon.png"/> <!-- Icône pour la critique -->
+            </ImageView>
+            <Label fx:id="formTitleLabel" text="New Review" styleClass="form-title-activty"/>
+        </HBox>
+    <VBox spacing="10" styleClass="form-section-activty">
+        <!-- Section : Commentaire -->
+        <VBox spacing="10" styleClass="form-section-review">
+            <Label text="Commentaire" styleClass="section-label-review"/>
+            <TextArea fx:id="commentaireField" promptText="Votre commentaire" styleClass="form-field-review"/>
+        </VBox>
+    </VBox>
 
-    <!-- Champ : Note -->
-    <ComboBox fx:id="noteComboBox" promptText="Note (0 à 5)">
-        <!-- Note : Valeurs de 0 à 5 -->
-    </ComboBox>
+    <VBox spacing="10" styleClass="form-section-activty">
+        <!-- Section : Note -->
+        <VBox spacing="10" styleClass="form-section-review">
+            <Label text="Note" styleClass="section-label-review"/>
+            <Rating fx:id="noteRating" max="5" rating="0" styleClass="rating-field-review"/>
+        </VBox>
+    </VBox>
 
-    <!-- Champ : ID de l'activité (ComboBox pour l'ID de l'activité) -->
-    <ComboBox fx:id="activityIdComboBox" promptText="Sélectionner l'ID de l'activité">
-        <!-- Cette ComboBox sera peuplée dynamiquement -->
-    </ComboBox>
+    <VBox spacing="10" styleClass="form-section-activty">
+        <!-- Section : ID de l'activité -->
+        <VBox spacing="10" styleClass="form-section-review">
+            <Label text="Activité" styleClass="section-label-review"/>
+            <ComboBox fx:id="activityIdComboBox" promptText="Sélectionner l'ID de l'activité" styleClass="form-field-review">
+                <!-- Cette ComboBox sera peuplée dynamiquement -->
+            </ComboBox>
+        </VBox>
+    </VBox>
 
-    <!-- Boutons d'action -->
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveReview" styleClass="save-button"/>
-    </HBox>
+        <!-- Boutons d'action -->
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <!-- Bouton Annuler sans icône -->
+            <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button-activty"/>
 
-    <!-- Label pour afficher le statut -->
-    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
-</VBox>
+            <!-- Bouton Enregistrer sans icône -->
+            <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveReview" styleClass="save-button-activty"/>
+        </HBox>
+
+        <!-- Label pour afficher le statut (Succès, Erreur, etc.) -->
+        <Label fx:id="statusLabel" text="" styleClass="status-label-review"/>
+    </VBox>
+</ScrollPane>
