@@ -1143,6 +1143,89 @@
 }
 
 /* Styles for ScrollPane */
+=======
+
+
+
+.activity-form {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+.form-title-activty {
+    -fx-font-size: 24px; /* Taille de police plus grande */
+    -fx-font-weight: bold;
+    -fx-text-fill: #3498db; /* Couleur bleue */
+    -fx-padding: 10 0; /* Espacement autour du titre */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); /* Ombre légère */
+}
+.form-section-activty {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+.section-label-activty {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+.form-field-activty {
+    -fx-pref-width: 350;
+    -fx-pref-height: 45;
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+.description-field-activty {
+    -fx-pref-width: 350;
+    -fx-pref-height: 100; /* Ajustez la hauteur selon vos besoins */
+    -fx-background-color: white; /* Fond blanc */
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+.time-combo-activty {
+    -fx-pref-width: 100;
+    -fx-pref-height: 35;
+    -fx-background-color: #ecf0f1;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+
+.cancel-button-activty {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5px;
+}
+
+.save-button-activty {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5px;
+}
+
+.status-label-activty {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.status-label.success-activty {
+    -fx-text-fill: #27ae60;
+}
+
+.status-label.error-activty {
+    -fx-text-fill: #e74c3c;
+}
+/* ScrollPane Styles */
+
 .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -1465,4 +1548,200 @@
 
 .pdf-button:hover {
     -fx-background-color: #007B9E; /* Bleu plus foncé au survol */
+}
+
+/* Nouveau style pour le bouton .button-35 */
+.button-35 {
+    -fx-alignment: center;
+    -fx-background-color: #fff;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2);
+    -fx-text-fill: #121212;
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2rem;
+    -fx-font-weight: bold;
+    -fx-padding:  1.2rem;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.button-35:hover {
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3);
+}
+/* Style pour le bouton Annuler (rouge) */
+.cancel-button-activty {
+    -fx-background-color: #e74c3c; /* Rouge */
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-background-radius: 12px; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2rem;
+    -fx-font-weight: bold;
+    -fx-padding:  1.2rem;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.cancel-button-activty:hover {
+    -fx-background-color: #c0392b; /* Rouge plus foncé au survol */
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3); /* Ombre plus prononcée au survol */
+}
+
+/* Style pour le bouton Enregistrer (vert) */
+.save-button-activty {
+    -fx-background-color: #2ecc71; /* Vert */
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-background-radius: 12px; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2rem;
+    -fx-font-weight: bold;
+    -fx-padding: 1.2rem;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.save-button-activty:hover {
+    -fx-background-color: #27ae60; /* Vert plus foncé au survol */
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3); /* Ombre plus prononcée au survol */
+}
+
+
+
+
+/* Titre du formulaire */
+.form-title-review {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+
+/* Section du formulaire */
+.form-section-review {
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
+}
+
+/* Label de section */
+.section-label-review {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+}
+
+/* Champ de formulaire */
+.form-field-review {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 30px;
+}
+
+/* Champ de notation (Rating) */
+.rating-field-review {
+    -fx-pref-width: 300px;
+}
+
+/* Bouton Annuler */
+.cancel-button-review {
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+}
+
+/* Bouton Enregistrer */
+.save-button-review {
+    -fx-background-color: #44ff44;
+    -fx-text-fill: white;
+}
+
+/* Label de statut */
+.status-label-review {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #333333;
+}
+
+
+
+
+
+
+
+
+/* Style pour le conteneur principal */
+.activities-grid-container-act {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Style pour le header */
+.header-activity {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+/* Style pour le titre de la section */
+.section-title-activty {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Style pour les boutons */
+.add-button-activity-activty {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.add-button-act:hover {
+    -fx-background-color: #1565C0; /* Changement de couleur au survol */
+}
+
+.activity-card-actt {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 15px;
+}
+
+/* Style pour le titre de la carte */
+.card-title-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Style pour le texte de la carte */
+.card-text-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+
+.search-field-activty {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 30px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 10px;
+}
+
+.search-button-activty {
+    -fx-background-color: #0080FF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+}
+
+.search-button-activty:hover {
+    -fx-background-color: #45a049;
 }

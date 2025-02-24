@@ -6,6 +6,8 @@ import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -14,6 +16,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import org.controlsfx.control.Rating;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -54,10 +59,29 @@ public class ReviewGrid implements Navigatable {
         VBox reviewInfo = new VBox(10);
         reviewInfo.getStyleClass().add("review-info");
 
-        // Labels pour afficher les informations
-        Label commentaireLabel = createStyledLabel("Commentaire: " + review.getCommentaire(), "review-commentaire");
-        Label noteLabel = createStyledLabel("Note: " + review.getNote(), "review-note");
+        // Commentaire avec icône
+        HBox commentBox = new HBox(10);
+        commentBox.setAlignment(Pos.CENTER_LEFT);
+        ImageView commentIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/comment-icon.png")));
+        commentIcon.setFitHeight(20);
+        commentIcon.setFitWidth(20);
+        Label commentaireLabel = createStyledLabel(review.getCommentaire(), "review-commentaire");
+        commentBox.getChildren().addAll(commentIcon, commentaireLabel);
+
+        // Affichage de la note sous forme d'étoiles
+        Rating noteRating = new Rating();
+        noteRating.setRating(review.getNote()); // Définir la note
+        noteRating.setMax(5); // Maximum de 5 étoiles
+        noteRating.setDisable(true); // Désactiver l'interaction utilisateur
+
+        // Date de revue avec icône
+        HBox dateBox = new HBox(10);
+        dateBox.setAlignment(Pos.CENTER_LEFT);
+        ImageView dateIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/start-date-icon.png")));
+        dateIcon.setFitHeight(20);
+        dateIcon.setFitWidth(20);
         Label dateReviewLabel = createStyledLabel("Date de revue: " + formatDate(review.getDateReview()), "review-date");
+        dateBox.getChildren().addAll(dateIcon, dateReviewLabel);
 
         // Boutons d'action pour modifier ou supprimer la revue
         Button updateButton = createStyledButton("Modifier", e -> {
@@ -66,14 +90,15 @@ public class ReviewGrid implements Navigatable {
             } catch (IOException ex) {
                 ex.printStackTrace(); // Affichage de l'erreur dans la console pour le debug
             }
-        });
-        Button deleteButton = createStyledButton("Supprimer", e -> confirmDelete(review));
+        }, "#0080ff", "white"); // Green background with white text
+
+        Button deleteButton = createStyledButton("Supprimer", e -> confirmDelete(review), "#F44336", "white"); // Red background with white text
 
         HBox buttonHbox = new HBox(15);
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
 
         reviewInfo.getChildren().addAll(
-                commentaireLabel, noteLabel, dateReviewLabel, buttonHbox
+                commentBox, noteRating, dateBox, buttonHbox
         );
 
         card.getChildren().addAll(reviewInfo);
@@ -88,14 +113,35 @@ public class ReviewGrid implements Navigatable {
         return label;
     }
 
-    // Méthode pour créer un bouton stylisé
-    private Button createStyledButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
+    // Méthode pour créer un bouton stylisé avec des couleurs personnalisées (sans icône)
+    private Button createStyledButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action, String backgroundColor, String textColor) {
         Button button = new Button(text);
         button.setOnAction(action);
-        button.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px; -fx-font-family: 'Roboto', sans-serif;");
-        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #1565C0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px;"));
-        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px;"));
+
+        // Appliquer le style au bouton
+        button.setStyle("-fx-background-color: " + backgroundColor + "; " +
+                "-fx-text-fill: " + textColor + "; " +
+                "-fx-font-size: 14px; " +
+                "-fx-padding: 10 15; " +
+                "-fx-background-radius: 25px; " +
+                "-fx-font-family: 'Roboto', sans-serif;");
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: " + darkenColor(backgroundColor) + "; " +
+                "-fx-text-fill: " + textColor + "; " +
+                "-fx-font-size: 14px; " +
+                "-fx-padding: 10 15; " +
+                "-fx-background-radius: 25px;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: " + backgroundColor + "; " +
+                "-fx-text-fill: " + textColor + "; " +
+                "-fx-font-size: 14px; " +
+                "-fx-padding: 10 15; " +
+                "-fx-background-radius: 25px;"));
         return button;
+    }
+
+    // Helper method to darken the color for hover effect
+    private String darkenColor(String color) {
+        // You can implement a simple logic to darken the color, e.g., by reducing the brightness
+        return "#1565C0"; // Example: Darker shade of blue
     }
 
     // Dialog de confirmation pour la suppression
