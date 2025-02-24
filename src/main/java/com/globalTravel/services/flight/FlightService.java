@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class FlightService implements IService<Flight> {
             pst.setInt(2, flight.getAirline_id());
             pst.setString(3, flight.getDeparture_airport());
             pst.setString(4, flight.getArrival_airport());
-            pst.setString(5, flight.getDeparture_time());
-            pst.setString(6, flight.getArrival_time());
+            pst.setTimestamp(5, flight.getDeparture_time());
+            pst.setTimestamp(6, flight.getArrival_time());
             pst.setInt(7, flight.getDuration());
             pst.setInt(8, flight.getAvailable_seats());
             pst.setDouble(9, flight.getBase_price());
@@ -50,8 +51,8 @@ public class FlightService implements IService<Flight> {
             pst.setInt(2, flight.getAirline_id());
             pst.setString(3, flight.getDeparture_airport());
             pst.setString(4, flight.getArrival_airport());
-            pst.setString(5, flight.getDeparture_time());
-            pst.setString(6, flight.getArrival_time());
+            pst.setTimestamp(5, flight.getDeparture_time());
+            pst.setTimestamp(6, flight.getArrival_time());
             pst.setInt(7, flight.getDuration());
             pst.setInt(8, flight.getAvailable_seats());
             pst.setDouble(9, flight.getBase_price());
@@ -94,8 +95,8 @@ public class FlightService implements IService<Flight> {
                         res.getInt("airline_id"),
                         res.getString("departure_airport_name"),
                         res.getString("arrival_airport_name"),
-                        res.getString("departure_time"),
-                        res.getString("arrival_time"),
+                        res.getTimestamp("departure_time"),
+                        res.getTimestamp("arrival_time"),
                         res.getInt("duration_per_hours"),
                         res.getInt("available_seats"),
                         res.getDouble("flight_base_price"),
@@ -107,5 +108,23 @@ public class FlightService implements IService<Flight> {
         }
         return flights;
     }
+
+
+    public boolean isFlightNumberExists(String flightNumber) {
+        String query = "SELECT COUNT(*) FROM flights WHERE flight_number = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, flightNumber);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking flight number: " + e.getMessage());
+        }
+        return false;
+    }
+
+  
 }
 

@@ -1,12 +1,14 @@
 package com.globalTravel.controllers.hotel;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.HotelService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class HotelUpdateForm {
+public class HotelUpdateForm implements Navigatable {
 
     @FXML private Label formTitleLabel;
     @FXML private TextField nameField;
@@ -22,7 +24,11 @@ public class HotelUpdateForm {
     private Hotel hotelToEdit;
     private Stage stage;
     private HotelService hotelService = new HotelService();
-
+    private DashBoard dashBoardController;
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -196,6 +202,7 @@ public class HotelUpdateForm {
             System.out.println("Hôtel mis à jour avec succès !");
             showConfirmation("Hôtel mis à jour avec succès !");
             closeForm();
+            dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         } catch (Exception e) {
             System.err.println("Erreur lors de la mise à jour : " + e.getMessage());
             showError("Erreur lors de la mise à jour !");

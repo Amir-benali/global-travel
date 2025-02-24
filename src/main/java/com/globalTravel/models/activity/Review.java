@@ -1,4 +1,5 @@
 package com.globalTravel.models.activity;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -7,22 +8,22 @@ public class Review {
     private String commentaire;
     private int note;
     private LocalDateTime dateReview;
-    private String reservationDecision;
+    private int activityId;
 
 
-    public Review(int id, String commentaire, int note, LocalDateTime dateReview, String reservationDecision) {
+    public Review(int id, String commentaire, int note, LocalDateTime dateReview, int activityId) {
         this.id = id;
-        this.commentaire = commentaire;
+        setCommentaire(commentaire);
         setNote(note);
-        this.dateReview = (dateReview != null) ? dateReview : LocalDateTime.now();
-        this.reservationDecision = reservationDecision;
+        setDateReview(dateReview);
+        setActivityId(activityId);
     }
 
-    public Review(String commentaire, int note, String reservationDecision) {
-        this.commentaire = commentaire;
+    public Review(String commentaire, int note, int activityId) {
+        setCommentaire(commentaire);
         setNote(note);
         this.dateReview = LocalDateTime.now();
-        this.reservationDecision = reservationDecision;
+        setActivityId(activityId);
     }
 
 
@@ -39,6 +40,9 @@ public class Review {
     }
 
     public void setCommentaire(String commentaire) {
+        if (commentaire == null || commentaire.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le commentaire ne pas etre vide.");
+        }
         this.commentaire = commentaire;
     }
 
@@ -47,8 +51,8 @@ public class Review {
     }
 
     public void setNote(int note) {
-        if (note < 1 || note > 5) {
-            throw new IllegalArgumentException("La note  comprise entre 1 et 5.");
+        if (note < 0|| note > 5) {
+            throw new IllegalArgumentException("La note  comprise entre 0 et 5.");
         }
         this.note = note;
     }
@@ -58,18 +62,26 @@ public class Review {
     }
 
     public void setDateReview(LocalDateTime dateReview) {
-        this.dateReview = dateReview;
-    }
-
-    public String getReservationDecision() {
-        return reservationDecision;
-    }
-
-    public void setReservationDecision(String reservationDecision) {
-        this.reservationDecision = reservationDecision;
+        if (dateReview == null) {
+            this.dateReview = LocalDateTime.now();
+        } else {
+            this.dateReview = dateReview;
+        }
     }
 
 
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        if (activityId <= 0) {
+            throw new IllegalArgumentException("ID de l activité  supérieur a 0");
+        }
+        this.activityId = activityId;
+    }
+
+    //conduction pour compareé dans main deux instance
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,7 +104,7 @@ public class Review {
                 ", commentaire='" + commentaire + '\'' +
                 ", note=" + note +
                 ", dateReview=" + dateReview +
-                ", reservationDecision='" + reservationDecision + '\'' +
+                ", activityId=" + activityId +
                 '}';
     }
 }

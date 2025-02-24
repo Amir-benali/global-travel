@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.ChambreService;
@@ -10,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class ChambreUpdateForm {
+public class ChambreUpdateForm implements Navigatable {
 
     @FXML private Label formTitleLabel;
     @FXML private TextField typeField;
@@ -24,7 +26,11 @@ public class ChambreUpdateForm {
     private Stage stage;
     private ChambreService chambreService = new ChambreService();
     private HotelService hotelService = new HotelService();
-
+    private DashBoard dashBoardController;
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -47,6 +53,20 @@ public class ChambreUpdateForm {
     private void loadHotels() {
         ObservableList<Hotel> hotels = FXCollections.observableArrayList(hotelService.rechercher());
         hotelComboBox.setItems(hotels);
+        hotelComboBox.setCellFactory(comboBox -> new ListCell<>() {
+            @Override
+            protected void updateItem(Hotel hotel, boolean empty) {
+                super.updateItem(hotel, empty);
+                setText(empty || hotel == null ? null : hotel.getNom_h());
+            }
+        });
+        hotelComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Hotel hotel, boolean empty) {
+                super.updateItem(hotel, empty);
+                setText(empty || hotel == null ? null : hotel.getNom_h());
+            }
+        });
     }
 
     private void populateForm() {
@@ -187,6 +207,7 @@ public class ChambreUpdateForm {
             chambreService.modifier(updatedChambre);
             System.out.println("Chambre mise à jour avec succès !");
             showAlert("Succès", "Chambre mise à jour avec succès !");
+            dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
             closeForm();
         } catch (Exception e) {
             System.err.println("Erreur lors de la mise à jour de la chambre : " + e.getMessage());

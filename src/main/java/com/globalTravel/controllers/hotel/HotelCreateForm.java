@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
+import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.Navigatable;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.HotelService;
 import javafx.fxml.FXML;
@@ -11,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
-public class HotelCreateForm {
+public class HotelCreateForm implements Navigatable {
 
     @FXML private Label formTitleLabel;
     @FXML private TextField hotelNameField;
@@ -24,7 +26,11 @@ public class HotelCreateForm {
     @FXML private TextArea reviewsField;
     @FXML private Button saveButton;
     @FXML private Button cancelButton;
-
+    private DashBoard dashBoardController;
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     private HotelService hotelService = new HotelService();
     private Stage stage;
 
@@ -202,6 +208,7 @@ public class HotelCreateForm {
             hotelService.ajouter(hotel);
             showConfirmation("Hôtel créé avec succès !");
             closeForm();
+            dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         } catch (Exception e) {
             System.err.println("Error saving hotel: " + e.getMessage());
             showError("Erreur lors de la création de l'hôtel !");

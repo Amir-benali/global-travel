@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" styleClass="review-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewCreateForm">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="formTitleLabel" text="Ajouter une critique" styleClass="form-title"/>
+
+    <!-- Champ : Commentaire -->
+    <TextField fx:id="commentaireField" promptText="Votre commentaire"/>
+
+    <!-- Champ : Note -->
+    <ComboBox fx:id="noteComboBox" promptText="Note (0 à 5)">
+        <!-- Note : Valeurs de 0 à 5 -->
+    </ComboBox>
+
+    <!-- Champ : ID de l'activité (ComboBox pour l'ID de l'activité) -->
+    <ComboBox fx:id="activityIdComboBox" promptText="Sélectionner l'ID de l'activité">
+        <!-- Cette ComboBox sera peuplée dynamiquement -->
+    </ComboBox>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveReview" styleClass="save-button"/>
+    </HBox>
+
+    <!-- Label pour afficher le statut -->
+    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+</VBox>
