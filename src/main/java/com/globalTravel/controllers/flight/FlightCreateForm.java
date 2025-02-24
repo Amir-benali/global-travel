@@ -1,6 +1,7 @@
 package com.globalTravel.controllers.flight;
 
             import com.globalTravel.controllers.DashBoard;
+            import com.globalTravel.controllers.Navigatable;
             import com.globalTravel.models.flight.Flight;
             import com.globalTravel.models.flight.FlightStatus;
             import com.globalTravel.services.flight.AirportService;
@@ -23,7 +24,7 @@ package com.globalTravel.controllers.flight;
             import java.util.List;
             import java.util.stream.Collectors;
 
-public class FlightCreateForm {
+public class FlightCreateForm  implements Navigatable {
 
                 @FXML
                 private ComboBox<String> airline_nameField;
@@ -72,11 +73,13 @@ public class FlightCreateForm {
                     this.stage = stage;
                 }
 
+                @Override
                 public void setDashBoardController(DashBoard dashBoardController) {
                     this.dashBoardController = dashBoardController;
                 }
 
-                private final AirportService airportService = new AirportService();
+
+    private final AirportService airportService = new AirportService();
                 private List<String> airportNames;
                 private List<String> airportCountries;
 
@@ -289,7 +292,7 @@ public class FlightCreateForm {
 
                         flightService.ajouter(flight);
                         showAlert(Alert.AlertType.INFORMATION, "Success", "Flight added successfully.");
-                        dashBoardController.navigateTo("/resources/dashboard/flight/flight-grid.fxml");
+                        dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
                     } catch (Exception e) {
                         showAlert(Alert.AlertType.ERROR, "Error", "Error creating flight: " + e.getMessage());
                     }
@@ -319,7 +322,7 @@ public class FlightCreateForm {
                 @FXML
                 private void handleCancel() {
                     clearForm();
-                    dashBoardController.navigateTo("/resources/dashboard/flight/flight-grid.fxml");
+                    dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
                 }
 
                 private void closeForm() {

@@ -268,7 +268,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
     -fx-background-radius: 5;
     -fx-padding: 10;
-    -fx-pref-width: 220;
+    -fx-pref-width: 275;
     -fx-alignment: center;
 }
 
@@ -292,7 +292,6 @@
     -fx-background-color: #0197FF;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
     -fx-background-radius: 3;
 }
 
@@ -1042,7 +1041,7 @@
 .car-brand-model {
     -fx-font-size: 24px;
 
-
+}
 /* ... (vos styles existants) ... */
 
 /* Styles for Hotel Cards */
@@ -1103,6 +1102,7 @@
 
 .update-button:hover {
 
+}
 .hotel-address {
     -fx-font-size: 14px;
     -fx-text-fill: #555555;
@@ -1191,6 +1191,7 @@
 
 .section-title {
     -fx-font-size: 20px;
+}
 /* Styles for Search and Add Buttons */
 .search-button {
     -fx-background-color: #2ecc71;
@@ -1395,7 +1396,6 @@
 
 .action-button {
     -fx-background-radius: 5;
-    -fx-padding: 10 20;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
@@ -1408,13 +1408,7 @@
     -fx-background-color: #2980b9;
 }
 
-.back-button {
-    -fx-background-color: #95a5a6;
-}
 
-.back-button:hover {
-    -fx-background-color: #7f8c8d;
-}
 
 .book-button {
     -fx-background-color: #27ae60;
@@ -1574,6 +1568,7 @@
 
 .font-awesome-icon-green {
     -fx-fill: #28a745;
+    }
 /* Styles for Text Fields */
 .text-field, .text-area, .combo-box {
     -fx-pref-width: 300px;
@@ -1611,10 +1606,7 @@
     -fx-background-color: #f0f0f0;
 }
 
-.combo-box .list-cell:selected {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-}
+
 
 /* Styles for Buttons */
 .save-button {
@@ -1741,10 +1733,7 @@
     -fx-background-color: #f0f0f0;
 }
 
-.combo-box .list-cell:selected {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-}
+
 
 /* Styles for Buttons */
 .save-button {
@@ -2044,4 +2033,10 @@
 
 .search-button-activty:hover {
     -fx-background-color: #45a049;
+}
+
+.review-info {
+    -fx-spacing: 5;
+    -fx-padding: 20 0;
+    -fx-alignment: center-left;
 }

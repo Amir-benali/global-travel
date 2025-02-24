@@ -48,7 +48,6 @@ public class HotelCreateForm implements Navigatable {
     @FXML private ComboBox<String> emojiComboBox;
     @FXML private Button emojiButton;
 
-
     private DashBoard dashBoardController;
     private HotelService hotelService = new HotelService();
     private Stage stage;
@@ -77,6 +76,7 @@ public class HotelCreateForm implements Navigatable {
         // Sélectionner le premier emoji par défaut
         emojiComboBox.getSelectionModel().selectFirst();
     }
+
     @FXML
     private void handleInsertEmoji() {
         String selectedEmoji = emojiComboBox.getValue();
@@ -84,7 +84,6 @@ public class HotelCreateForm implements Navigatable {
             reviewsField.appendText(selectedEmoji + " ");
         }
     }
-
 
     // Méthode pour charger les pays (REST Countries API)
     private void loadCountries() {
@@ -171,6 +170,7 @@ public class HotelCreateForm implements Navigatable {
 
         hotelService.ajouter(hotel);
         showConfirmation("Hôtel créé avec succès !");
+        dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         closeForm();
     }
 
@@ -179,51 +179,67 @@ public class HotelCreateForm implements Navigatable {
         boolean isValid = true;
 
         // Validation du nom de l'hôtel
-        if (hotelNameField.getText().trim().isEmpty() || hotelNameField.getText().trim().length() <= 5) {
-            setFieldError(hotelNameField, "Le nom de l'hôtel est requis et doit contenir plus de 5 caractères.");
+        if (hotelNameField.getText().trim().isEmpty() || hotelNameField.getText().trim().length() <= 2) {
+            setFieldError(hotelNameField, "Le nom de l'hôtel est requis et doit contenir plus de 2 caractères.");
             isValid = false;
+        } else {
+            clearFieldError(hotelNameField);
         }
 
         // Validation de l'adresse
-        if (addressField.getText().trim().isEmpty() || addressField.getText().trim().length() <= 5) {
-            setFieldError(addressField, "L'adresse est requise et doit contenir plus de 5 caractères.");
+        if (addressField.getText().trim().isEmpty() || addressField.getText().trim().length() <= 2) {
+            setFieldError(addressField, "L'adresse est requise et doit contenir plus de 2 caractères.");
             isValid = false;
+        } else {
+            clearFieldError(addressField);
         }
 
         // Validation des services
-        if (servicesField.getText().trim().isEmpty() || servicesField.getText().trim().length() <= 5) {
-            setFieldError(servicesField, "Les services sont requis et doivent contenir plus de 5 caractères.");
+        if (servicesField.getText().trim().isEmpty() || servicesField.getText().trim().length() <= 2) {
+            setFieldError(servicesField, "Les services sont requis et doivent contenir plus de 2 caractères.");
             isValid = false;
+        } else {
+            clearFieldError(servicesField);
         }
 
         // Validation des coordonnées
-        if (coordinatesField.getText().trim().isEmpty() || coordinatesField.getText().trim().length() <= 5) {
-            setFieldError(coordinatesField, "Les coordonnées sont requises et doivent contenir plus de 5 caractères.");
+        if (coordinatesField.getText().trim().isEmpty() || coordinatesField.getText().trim().length() <= 2) {
+            setFieldError(coordinatesField, "Les coordonnées sont requises et doivent contenir plus de 2 caractères.");
             isValid = false;
+        } else {
+            clearFieldError(coordinatesField);
         }
 
         // Validation des avis des clients
-        if (reviewsField.getText().trim().isEmpty() || reviewsField.getText().trim().length() <= 5) {
-            setFieldError(reviewsField, "Les avis des clients sont requis et doivent contenir plus de 5 caractères.");
+        if (reviewsField.getText().trim().isEmpty() || reviewsField.getText().trim().length() <= 2) {
+            setFieldError(reviewsField, "Les avis des clients sont requis et doivent contenir plus de 2 caractères.");
             isValid = false;
+        } else {
+            clearFieldError(reviewsField);
         }
 
         // Validation du pays
         if (countryComboBox.getValue() == null) {
             setFieldError(countryComboBox, "Choisissez un pays.");
             isValid = false;
+        } else {
+            clearFieldError(countryComboBox);
         }
 
         // Validation de la ville
         if (cityComboBox.getValue() == null) {
             setFieldError(cityComboBox, "Choisissez une ville.");
             isValid = false;
+        } else {
+            clearFieldError(cityComboBox);
         }
 
         // Validation de la catégorie (1-7)
         if (categoryField.getValue() == null) {
             setFieldError(categoryField, "Choisissez une catégorie entre 1 et 7.");
             isValid = false;
+        } else {
+            clearFieldError(categoryField);
         }
 
         return isValid;
@@ -234,6 +250,12 @@ public class HotelCreateForm implements Navigatable {
         field.setStyle("-fx-border-color: red;");
         Tooltip tooltip = new Tooltip(message);
         Tooltip.install(field, tooltip);
+    }
+
+    // Méthode pour effacer les erreurs de validation
+    private void clearFieldError(Control field) {
+        field.setStyle("");
+        Tooltip.uninstall(field, null);
     }
 
     @FXML

@@ -21,7 +21,7 @@
 
 /* Text fields */
 .input-field {
-    -fx-pref-width: 120px;
+    /*-fx-pref-width: 120px;*/
     -fx-pref-height: 35px;
     -fx-font-size: 14px;
     -fx-background-color: #ffffff;

@@ -89,7 +89,7 @@ public class HotelGrid implements Navigatable {
         categoryLabel.getStyleClass().add("hotel-category");
 
         // Buttons
-        Button updateButton = new Button("Update Hotel");
+        Button updateButton = new Button("Update");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateHotel(hotel);

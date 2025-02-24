@@ -110,7 +110,7 @@ public class CarGrid implements Navigatable {
         detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.ORANGE), 0, 1);
         detailsGrid.add(new Label("Driver: " + ((car.getCarDriver() != null) ? car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName() : "N/A")), 1, 1);
         detailsGrid.add(createIcon(FontAwesomeIcon.CREDIT_CARD, Color.RED), 2, 1);
-        detailsGrid.add(new Label("Driver ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
+        detailsGrid.add(new Label("DR ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
 
         detailsGrid.getStyleClass().add("details-grid");
 
