@@ -4,9 +4,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class MainGUI extends Application {
 
@@ -25,5 +29,7 @@ public class MainGUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("global-travel");
         primaryStage.show();
+
+
     }
 }

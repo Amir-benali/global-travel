@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="activities-grid-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ReviewGrid">
     <content>
@@ -12,14 +14,31 @@
             </padding>
 
             <!-- Header Section -->
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="50.0" styleClass="header">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" styleClass="header-activity">
                 <children>
-                    <Label styleClass="section-title" text="Review List" style="-fx-font-family: 'Roboto', sans-serif; -fx-font-size: 28px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"/>
-                    <Button onAction="#navigateToReview" styleClass="add-button" text="Review List"
-                            style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 25px; -fx-background-radius: 25px;"/>
+                    <!-- Icône pour le titre -->
+                    <ImageView fitHeight="40" fitWidth="40">
+                        <Image url="@/icons/review-icon.png"/> <!-- Icône pour les revues -->
+                    </ImageView>
+                    <!-- Titre de la section -->
+                    <Label styleClass="section-title-activty" text="Review List" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#addReview" styleClass="add-button" text="+ ADD REVIEW"
-                            style="-fx-background-color: #1E88E5; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 25px; -fx-background-radius: 25px;"/>
+                    <!-- Bouton pour naviguer vers la liste des activités -->
+                    <Button onAction="#navigateToReview" styleClass="add-button-activity-activty" text="Activity List">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@/icons/list-icon.png"/> <!-- Icône pour la liste -->
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <!-- Bouton pour ajouter une revue -->
+                    <Button onAction="#addReview" styleClass="add-button-activity-activty" text="Add Review">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@/icons/add-icon.png"/> <!-- Icône pour ajouter -->
+                            </ImageView>
+                        </graphic>
+                    </Button>
                 </children>
                 <padding>
                     <Insets top="10" bottom="10" left="15" right="15"/>

@@ -78,8 +78,19 @@ public class UserForm implements Navigatable {
     void handleSave(ActionEvent event) {
         if (!validateUserForm()) return;
 
+        String newEmail = emailField.getText();
+
+        // Vérifier si l'email existe déjà et ne correspond pas à l'utilisateur actuel
+        if (userService.emailExists(newEmail)) {
+            User existingUser = userService.getUserByEmail(newEmail);
+            if (existingUser != null && existingUser.getId() != currentUser.getId()) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Cet email est déjà utilisé par un autre utilisateur.");
+                return;
+            }
+        }
+
         if (showConfirmationDialog("Confirmation", "Voulez-vous vraiment mettre à jour cet utilisateur ?")) {
-            currentUser.setEmail(emailField.getText());
+            currentUser.setEmail(newEmail);
             currentUser.setPhoneNumber(phoneField.getText());
             currentUser.setLastName(lastNameField.getText());
             currentUser.setFirstName(firstNameField.getText());
@@ -101,6 +112,7 @@ public class UserForm implements Navigatable {
         String role = roleComboBox.getValue();
         LocalDate birthDate = birthDatePicker.getValue();
 
+        // Vérification des champs obligatoires
         if (firstName.isBlank() || lastName.isBlank() || email.isBlank() || phone.isBlank() || birthDate == null || role == null) {
             showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Tous les champs sont obligatoires sauf l'adresse.");
             return false;
@@ -118,7 +130,22 @@ public class UserForm implements Navigatable {
             return false;
         }
 
+        // Vérification de la date de naissance
+        if (!isValidBirthDate(birthDate)) {
+            showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Vous devez avoir au moins 18 ans et la date de naissance ne peut pas être dans le futur.");
+            return false;
+        }
+
         return true;
+    }
+
+    // Méthode pour valider la date de naissance
+    private boolean isValidBirthDate(LocalDate birthDate) {
+        LocalDate today = LocalDate.now();
+        LocalDate minBirthDate = today.minusYears(18); // L'utilisateur doit avoir au moins 18 ans
+
+        // Vérifier que la date de naissance n'est pas dans le futur et que l'utilisateur a au moins 18 ans
+        return !birthDate.isAfter(today) && !birthDate.isAfter(minBirthDate);
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
