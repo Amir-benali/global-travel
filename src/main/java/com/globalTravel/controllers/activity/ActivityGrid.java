@@ -29,13 +29,16 @@ public class ActivityGrid implements Navigatable {
     private final ActivityService activityService = new ActivityService();
     private final Connection connection = DataSource.getInstance().getConnection(); // Connexion à la base de données
 
+    @FXML
+    private FlowPane activitiesGrid;
+
+    @FXML
+    private TextField searchField; // Ajout du champ de recherche
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
-
-    @FXML
-    private FlowPane activitiesGrid;
 
     @FXML
     public void initialize() {
@@ -43,13 +46,28 @@ public class ActivityGrid implements Navigatable {
     }
 
     private void loadActivities() {
-        List<Activity> activities = activityService.rechercher();
+        loadActivities(null); // Charge toutes les activités si aucun filtre n'est appliqué
+    }
+
+    private void loadActivities(String searchQuery) {
+        List<Activity> activities;
+        if (searchQuery == null || searchQuery.isEmpty()) {
+            activities = activityService.rechercher(); // Charge toutes les activités
+        } else {
+            activities = activityService.rechercherParNom(searchQuery); // Charge les activités filtrées
+        }
         activitiesGrid.getChildren().clear();
 
         for (Activity activity : activities) {
             VBox activityCard = createActivityCard(activity);
             activitiesGrid.getChildren().add(activityCard);
         }
+    }
+
+    @FXML
+    public void searchActivities() {
+        String searchQuery = searchField.getText();
+        loadActivities(searchQuery); // Charge les activités filtrées par le nom
     }
 
     private VBox createActivityCard(Activity activity) {

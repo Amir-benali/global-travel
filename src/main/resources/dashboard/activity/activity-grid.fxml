@@ -22,9 +22,22 @@
                     <ImageView fitHeight="40" fitWidth="40">
                         <Image url="@/icons/activity-icon.png"/> <!-- Icône pour l'activité -->
                     </ImageView>
+
                     <!-- Titre de la section -->
                     <Label styleClass="section-title-activty" text="Activity List" />
-                    <Region HBox.hgrow="ALWAYS" />
+
+                    <!-- Barre de recherche -->
+                    <TextField fx:id="searchField" promptText="Search by activity name" styleClass="search-field-activty" />
+                    <Button onAction="#searchActivities" styleClass="search-button-activty" text="Search">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20">
+                                <Image url="@/icons/search.png"/> <!-- Icône pour la recherche -->
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
+                    <Region HBox.hgrow="ALWAYS" /> <!-- Pousse les éléments suivants vers la droite -->
+
                     <!-- Bouton pour naviguer vers la liste des activités -->
                     <Button onAction="#navigateToReview" styleClass="add-button-activity-activty" text="Review List">
                         <graphic>

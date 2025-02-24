@@ -1282,3 +1282,26 @@
     -fx-font-size: 14px;
     -fx-text-fill: #555555;
 }
+
+
+.search-field-activty {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 30px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 10px;
+}
+
+.search-button-activty {
+    -fx-background-color: #0080FF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+}
+
+.search-button-activty:hover {
+    -fx-background-color: #45a049;
+}
