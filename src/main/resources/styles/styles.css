@@ -1,3 +1,4 @@
+
 /* Main Styles */
 .root {
     -fx-font-family: 'Segoe UI', Arial, sans-serif;
@@ -1026,6 +1027,20 @@
     -fx-text-fill: #ffffff; /* Dark gray text for today's date */
     -fx-font-weight: bold; /* Bold font for today's date */
 }
+.car-offer-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-transition: all 0.3s ease;
+}
+
+.car-image {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.car-brand-model {
+    -fx-font-size: 24px;
 
 
 /* ... (vos styles existants) ... */
@@ -1053,6 +1068,40 @@
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
+
+.details-grid {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+}
+
+.details-grid Label {
+    -fx-font-size: 14px;
+}
+
+.details-grid Label:nth-child(odd) {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.details-grid Label:nth-child(even) {
+    -fx-text-fill: #7f8c8d;
+}
+
+.modern-button {
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.update-button {
+    -fx-background-color: #3498db;
+}
+
+.update-button:hover {
 
 .hotel-address {
     -fx-font-size: 14px;
@@ -1097,6 +1146,51 @@
     -fx-background-color: #c0392b;
 }
 
+.details-button {
+    -fx-background-color: #2196F3; /* Blue background */
+}
+
+.details-button:hover {
+    -fx-background-color: #1e88e5; /* Darker blue on hover */
+}
+
+.main-container {
+    -fx-background-color: #f0f4f8;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.offer-summary {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.price-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.date-label, .route-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #34495e;
+}
+
+.details-section {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.section-title {
+    -fx-font-size: 20px;
 /* Styles for Search and Add Buttons */
 .search-button {
     -fx-background-color: #2ecc71;
@@ -1290,6 +1384,196 @@
     -fx-padding: 0 0 10px 0;
 }
 
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.field-value {
+    -fx-text-fill: #2c3e50;
+}
+
+.action-button {
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.edit-button {
+    -fx-background-color: #3498db;
+}
+
+.edit-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.back-button {
+    -fx-background-color: #95a5a6;
+}
+
+.back-button:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.book-button {
+    -fx-background-color: #27ae60;
+}
+
+.book-button:hover {
+    -fx-background-color: #2ecc71;
+}
+/* Styles for the list view (address suggestions) */
+.list-view {
+    -fx-pref-width: 300px;
+    -fx-max-height: 150px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-color: white;
+}
+
+.list-cell {
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #ecf0f1;
+    -fx-cursor: hand;
+}
+
+/* Styles for buttons */
+.button {
+    -fx-padding: 10px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}
+
+.book-button {
+    -fx-background-color: #2ecc71; /* Green */
+    -fx-text-fill: white;
+}
+
+.book-button:hover {
+    -fx-background-color: #27ae60; /* Darker green */
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c; /* Red */
+    -fx-text-fill: white;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b; /* Darker red */
+}
+
+/* Styles for the WebView (map) */
+.web-view {
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+
+
+/* Styles for the date picker */
+.date-picker {
+    -fx-pref-width: 300px;
+    -fx-font-size: 14px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 0 5px 5px 0;
+}
+
+.date-picker .arrow-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.date-picker .text-field {
+    -fx-background-color: white;
+    -fx-border-radius: 5px 0 0 5px;
+}
+
+/* Hover effect for the card */
+.vbox:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+}
+.main-container {
+    -fx-background-color: #f0f4f8;
+}
+
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+
+.text-field, .date-picker {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5px;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.text-field:focused, .date-picker:focused {
+    -fx-border-color: #3498db;
+}
+
+
+.cancel-button {
+    -fx-background-color: #95a5a6;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.book-button {
+    -fx-background-color: #27ae60;
+}
+
+.book-button:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5px;
+}
+
+/* Icon Specific Styles */
+.font-awesome-icon {
+    -fx-fill: #333333;
+}
+
+/* Custom Color Scheme for Icons */
+.font-awesome-icon-blue {
+    -fx-fill: #007BFF;
+}
+
+.font-awesome-icon-green {
+    -fx-fill: #28a745;
 /* Styles for Text Fields */
 .text-field, .text-area, .combo-box {
     -fx-pref-width: 300px;

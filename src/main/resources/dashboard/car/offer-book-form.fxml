@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox spacing="20" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.globalTravel.controllers.car.OfferBookForm"
+      styleClass="main-container">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Left half: Form -->
+    <VBox spacing="20" prefWidth="400" HBox.hgrow="ALWAYS" styleClass="form-card">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Book Your Trip" styleClass="form-title"/>
+
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="100"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <Label text="Start Location:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="startLocationField" promptText="Enter start address"
+                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <ListView fx:id="startSuggestions" GridPane.columnIndex="1" GridPane.rowIndex="1" visible="false"/>
+
+            <Label text="Destination:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="destinationField" promptText="Enter destination address"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <ListView fx:id="destinationSuggestions" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false"/>
+
+            <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField fx:id="timeField" promptText="HH:MM" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        </GridPane>
+
+        <Region VBox.vgrow="ALWAYS"/> <!-- Spacer -->
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+            <Button text="Book Now" onAction="#handleBooking" styleClass="book-button"/>
+        </HBox>
+    </VBox>
+
+    <!-- Right half: Map -->
+    <WebView fx:id="mapWebView" prefWidth="400" HBox.hgrow="ALWAYS"/>
+</HBox>

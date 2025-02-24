@@ -21,7 +21,12 @@ public class OfferService implements IService<Offer> {
             pst.setString(1,  offer.getDescription());
             pst.setTimestamp(2, Timestamp.valueOf(offer.getDate()));
             pst.setFloat(3, offer.getPrice());
-            pst.setInt(4, offer.getRoute().getId());
+            if(offer.getRoute() != null) {
+                pst.setInt(4, offer.getRoute().getId());
+            }
+            else {
+                pst.setNull(4, Types.INTEGER);
+            }
             pst.setInt(5, offer.getCar().getId());
 
 
@@ -41,7 +46,12 @@ public class OfferService implements IService<Offer> {
             pst.setString(1,  offer.getDescription());
             pst.setTimestamp(2, Timestamp.valueOf(offer.getDate()));
             pst.setFloat(3, offer.getPrice());
-            pst.setInt(4, offer.getRoute().getId());
+            if(offer.getRoute() != null) {
+                pst.setInt(4, offer.getRoute().getId());
+            }
+            else {
+                pst.setNull(4, Types.INTEGER);
+            }
             pst.setInt(5, offer.getCar().getId());
             pst.setInt(6, offer.getId());
 
