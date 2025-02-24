@@ -120,7 +120,6 @@
     -fx-background-color: #0197FF;
 }
 
-/* Table Styles */
 .user-table {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -145,12 +144,28 @@
 }
 
 .user-table .table-row-cell:selected {
-    -fx-background-color: #f0f7ff;
+    -fx-background-color: #f0f7ff; /* Light blue background for selected row */
+    -fx-border-color: transparent transparent #ddd transparent; /* Add a border for better visibility */
+    -fx-border-width: 0 0 1 0;
+}
+
+.user-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #000; /* Ensure text color is readable */
 }
 
 .user-table .table-cell {
     -fx-alignment: center-left;
     -fx-padding: 12px;
+    -fx-text-fill: #333; /* Default text color */
+}
+
+.user-table .table-row-cell:hover {
+    -fx-background-color: #f5f5f5; /* Light gray background on hover */
+}
+
+.user-table .table-row-cell:empty {
+    -fx-background-color: transparent; /* Transparent background for empty rows */
+    -fx-border-color: transparent; /* No border for empty rows */
 }
 
 /* Pagination Styles */
@@ -1012,6 +1027,7 @@
     -fx-font-weight: bold; /* Bold font for today's date */
 }
 
+
 /* ... (vos styles existants) ... */
 
 /* Styles for Hotel Cards */
@@ -1143,7 +1159,7 @@
 }
 
 /* Styles for ScrollPane */
-=======
+
 
 
 
