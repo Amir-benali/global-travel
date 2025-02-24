@@ -78,8 +78,19 @@ public class UserForm implements Navigatable {
     void handleSave(ActionEvent event) {
         if (!validateUserForm()) return;
 
+        String newEmail = emailField.getText();
+
+        // Vérifier si l'email existe déjà et ne correspond pas à l'utilisateur actuel
+        if (userService.emailExists(newEmail)) {
+            User existingUser = userService.getUserByEmail(newEmail);
+            if (existingUser != null && existingUser.getId() != currentUser.getId()) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Cet email est déjà utilisé par un autre utilisateur.");
+                return;
+            }
+        }
+
         if (showConfirmationDialog("Confirmation", "Voulez-vous vraiment mettre à jour cet utilisateur ?")) {
-            currentUser.setEmail(emailField.getText());
+            currentUser.setEmail(newEmail);
             currentUser.setPhoneNumber(phoneField.getText());
             currentUser.setLastName(lastNameField.getText());
             currentUser.setFirstName(firstNameField.getText());
