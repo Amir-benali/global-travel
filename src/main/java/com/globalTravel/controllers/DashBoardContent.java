@@ -6,21 +6,52 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Label;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import com.globalTravel.models.activity.Activity;
+import com.globalTravel.services.activity.ActivityService;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DashBoardContent {
 
     @FXML private Label totalBookingsLabel;
     @FXML private Label revenueLabel;
-    @FXML private Label activeUsersLabel;
     @FXML private Label newActivitiesLabel;
 
     @FXML private PieChart bookingsPieChart;
     @FXML private LineChart<String, Number> revenueTrendChart;
-    @FXML private TableView<TopActivity> topActivitiesTable;
+
+    @FXML
+    private TableView<Activity> topActivitiesTable;
+
+    @FXML
+    private TableColumn<Activity, String> activityNameColumn;
+
+    @FXML
+    private TableColumn<Activity, String> typeColumn;
+
+    @FXML
+    private TableColumn<Activity, String> revenueColumn;
+
+    @FXML
+    private TableColumn<Activity, String> startDateColumn;
+
+    @FXML
+    private TableColumn<Activity, String> descriptionColumn;
+
+    @FXML
+    private TableColumn<Activity, String> locationColumn;
+
+    @FXML
+    private TableColumn<Activity, String> endDateColumn;
+
+    private final ActivityService activityService = new ActivityService();
 
     @FXML
     public void initialize() {
@@ -31,78 +62,65 @@ public class DashBoardContent {
     }
 
     private void updateQuickStats() {
-        totalBookingsLabel.setText("1,234");
-        revenueLabel.setText("$56,789");
-        activeUsersLabel.setText("5,678");
-        newActivitiesLabel.setText("42");
+        List<Activity> activities = activityService.rechercher();
+        int totalBookings = activities.size();
+        double totalRevenue = activities.stream().mapToDouble(Activity::getPrixTotal).sum();
+        int newActivities = activities.stream().filter(activity -> isNewActivity(activity)).toArray().length;
+
+        totalBookingsLabel.setText(String.valueOf(totalBookings));
+        revenueLabel.setText("$" + String.format("%.2f", totalRevenue));
+        newActivitiesLabel.setText(String.valueOf(newActivities));
+    }
+
+    private boolean isNewActivity(Activity activity) {
+        long currentTime = System.currentTimeMillis();
+        long activityTime = activity.getDateDebut().getTime();
+        return (currentTime - activityTime) < (7 * 24 * 60 * 60 * 1000); // 7 days
     }
 
     private void setupBookingsPieChart() {
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Hotels", 35),
-                new PieChart.Data("Flights", 30),
-                new PieChart.Data("Activities", 25),
-                new PieChart.Data("Car Rentals", 10)
-        );
+        List<Activity> activities = activityService.rechercher();
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        activities.stream()
+                .collect(Collectors.groupingBy(Activity::getTypeActivity, Collectors.counting()))
+                .forEach((type, count) -> pieChartData.add(new PieChart.Data(type.toString(), count)));
+
         bookingsPieChart.setData(pieChartData);
     }
 
     private void setupRevenueTrendChart() {
+        List<Activity> activities = activityService.rechercher();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Monthly Revenue");
 
-        series.getData().add(new XYChart.Data<>("Jan", 50000));
-        series.getData().add(new XYChart.Data<>("Feb", 60000));
-        series.getData().add(new XYChart.Data<>("Mar", 55000));
-        series.getData().add(new XYChart.Data<>("Apr", 65000));
-        series.getData().add(new XYChart.Data<>("May", 75000));
-        series.getData().add(new XYChart.Data<>("Jun", 80000));
+        activities.stream()
+                .collect(Collectors.groupingBy(activity -> getMonthFromTimestamp(activity.getDateDebut()), Collectors.summingDouble(Activity::getPrixTotal)))
+                .forEach((month, revenue) -> series.getData().add(new XYChart.Data<>(month, revenue)));
 
         revenueTrendChart.getData().add(series);
     }
 
-    private void setupTopActivitiesTable() {
-        TableColumn<TopActivity, String> nameColumn = new TableColumn<>("Activity Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<TopActivity, Integer> bookingsColumn = new TableColumn<>("Bookings");
-        bookingsColumn.setCellValueFactory(new PropertyValueFactory<>("bookings"));
-
-        TableColumn<TopActivity, String> revenueColumn = new TableColumn<>("Revenue");
-        revenueColumn.setCellValueFactory(new PropertyValueFactory<>("revenue"));
-
-        TableColumn<TopActivity, Double> ratingColumn = new TableColumn<>("Rating");
-        ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
-
-        topActivitiesTable.getColumns().setAll(nameColumn, bookingsColumn, revenueColumn, ratingColumn);
-
-        ObservableList<TopActivity> activities = FXCollections.observableArrayList(
-                new TopActivity("City Tour", 150, "$7,500", 4.8),
-                new TopActivity("Mountain Hiking", 120, "$6,000", 4.7),
-                new TopActivity("Beach Volleyball", 100, "$5,000", 4.6),
-                new TopActivity("Wine Tasting", 80, "$4,000", 4.9)
-        );
-
-        topActivitiesTable.setItems(activities);
+    private String getMonthFromTimestamp(Timestamp timestamp) {
+        return new SimpleDateFormat("MMM").format(timestamp);
     }
 
-    // Inner class for top activities table
-    public static class TopActivity {
-        private final String name;
-        private final int bookings;
-        private final String revenue;
-        private final double rating;
+    private void setupTopActivitiesTable() {
+        // Lier les colonnes aux propriétés de Activity
+        activityNameColumn.setCellValueFactory(new PropertyValueFactory<>("nomActivity"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("typeActivity"));
+        revenueColumn.setCellValueFactory(new PropertyValueFactory<>("prixTotal"));
+        startDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("localisation"));
+        endDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
 
-        public TopActivity(String name, int bookings, String revenue, double rating) {
-            this.name = name;
-            this.bookings = bookings;
-            this.revenue = revenue;
-            this.rating = rating;
-        }
+        // Récupérer les activités et les trier par prix (du plus cher au moins cher)
+        List<Activity> activities = activityService.rechercher();
+        activities.sort((a1, a2) -> Integer.compare(a2.getPrixTotal(), a1.getPrixTotal()));
 
-        public String getName() { return name; }
-        public int getBookings() { return bookings; }
-        public String getRevenue() { return revenue; }
-        public double getRating() { return rating; }
+        // Ajouter les activités triées au tableau
+        ObservableList<Activity> topActivities = FXCollections.observableArrayList(activities);
+        topActivitiesTable.setItems(topActivities);
     }
 }
