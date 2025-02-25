@@ -6,20 +6,29 @@ public class PrivateCar {
     private String model;
     private int num_place;
     private CarDriver carDriver;
-
-    public PrivateCar(int id, String brand, String model, int num_place, CarDriver carDriver) {
+    private String image;
+    public PrivateCar(int id, String brand, String model, int num_place, CarDriver carDriver, String image) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.num_place = num_place;
         this.carDriver = carDriver;
+        this.image = image;
     }
 
-    public PrivateCar(  String brand ,String model,int num_place,  CarDriver carDriver) {
+    public PrivateCar(  String brand ,String model,int num_place,  CarDriver carDriver,String image) {
         this.carDriver = carDriver;
         this.num_place = num_place;
         this.model = model;
         this.brand = brand;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public int getId() {
@@ -70,6 +79,7 @@ public class PrivateCar {
                 ", model='" + model + '\'' +
                 ", num_place=" + num_place +
                 ", carDriver=" + carDriver +
+                ", image='" + image + '\'' +
                 '}';
     }
 }
