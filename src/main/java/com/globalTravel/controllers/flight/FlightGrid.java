@@ -6,15 +6,10 @@ package com.globalTravel.controllers.flight;
         import com.globalTravel.services.flight.FlightService;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
-        import javafx.scene.control.Alert;
-        import javafx.scene.control.Button;
-        import javafx.scene.control.ButtonType;
-        import javafx.scene.control.Label;
+        import javafx.scene.control.*;
         import javafx.scene.image.Image;
         import javafx.scene.image.ImageView;
-        import javafx.scene.layout.FlowPane;
-        import javafx.scene.layout.HBox;
-        import javafx.scene.layout.VBox;
+        import javafx.scene.layout.*;
 
         import java.util.List;
 
@@ -27,7 +22,7 @@ package com.globalTravel.controllers.flight;
             }
 
             @FXML
-            private FlowPane flightsGrid;
+            private VBox flightsGrid;
 
             @FXML
             public void initialize() {
@@ -38,56 +33,100 @@ package com.globalTravel.controllers.flight;
                 flightsGrid.getChildren().clear();
                 List<Flight> flights = flightService.rechercher();
                 for (Flight flight : flights) {
-                    VBox flightCard = createFlightCard(flight);
+                    HBox flightCard = createFlightRow(flight);
                     flightsGrid.getChildren().add(flightCard);
                 }
             }
 
-            private VBox createFlightCard(Flight flight) {
-                VBox card = new VBox(10);
-                card.getStyleClass().add("flight-offer-card");
+            private HBox createFlightRow(Flight flight) {
+                HBox row = new HBox(30);
+                row.getStyleClass().add("flight-row");
 
-                ImageView airlineLogoView = new ImageView(new Image("/images/flight.png"));
-                airlineLogoView.setFitWidth(200);
-                airlineLogoView.setFitHeight(150);
+                // Flight image
+                ImageView airlineLogoView = new ImageView(new Image(getClass().getResource("/images/flight.png").toExternalForm()));
+                airlineLogoView.setFitWidth(100);
+                airlineLogoView.setFitHeight(75);
                 airlineLogoView.setPreserveRatio(true);
 
-                VBox flightInfo = new VBox(5);
-                flightInfo.getStyleClass().add("flight-info");
-
-                Label routeLabel = new Label(flight.getDeparture_airport() + " to " + flight.getArrival_airport());
+                // Flight title and airline name and departure+arrival countries
+                VBox titleBox = new VBox(5);
+                Label routeLabel = new Label(flight.getDeparture_airport() + " → " + flight.getArrival_airport());
                 routeLabel.getStyleClass().add("flight-title");
+
+                Label countries=new Label(flight.getDeparture_country()+" → "+flight.getArrival_country());
+                countries.getStyleClass().add("flight-countries");
+
+                Label airlineNameLabel = new Label(flight.getAirline_name());
+                airlineNameLabel.getStyleClass().add("flight-airline-name");
 
                 Label priceLabel = new Label("Price: $" + String.format("%.2f", flight.getBase_price()));
                 priceLabel.getStyleClass().add("flight-price");
 
-                Button viewDetailsButton = new Button("View Details");
-                viewDetailsButton.getStyleClass().add("view-details-button");
-                viewDetailsButton.setOnAction(e -> handleViewDetails(flight));
+                titleBox.getChildren().addAll(routeLabel, countries, airlineNameLabel, priceLabel);
 
-                Button deleteButton = new Button("Delete");
-                deleteButton.getStyleClass().add("view-details-button");
+                // Flight information in two columns
+                VBox infoBox = new VBox(5);
+                HBox infoColumns = new HBox(20);
+
+                VBox column1 = new VBox(5);
+                Label flightNumberLabel = new Label("Flight Number: " + flight.getFlight_number());
+                Label departureTimeLabel = new Label("Departure Time: " + flight.getDeparture_time());
+                Label arrivalTimeLabel = new Label("Arrival Time: " + flight.getArrival_time());
+                Label durationLabel = new Label("Duration: " + flight.getDuration() + " H");
+
+                column1.getChildren().addAll(flightNumberLabel, departureTimeLabel, arrivalTimeLabel, durationLabel);
+
+                VBox column2 = new VBox(5);
+                Label seatsLabel = new Label("Available Seats: " + flight.getAvailable_seats());
+                Label flightStatusLabel = new Label("Status: " + flight.getStatus());
+
+                column2.getChildren().addAll(seatsLabel, flightStatusLabel);
+
+                infoColumns.getChildren().addAll(column1, column2);
+                infoBox.getChildren().add(infoColumns);
+
+                // Buttons with icons
+                VBox buttonBox = new VBox(5);
+                Button updateButton = new Button();
+                ImageView updateIcon = new ImageView(new Image(getClass().getResource("/images/update_flight.png").toExternalForm()));
+                updateIcon.setFitWidth(20); // Set the desired width
+                updateIcon.setFitHeight(20); // Set the desired height
+                updateButton.setStyle("-fx-background-color: #1b97e3;");
+                updateButton.setGraphic(updateIcon);
+                updateButton.setOnAction(e -> handleUpdateFlight(flight));
+                Tooltip updateTooltip = new Tooltip("Update Flight");
+                Tooltip.install(updateButton, updateTooltip);
+
+                Button deleteButton = new Button();
+                ImageView deleteIcon = new ImageView(new Image(getClass().getResource("/images/delete_flight.png").toExternalForm()));
+                deleteIcon.setFitWidth(20); // Set the desired width
+                deleteIcon.setFitHeight(20); // Set the desired height
+                deleteButton.setStyle("-fx-background-color: rgba(248,50,50,0.87);");
+                deleteButton.setGraphic(deleteIcon);
+                Tooltip deleteTooltip = new Tooltip("Delete Flight");
+                Tooltip.install(deleteButton, deleteTooltip);
+
                 deleteButton.setOnAction(e -> handleDeleteFlight(flight));
 
-                Button updateButton = new Button("Update");
-                updateButton.getStyleClass().add("view-details-button");
-                updateButton.setOnAction(e -> handleUpdateFlight(flight));
+                buttonBox.getChildren().addAll(updateButton, deleteButton);
 
-                HBox buttonHbox = new HBox(3);
-                buttonHbox.getChildren().addAll(viewDetailsButton, updateButton, deleteButton);
-                flightInfo.getChildren().addAll(routeLabel, priceLabel, buttonHbox);
+                // Spacer to push buttons to the end
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                card.getChildren().addAll(airlineLogoView, flightInfo);
+                // Assemble the row
+                row.getChildren().addAll(airlineLogoView, titleBox, infoBox,spacer, buttonBox);
 
-                return card;
+                return row;
             }
-
             private void handleViewDetails(Flight flight) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Flight Details");
                 alert.setHeaderText("Flight Information");
                 alert.setContentText("Flight Number: " + flight.getFlight_number() + "\n" +
-                        "Airline ID: " + flight.getAirline_id() + "\n" +
+                        "Airline ID: " + flight.getAirline_name() + "\n" +
+                        "Departure Country: " + flight.getDeparture_country() + "\n" +
+                        "Arrival Country: " + flight.getArrival_country() + "\n" +
                         "Departure Airport: " + flight.getDeparture_airport() + "\n" +
                         "Arrival Airport: " + flight.getArrival_airport() + "\n" +
                         "Departure Time: " + flight.getDeparture_time() + "\n" +

@@ -1,0 +1,135 @@
+/* src/main/resources/styles/FlightStyle.css */
+
+/* General styles for the flight form */
+.flight-form {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-border-color: #02aacd;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-height: 200px;
+
+}
+
+/* Form title */
+.form-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+    -fx-font-family:Arial;
+
+}
+
+/* Text fields */
+.input-field {
+    /*-fx-pref-width: 120px;*/
+    -fx-pref-height: 35px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+DatePicker {
+    -fx-pref-width: 150px;
+    -fx-pref-height: 30px;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+}
+
+/* Smaller text fields */
+.small-text-field {
+    -fx-pref-width: 150px;
+    -fx-pref-height: 25px;
+}
+
+/* Background labels */
+.background-label {
+    -fx-text-fill: #2b2d30;
+    -fx-font-size: 13px;
+    -fx-font-family:sans-serif;
+    -fx-font-weight: bold;
+}
+
+.combo-box {
+    -fx-background-color: #fff;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 10px;
+    -fx-pref-width: 200px;
+}
+
+/* Buttons */
+.choose-image-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+}
+
+.choose-image-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Selected image label */
+.selected-image-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/*Flights Grid*/
+.flights-grid {
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+.flight-row {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-border-color: #02aacd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.flight-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.flight-airline-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.flight-price {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2ecc71;
+}
+

@@ -16,19 +16,19 @@
 
     <!-- Brand Field -->
     <VBox>
-        <TextField fx:id="brandField" promptText="Brand"/>
+        <TextField fx:id="brandField" promptText="Brand" disable="true"/>
         <VBox fx:id="brandErrorContainer"/>
     </VBox>
 
     <!-- Model Field -->
     <VBox>
-        <TextField fx:id="modelField" promptText="Model"/>
+        <TextField fx:id="modelField" promptText="Model" disable="true"/>
         <VBox fx:id="modelErrorContainer"/>
     </VBox>
 
     <!-- Number of Seats Field -->
     <VBox>
-        <TextField fx:id="numSeatsField" promptText="Number of Seats"/>
+        <TextField fx:id="numSeatsField" promptText="Number of Seats" disable="true"/>
         <VBox fx:id="numSeatsErrorContainer"/>
     </VBox>
 
@@ -43,7 +43,13 @@
         </ComboBox>
         <VBox fx:id="driverErrorContainer"/>
     </VBox>
+    <!-- Image Selection Section -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Choose car image" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+    </HBox>
 
+    <ImageView fx:id="driverImagePreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>

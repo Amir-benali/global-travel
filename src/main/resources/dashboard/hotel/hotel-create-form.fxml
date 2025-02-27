@@ -3,40 +3,55 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
 
 <VBox spacing="10" styleClass="hotel-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelCreateForm">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
+    <!-- Titre du formulaire -->
     <Label fx:id="formTitleLabel" text="Add New Hotel" styleClass="form-title"/>
 
-    <!-- Hotel Name Field -->
+    <!-- Champ pour le nom de l'hôtel -->
     <TextField fx:id="hotelNameField" promptText="Hotel Name"/>
 
-    <!-- Address Field -->
+    <!-- Sélection du pays et de la ville -->
+    <ComboBox fx:id="countryComboBox" promptText="Choisir un pays"/>
+    <ComboBox fx:id="cityComboBox" promptText="Choisir une ville"/>
+
+    <!-- Champ pour l'adresse -->
     <TextField fx:id="addressField" promptText="Address"/>
 
-    <!-- City Field -->
-    <TextField fx:id="cityField" promptText="City"/>
+    <!-- Sélection de la catégorie -->
+    <ComboBox fx:id="categoryField" promptText="Category (1-7)"/>
 
-    <!-- Country Field -->
-    <TextField fx:id="countryField" promptText="Country"/>
-
-    <!-- Category Field -->
-    <TextField fx:id="categoryField" promptText="Category (Stars)"/>
-
-    <!-- Services Field -->
+    <!-- Champ pour les services -->
     <TextField fx:id="servicesField" promptText="Services"/>
 
-    <!-- Coordinates Field -->
+    <!-- Champ pour les coordonnées -->
     <TextField fx:id="coordinatesField" promptText="Coordinates"/>
 
-    <!-- Reviews Field -->
-    <TextArea fx:id="reviewsField" promptText="Customer Reviews"/>
+    <HBox spacing="10">
+        <TextArea fx:id="reviewsField" prefHeight="100" prefWidth="300"/>
+        <VBox spacing="5">
+            <ComboBox fx:id="emojiComboBox" prefWidth="50"/>
+            <Button fx:id="emojiButton" text="😀" onAction="#handleInsertEmoji"/>
+        </VBox>
+    </HBox>
 
-    <!-- Action Buttons -->
+
+    <!-- Section pour la traduction des avis -->
+    <Label text="Choisir la langue de traduction :"/>
+    <ComboBox fx:id="languageComboBox" promptText="Choisir une langue"/>
+
+    <!-- Bouton pour déclencher la traduction -->
+    <Button fx:id="translateButton" text="Traduire" onAction="#handleTranslate"/>
+
+    <!-- Zone de texte pour afficher l'avis traduit -->
+    <Label text="Avis traduit :"/>
+    <TextArea fx:id="translatedReviewTextArea" prefHeight="100" wrapText="true" editable="false"/>
+
+    <!-- Boutons d'action -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
         <Button fx:id="saveButton" text="Save Hotel" onAction="#handleSaveHotel" styleClass="save-button"/>

@@ -66,7 +66,7 @@ public class ChambreGrid implements Navigatable {
         optionsLabel.getStyleClass().add("chambre-options");
 
         // Buttons
-        Button updateButton = new Button("Update Chambre");
+        Button updateButton = new Button("Update");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateChambre(chambre);
@@ -77,7 +77,7 @@ public class ChambreGrid implements Navigatable {
         updateButton.getStyleClass().add("view-details-button");
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
+        deleteButton.getStyleClass().add("delete-button");
         deleteButton.setOnAction(e -> deleteChambre(chambre));
 
         HBox buttonHbox = new HBox(3);
