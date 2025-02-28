@@ -1,9 +1,8 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.car.PrivateCar;
-import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.PrivateCarService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
@@ -25,12 +24,11 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
 public class CarGrid implements Navigatable {
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();

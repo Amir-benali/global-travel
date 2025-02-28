@@ -1,0 +1,216 @@
+/* Root and General Styles */
+.root {
+    -fx-background-color: #f8f9fa; /* Light gray background */
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* Header Styles */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+    -fx-padding: 15px 25px;
+}
+
+.company-logo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb; /* Blue accent color */
+}
+
+/* Navigation Buttons */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f1f5f9; /* Light gray hover background */
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.nav-icon {
+    -fx-fill: #64748b; /* Gray icon color */
+    -fx-transition: all 0.3s ease;
+}
+
+.nav-button:hover .nav-icon {
+    -fx-fill: #2563eb; /* Blue icon color on hover */
+}
+/* Style for the selected navigation button */
+.nav-button.selected {
+    -fx-background-color: #f1f5f9; /* Light gray hover background */
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+
+}
+.nav-button.selected .nav-icon {
+    -fx-fill: #2563eb; /* Blue icon color on hover */
+}
+/* Profile Button */
+.profile-button {
+    -fx-background-color: #f1f5f9;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 24px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.profile-button:hover {
+    -fx-background-color: #e2e8f0; /* Slightly darker gray on hover */
+}
+
+.user-name-label {
+    -fx-text-fill: #475569; /* Dark gray text */
+    -fx-font-size: 14px;
+}
+
+/* ScrollPane and Main Content */
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Welcome Section */
+.welcome-section {
+    -fx-padding: 20px;
+}
+
+.welcome-text {
+    -fx-font-size: 24px;
+    -fx-text-fill: #475569; /* Dark gray text */
+}
+
+.welcome-name {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb; /* Blue accent color */
+}
+
+/* Statistics Cards */
+.stat-card {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 0);
+    -fx-alignment: CENTER;
+    -fx-spacing: 10px;
+    -fx-transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 20, 0, 0, 0);
+    -fx-translate-y: -5px; /* Slight lift effect on hover */
+}
+
+.stat-icon {
+    -fx-fill: #2563eb; /* Blue icon color */
+}
+
+.stat-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b; /* Dark text */
+}
+
+.stat-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b; /* Gray text */
+}
+
+/* Charts Section */
+.chart-container {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 0);
+    -fx-transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 20, 0, 0, 0);
+    -fx-translate-y: -5px; /* Slight lift effect on hover */
+}
+
+.chart-header {
+    -fx-padding: 0 0 20px 0;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b; /* Dark text */
+}
+
+.chart-period-button {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569; /* Gray text */
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.chart-period-button:hover {
+    -fx-background-color: #e2e8f0; /* Slightly darker gray on hover */
+}
+
+/* Table Section */
+.table-container {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 15, 0, 0, 0);
+    -fx-transition: all 0.3s ease;
+}
+
+.table-container:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 20, 0, 0, 0);
+    -fx-translate-y: -5px; /* Slight lift effect on hover */
+}
+
+.table-header {
+    -fx-padding: 0 0 20px 0;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8fafc; /* Light gray header */
+    -fx-padding: 12px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #475569; /* Gray text */
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-padding: 12px;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #f1f5f9; /* Light gray hover background */
+}
+
+.view-all-button {
+    -fx-background-color: #2563eb; /* Blue button */
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.view-all-button:hover {
+    -fx-background-color: #1d4ed8; /* Darker blue on hover */
+}

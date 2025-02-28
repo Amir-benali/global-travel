@@ -1,4 +1,4 @@
-package com.globalTravel.controllers;
+package com.globalTravel.controllers.backoffice;
 import com.globalTravel.models.user.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

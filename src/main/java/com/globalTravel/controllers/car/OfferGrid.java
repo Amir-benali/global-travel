@@ -1,7 +1,9 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.car.Offer;
 import com.globalTravel.services.car.OfferService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -27,12 +29,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class OfferGrid implements Navigatable {
+public class OfferGrid implements Navigatable, FrontNavigatable {
     private DashBoard dashBoardController;
     private OfferService offerService = new OfferService();
+    private FrontOffice frontOfficeController;
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
+    }
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 
     @FXML
@@ -143,8 +150,8 @@ public class OfferGrid implements Navigatable {
 
 
     private void showOfferDetails(Offer offer) {
-        dashBoardController.navigateTo("dashboard/car/offer-details.fxml");
-        ((OfferDetails) dashBoardController.getController()).initialize(offer);
+        frontOfficeController.navigateTo("dashboard/car/offer-details.fxml");
+        ((OfferDetails) frontOfficeController.getController()).initialize(offer);
     }
 
     private void deleteOffer(Offer offer) {

@@ -1,6 +1,7 @@
 package com.globalTravel.controllers.auth;
 
-import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import com.globalTravel.utils.DataSource;
@@ -63,11 +64,20 @@ public class Login {
 
     private void navigateToDashboard(User user) {
         try {
+            if(!user.getRoles().equals("admin")){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontOffice/front-office.fxml"));
+                Parent root = loader.load();
+                FrontOffice frontOfficeController = loader.getController();
+                frontOfficeController.setCurrentUser(user);
+                emailField.getScene().setRoot(root);
+            }
+            else{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/dashboard.fxml"));
             Parent root = loader.load();
             DashBoard dashboardController = loader.getController();
             dashboardController.setCurrentUser(user);
             emailField.getScene().setRoot(root);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir le tableau de bord.", Alert.AlertType.ERROR);
