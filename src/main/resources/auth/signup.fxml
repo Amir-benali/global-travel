@@ -5,9 +5,9 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+
 <StackPane styleClass="signup-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.auth.Signup">
     <VBox styleClass="signup-card" maxWidth="400" maxHeight="600" alignment="CENTER" spacing="15">
         <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
@@ -16,11 +16,17 @@
             </image>
         </ImageView>
         <Label text="Create an Account" styleClass="title"/>
-        <TextField fx:id="fullNameField" promptText="Full Name" styleClass="input-field"/>
+
+        <!-- Champ pour le prénom et le nom, alignés horizontalement -->
+        <HBox spacing="10" alignment="CENTER">
+            <TextField fx:id="firstNameField" promptText="First Name" styleClass="input-field" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="lastNameField" promptText="Last Name" styleClass="input-field" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
         <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
 
         <!-- Ajout du champ de sélection du genre -->
-        <ComboBox fx:id="genderComboBox" promptText="selectioner le genre" styleClass="input-field">
+        <ComboBox fx:id="genderComboBox" promptText="Sélectionner le genre" styleClass="input-field">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="Homme"/>

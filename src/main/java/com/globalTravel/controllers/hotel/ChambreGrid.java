@@ -1,11 +1,14 @@
 package com.globalTravel.controllers.hotel;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.services.hotel.ChambreService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -17,8 +20,10 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.List;
 
-public class ChambreGrid implements Navigatable {
+public class ChambreGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddChamber;
     private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -66,7 +71,7 @@ public class ChambreGrid implements Navigatable {
         optionsLabel.getStyleClass().add("chambre-options");
 
         // Buttons
-        Button updateButton = new Button("Update Chambre");
+        Button updateButton = new Button("Update");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateChambre(chambre);
@@ -77,7 +82,7 @@ public class ChambreGrid implements Navigatable {
         updateButton.getStyleClass().add("view-details-button");
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
+        deleteButton.getStyleClass().add("delete-button");
         deleteButton.setOnAction(e -> deleteChambre(chambre));
 
         HBox buttonHbox = new HBox(3);
@@ -87,6 +92,38 @@ public class ChambreGrid implements Navigatable {
         card.getChildren().add(chambreInfo);
 
         return card;
+    }
+
+    private void updateButtonVisibility() {
+        for (Node node : chambresGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof VBox) {
+                        for (Node nestedchild : ((VBox) child).getChildren()) {
+                            if (nestedchild instanceof HBox) {
+                                HBox buttonBox = (HBox) nestedchild;
+                                // Filter buttons by their text
+                                Button updateButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Update".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                                Button deleteButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Delete".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+                                System.out.println("updateButton = " + updateButton);
+                                System.out.println("deleteButton = " + deleteButton);
+                                if (frontOfficeController != null && updateButton != null && deleteButton != null) {
+                                    buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void deleteChambre(Chambre chambre) {
@@ -140,5 +177,12 @@ public class ChambreGrid implements Navigatable {
 
     public void addChambre(ActionEvent actionEvent) {
         dashBoardController.navigateTo("dashboard/hotel/chambre-create-form.fxml");
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddChamber.setVisible(false);
     }
 }

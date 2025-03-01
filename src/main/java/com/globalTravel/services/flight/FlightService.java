@@ -20,19 +20,21 @@ public class FlightService implements IService<Flight> {
 
     @Override
     public void ajouter(Flight flight) {
-        String req = "INSERT INTO flights (flight_number, airline_id, departure_airport_name, arrival_airport_name, departure_time, arrival_time, duration_per_hours, available_seats, flight_base_price, flight_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO flights (flight_number, airline_name,departure_country, arrival_country , departure_airport_name, arrival_airport_name, departure_time, arrival_time, duration_per_hours, available_seats, flight_base_price, flight_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setString(1, flight.getFlight_number());
-            pst.setInt(2, flight.getAirline_id());
-            pst.setString(3, flight.getDeparture_airport());
-            pst.setString(4, flight.getArrival_airport());
-            pst.setTimestamp(5, flight.getDeparture_time());
-            pst.setTimestamp(6, flight.getArrival_time());
-            pst.setInt(7, flight.getDuration());
-            pst.setInt(8, flight.getAvailable_seats());
-            pst.setDouble(9, flight.getBase_price());
-            pst.setString(10, flight.getStatus().name());
+            pst.setString(2, flight.getAirline_name());
+            pst.setString(3, flight.getDeparture_country());
+            pst.setString(4, flight.getArrival_country());
+            pst.setString(5, flight.getDeparture_airport());
+            pst.setString(6, flight.getArrival_airport());
+            pst.setTimestamp(7, flight.getDeparture_time());
+            pst.setTimestamp(8, flight.getArrival_time());
+            pst.setInt(9, flight.getDuration());
+            pst.setInt(10, flight.getAvailable_seats());
+            pst.setDouble(11, flight.getBase_price());
+            pst.setString(12, flight.getStatus().name());
 
             pst.executeUpdate();
 
@@ -44,20 +46,22 @@ public class FlightService implements IService<Flight> {
 
     @Override
     public void modifier(Flight flight) {
-        String req = "UPDATE flights SET flight_number=?, airline_id=?, departure_airport_name=?, arrival_airport_name=?, departure_time=?, arrival_time=?, duration_per_hours=?, available_seats=?, flight_base_price=?, flight_status=? WHERE id_flight=?";
+        String req = "UPDATE flights SET flight_number=?, airline_name=?, departure_country=?, arrival_country=?, departure_airport_name=?, arrival_airport_name=?, departure_time=?, arrival_time=?, duration_per_hours=?, available_seats=?, flight_base_price=?, flight_status=? WHERE id_flight=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setString(1, flight.getFlight_number());
-            pst.setInt(2, flight.getAirline_id());
-            pst.setString(3, flight.getDeparture_airport());
-            pst.setString(4, flight.getArrival_airport());
-            pst.setTimestamp(5, flight.getDeparture_time());
-            pst.setTimestamp(6, flight.getArrival_time());
-            pst.setInt(7, flight.getDuration());
-            pst.setInt(8, flight.getAvailable_seats());
-            pst.setDouble(9, flight.getBase_price());
-            pst.setString(10, flight.getStatus().toString());
-            pst.setInt(11, flight.getId_flight());
+            pst.setString(2, flight.getAirline_name());
+            pst.setString(3, flight.getDeparture_country());
+            pst.setString(4, flight.getArrival_country());
+            pst.setString(5, flight.getDeparture_airport());
+            pst.setString(6, flight.getArrival_airport());
+            pst.setTimestamp(7, flight.getDeparture_time());
+            pst.setTimestamp(8, flight.getArrival_time());
+            pst.setInt(9, flight.getDuration());
+            pst.setInt(10, flight.getAvailable_seats());
+            pst.setDouble(11, flight.getBase_price());
+            pst.setString(12, flight.getStatus().toString());
+            pst.setInt(13, flight.getId_flight());
 
             pst.executeUpdate();
 
@@ -92,7 +96,9 @@ public class FlightService implements IService<Flight> {
             while (res.next()){
                 flights.add(new Flight(res.getInt("id_flight"),
                         res.getString("flight_number"),
-                        res.getInt("airline_id"),
+                        res.getString("airline_name"),
+                        res.getString("departure_country"),
+                        res.getString("arrival_country"),
                         res.getString("departure_airport_name"),
                         res.getString("arrival_airport_name"),
                         res.getTimestamp("departure_time"),

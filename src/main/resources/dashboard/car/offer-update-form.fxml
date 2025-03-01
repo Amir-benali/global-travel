@@ -32,17 +32,6 @@
         <VBox fx:id="priceErrorContainer"/>
     </VBox>
 
-    <!-- Route ComboBox -->
-    <VBox>
-        <ComboBox fx:id="routeComboBox" promptText="Select Route">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <!-- Populated dynamically in the controller -->
-                </FXCollections>
-            </items>
-        </ComboBox>
-        <VBox fx:id="routeErrorContainer"/>
-    </VBox>
 
     <!-- Car ComboBox -->
     <VBox>

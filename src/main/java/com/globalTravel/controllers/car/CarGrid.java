@@ -1,34 +1,47 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.car.PrivateCar;
-import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.PrivateCarService;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class CarGrid implements Navigatable {
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
+public class CarGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddCar;
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();
+    private FrontOffice frontOfficeController;
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
+
 
     @FXML
     private FlowPane carsGrid;
@@ -45,36 +58,72 @@ public class CarGrid implements Navigatable {
         cars = getCars();
 
         for (PrivateCar car : cars) {
-            VBox carCard = createCarCard(car);
+            Node carCard = createCarCard(car);
             carsGrid.getChildren().add(carCard);
         }
     }
 
 
-    private VBox createCarCard(PrivateCar car) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("car-offer-card");
+    private Node createCarCard(PrivateCar car) {
+        VBox card = new VBox(15);
+        card.getStyleClass().addAll("car-offer-card", "modern-card");
+        card.setPadding(new Insets(15));
 
-        VBox carInfo = new VBox(5);
+        // Car Image
+        String imagePath = (!car.getImage().isEmpty()) ? car.getImage() : "/images/carlogo.png";
+        Image carImage;
+
+        try {
+            if (imagePath.startsWith("http") || imagePath.startsWith("file:")) {
+                carImage = new Image(imagePath, 300, 200, false, true);
+            } else {
+                carImage = new Image(getClass().getResource(imagePath).toExternalForm(), 300, 200, false, true);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load image: " + imagePath);
+            carImage = new Image(getClass().getResource("/images/carlogo.png").toExternalForm(), 300, 200, false, true);
+        }
+
+        ImageView carImageView = new ImageView(carImage);
+        carImageView.setFitWidth(300);
+        carImageView.setFitHeight(200);
+        carImageView.setPreserveRatio(false);
+        carImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
+        carImageView.getStyleClass().add("car-image");
+
+        // Car Info Container
+        VBox carInfo = new VBox(10);
         carInfo.getStyleClass().add("car-info");
 
-        ImageView carLogoView = new ImageView(new Image("/images/carlogo.png", 200, 150, true, true));
+        // Car Brand and Model
+        Label brandModelLabel = new Label(car.getBrand() + " " + car.getModel());
+        brandModelLabel.getStyleClass().add("car-brand-model");
 
-        // Car details
-        Label brandLabel = new Label("Brand: " + car.getBrand());
-        brandLabel.getStyleClass().add("car-brand");
+        // Car Details Grid (2x2 Layout)
+        GridPane detailsGrid = new GridPane();
+        detailsGrid.setHgap(15);
+        detailsGrid.setVgap(10);
 
-        Label modelLabel = new Label("Model: " + car.getModel());
-        modelLabel.getStyleClass().add("car-model");
+        // Row 1
+        detailsGrid.add(createIcon(FontAwesomeIcon.NAVICON, Color.BLUE), 0, 0);
+        detailsGrid.add(new Label("ID: " + car.getId()), 1, 0);
+        detailsGrid.add(createIcon(FontAwesomeIcon.USER, Color.GREEN), 2, 0);
+        detailsGrid.add(new Label("Seats: " + car.getNum_place()), 3, 0);
 
-        Label seatsLabel = new Label("Seats: " + car.getNum_place());
-        seatsLabel.getStyleClass().add("car-seats");
+        // Row 2
+        detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.ORANGE), 0, 1);
+        detailsGrid.add(new Label("Driver: " + ((car.getCarDriver() != null) ? car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName() : "N/A")), 1, 1);
+        detailsGrid.add(createIcon(FontAwesomeIcon.CREDIT_CARD, Color.RED), 2, 1);
+        detailsGrid.add(new Label("DR ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
 
-        Label driverLabel = new Label("Driver: " + car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName());
-        driverLabel.getStyleClass().add("car-driver");
+        detailsGrid.getStyleClass().add("details-grid");
 
         // Buttons
-        Button updateButton = new Button("Update Car");
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button updateButton = new Button("Update");
+        updateButton.getStyleClass().addAll("modern-button", "update-button");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateCar(car);
@@ -82,19 +131,30 @@ public class CarGrid implements Navigatable {
                 throw new RuntimeException(ex);
             }
         });
-        updateButton.getStyleClass().add("view-details-button");
 
         Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
+        deleteButton.getStyleClass().addAll("modern-button", "delete-button");
         deleteButton.setOnAction(e -> deleteCar(car));
 
-        HBox buttonHbox = new HBox(3);
-        buttonHbox.getChildren().addAll(updateButton, deleteButton);
-        carInfo.getChildren().addAll(carLogoView,brandLabel, modelLabel, seatsLabel, driverLabel, buttonHbox);
+        buttonBox.getChildren().addAll(updateButton, deleteButton);
 
-        card.getChildren().addAll(carInfo);
+        // Assemble all components
+        carInfo.getChildren().addAll(brandModelLabel, detailsGrid);
+        card.getChildren().addAll(carImageView, carInfo, buttonBox);
+
+        // Add hover effect
+        card.setOnMouseEntered(e -> card.setEffect(new DropShadow(20, Color.rgb(0, 0, 0, 0.3))));
+        card.setOnMouseExited(e -> card.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.1))));
 
         return card;
+    }
+
+    // Utility method to create FontAwesome icons with color
+    private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
+        iconView.setGlyphSize(20); // Increased size
+        iconView.setFill(color); // Set color
+        return iconView;
     }
 
     private void deleteCar(PrivateCar car) {
@@ -127,11 +187,43 @@ public class CarGrid implements Navigatable {
     }
 
     public void navigateToDriver(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/car/driver-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        }
     }
 
     public void navigateToOffer(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/car/offer-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        }
 
+    }
+    private void updateButtonVisibility() {
+        for (Node node : carsGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        Button updateButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("update-button")).get(0);
+                        Button deleteButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("delete-button")).get(0);
+
+                        if (frontOfficeController != null) {
+                            buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddCar.setVisible(false);
     }
 }

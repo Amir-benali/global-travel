@@ -7,6 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.apache.hc.client5.http.fluent.Content;
+import org.apache.hc.client5.http.fluent.Request;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -17,7 +22,8 @@ import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class Signup {
-    @FXML private TextField fullNameField;
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private ComboBox<String> genderComboBox;
     @FXML private DatePicker birthDatePicker;
@@ -28,8 +34,22 @@ public class Signup {
 
     private Connection conn;
 
+    // Clé API pour Email Validation
+    private static final String EMAIL_API_KEY = "7fdf78ad74a44970b1a59a49087dbddc";
+
+    // URL de l'API de validation d'email
+    private static final String EMAIL_API_URL = "https://emailvalidation.abstractapi.com/v1/";
+
     public Signup() {
         conn = DataSource.getInstance().getConnection();
+    }
+
+    @FXML
+    public void initialize() {
+        // Vérifier si le ComboBox est vide avant d'ajouter des éléments
+        if (genderComboBox.getItems().isEmpty()) {
+            genderComboBox.getItems().addAll("Homme", "Femme");
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
@@ -42,7 +62,8 @@ public class Signup {
 
     @FXML
     private void handleSignup() {
-        String fullName = fullNameField.getText().trim();
+        String firstName = firstNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
         String email = emailField.getText().trim();
         String gender = genderComboBox.getValue();
         LocalDate birthDate = birthDatePicker.getValue();
@@ -52,14 +73,14 @@ public class Signup {
         boolean agreedToTerms = termsCheckBox.isSelected();
 
         // Vérification des champs vides
-        if (fullName.isEmpty() || email.isEmpty() || gender == null || birthDate == null || phoneNumber.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || gender == null || birthDate == null || phoneNumber.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showAlert("Erreur", "Tous les champs sont obligatoires.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Vérification du format de full name
-        if (!(fullName.trim().contains(" ") && fullName.trim().split("\\s+").length >= 2)){
-            showAlert("Erreur", "Veuillez entrer un fullname valide.", Alert.AlertType.ERROR);
+        // Vérification de la date de naissance
+        if (!isValidBirthDate(birthDate)) {
+            showAlert("Erreur", "Vous devez avoir au moins 18 ans et la date de naissance ne peut pas être dans le futur.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -69,7 +90,7 @@ public class Signup {
             return;
         }
 
-        // Vérification du format du numéro de téléphone
+        // Vérification du format du numéro de téléphone (8 chiffres)
         if (!isValidPhoneNumber(phoneNumber)) {
             showAlert("Erreur", "Veuillez entrer un numéro de téléphone valide (8 chiffres).", Alert.AlertType.ERROR);
             return;
@@ -98,9 +119,11 @@ public class Signup {
             return;
         }
 
-        String[] parts = fullName.trim().split("\\s+", 2);
-        String firstName = parts[0];
-        String lastName = parts[1];
+        // Vérification de l'email via l'API
+        if (!validateEmailWithAPI(email)) {
+            showAlert("Erreur", "L'email n'est pas valide ou n'est pas délivrable.", Alert.AlertType.ERROR);
+            return;
+        }
 
         // Hash du mot de passe avec BCrypt
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -129,19 +152,32 @@ public class Signup {
         }
     }
 
+    // Méthode pour valider la date de naissance
+    private boolean isValidBirthDate(LocalDate birthDate) {
+        LocalDate today = LocalDate.now();
+        LocalDate minBirthDate = today.minusYears(18); // L'utilisateur doit avoir au moins 18 ans
+
+        // Vérifier que la date de naissance n'est pas dans le futur et que l'utilisateur a au moins 18 ans
+        return !birthDate.isAfter(today) && !birthDate.isAfter(minBirthDate);
+    }
+
+    // Méthode pour valider le format de l'email
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
+    // Méthode pour valider le format du numéro de téléphone (8 chiffres)
     private boolean isValidPhoneNumber(String phone) {
         return phone.matches("\\d{8}");
     }
 
+    // Méthode pour valider le mot de passe
     private boolean isValidPassword(String password) {
         return password.length() >= 6 && password.matches(".*[A-Z].*") && password.matches(".*\\d.*");
     }
 
+    // Méthode pour vérifier si l'utilisateur existe déjà
     private boolean userExists(String email) {
         String sql = "SELECT id FROM user WHERE email = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -150,6 +186,36 @@ public class Signup {
             return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Méthode pour valider l'email via l'API
+    private boolean validateEmailWithAPI(String email) {
+        try {
+            String apiUrl = EMAIL_API_URL + "?api_key=" + EMAIL_API_KEY + "&email=" + email;
+            Content content = Request.get(apiUrl).execute().returnContent();
+
+            // Parse the JSON response
+            JSONParser parser = new JSONParser();
+            JSONObject jsonResponse = (JSONObject) parser.parse(content.asString());
+
+            // Extracting the relevant fields from the response
+            boolean isValidFormat = (boolean) ((JSONObject) jsonResponse.get("is_valid_format")).get("value");
+            boolean isDeliverable = "DELIVERABLE".equals(jsonResponse.get("deliverability"));
+            boolean isDisposableEmail = (boolean) ((JSONObject) jsonResponse.get("is_disposable_email")).get("value");
+
+            // Return true only if the email is valid, deliverable, and not disposable
+            return isValidFormat && isDeliverable && !isDisposableEmail;
+
+        } catch (IOException e) {
+            System.out.println("Email validation error: " + e.getMessage());
+            return false;
+        } catch (ParseException e) {
+            System.out.println("Error parsing email validation response: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            System.out.println("Unexpected error during email validation: " + e.getMessage());
             return false;
         }
     }
