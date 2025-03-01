@@ -1,4 +1,4 @@
-package com.globalTravel.controllers;
+package com.globalTravel.controllers.backoffice;
 
 import com.globalTravel.controllers.flight.FlightUpdateForm;
 import com.globalTravel.models.flight.Flight;

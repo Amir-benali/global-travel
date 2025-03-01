@@ -1,89 +1,198 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
-
 <?import java.lang.String?>
-<VBox spacing="10" styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.FlightCreateForm">
+<?import java.net.URL?>
+<VBox styleClass="flight-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.flight.FlightCreateForm">
+    <stylesheets>
+        <URL value="@/styles/FlightStyle.css"/>
+    </stylesheets>
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
 
-    <Label fx:id="formTitleLabel" text="Add New Flight" styleClass="form-title"/>
+    <GridPane hgap="10" vgap="10">
+        <Label fx:id="formTitleLabel" text="ADD NEW FLIGHT" styleClass="form-title" GridPane.columnSpan="2"/>
 
-    <!-- Flight Number Field -->
-    <TextField fx:id="flightNumberField" promptText="Flight Number" styleClass="input-field"/>
+        <!-- Flight Number Field -->
+        <Label text="Flight Number:" styleClass="background-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="flightNumberField" styleClass="input-field small-text-field" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Ex:AF29Q" />
 
-    <!-- Airline ID Field -->
-    <ComboBox fx:id="airlineIdField" promptText="Select Airline ID" styleClass="input-field"/>
+        <!-- Airline Name Field -->
+        <Label text="Airline Name:" styleClass="background-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="airline_nameField" styleClass="combo-box" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Select Airline"/>
 
-    <!-- Departure Airport Field -->
-    <TextField fx:id="departureAirportField" promptText="Departure Airport" styleClass="input-field"/>
+        <HBox spacing="18" GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+        <!-- Departure Country Field -->
+        <Label text="Departure Country:" styleClass="background-label"/>
+        <ComboBox fx:id="departure_countryField" styleClass="combo-box" promptText="Select Departure Country"/>
 
-    <!-- Arrival Airport Field -->
-    <TextField fx:id="arrivalAirportField" promptText="Arrival Airport" styleClass="input-field"/>
+        <!-- Arrival Country Field -->
+        <Label text="Arrival Country:" styleClass="background-label"/>
+        <ComboBox fx:id="arrival_countryField" styleClass="combo-box" promptText="Select Arrival Country"/>
+        </HBox>
 
-    <VBox spacing="10">
+        <!-- Departure Airport Field -->
+        <HBox spacing="18" GridPane.rowIndex="4" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+        <Label text="Departure Airport:" styleClass="background-label"/>
+        <ComboBox fx:id="departureAirportField" styleClass="combo-box" promptText="Select Departure Airport"/>
+
+        <!-- Arrival Airport Field -->
+        <Label text="Arrival Airport:" styleClass="background-label"/>
+        <ComboBox fx:id="arrivalAirportField" styleClass="combo-box" promptText="Select Arrival Airport"/>
+        </HBox>
         <!-- Departure Date and Time -->
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Departure Date:"/>
-            <DatePicker fx:id="departureDatePicker" promptText="Select Date" styleClass="input-field"/>
+        <Label text="Departure Date:" styleClass="background-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <HBox spacing="5" GridPane.rowIndex="5" GridPane.columnIndex="1" alignment="CENTER_LEFT" >
+            <DatePicker fx:id="departureDatePicker" promptText="Date"/>
             <Label text="Time:"/>
-            <Spinner fx:id="departureHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
-            <Label text="Hours"/>
-            <Spinner fx:id="departureMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
-            <Label text="Minutes"/>
+            <ComboBox fx:id="departureHourComboBox" styleClass="combo-box" promptText="Hour">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="00"/>
+                        <String fx:value="01"/>
+                        <String fx:value="02"/>
+                        <String fx:value="03"/>
+                        <String fx:value="04"/>
+                        <String fx:value="05"/>
+                        <String fx:value="06"/>
+                        <String fx:value="07"/>
+                        <String fx:value="08"/>
+                        <String fx:value="09"/>
+                        <String fx:value="10"/>
+                        <String fx:value="11"/>
+                        <String fx:value="12"/>
+                        <String fx:value="13"/>
+                        <String fx:value="14"/>
+                        <String fx:value="15"/>
+                        <String fx:value="16"/>
+                        <String fx:value="17"/>
+                        <String fx:value="18"/>
+                        <String fx:value="19"/>
+                        <String fx:value="20"/>
+                        <String fx:value="21"/>
+                        <String fx:value="22"/>
+                        <String fx:value="23"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Label text=":"/>
+            <ComboBox fx:id="departureMinuteComboBox" styleClass="combo-box" promptText="Minute">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="00"/>
+                        <String fx:value="05"/>
+                        <String fx:value="10"/>
+                        <String fx:value="15"/>
+                        <String fx:value="20"/>
+                        <String fx:value="25"/>
+                        <String fx:value="30"/>
+                        <String fx:value="35"/>
+                        <String fx:value="40"/>
+                        <String fx:value="45"/>
+                        <String fx:value="50"/>
+                        <String fx:value="55"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
         </HBox>
-
         <!-- Arrival Date and Time -->
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Arrival Date:"/>
-            <DatePicker fx:id="arrivalDatePicker" promptText="Select Date" styleClass="input-field"/>
+        <Label text="Arrival Date:" styleClass="background-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <HBox spacing="5" GridPane.rowIndex="6" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+            <DatePicker fx:id="arrivalDatePicker" promptText="Date"/>
             <Label text="Time:"/>
-            <Spinner fx:id="arrivalHourSpinner" min="0" max="23" initialValue="0" editable="true" styleClass="input-field"/>
-            <Label text="Hours"/>
-            <Spinner fx:id="arrivalMinuteSpinner" min="0" max="59" initialValue="0" editable="true" styleClass="input-field"/>
-            <Label text="Minutes"/>
+            <ComboBox fx:id="arrivalHourComboBox" styleClass="combo-box" promptText="Hour">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="00"/>
+                        <String fx:value="01"/>
+                        <String fx:value="02"/>
+                        <String fx:value="03"/>
+                        <String fx:value="04"/>
+                        <String fx:value="05"/>
+                        <String fx:value="06"/>
+                        <String fx:value="07"/>
+                        <String fx:value="08"/>
+                        <String fx:value="09"/>
+                        <String fx:value="10"/>
+                        <String fx:value="11"/>
+                        <String fx:value="12"/>
+                        <String fx:value="13"/>
+                        <String fx:value="14"/>
+                        <String fx:value="15"/>
+                        <String fx:value="16"/>
+                        <String fx:value="17"/>
+                        <String fx:value="18"/>
+                        <String fx:value="19"/>
+                        <String fx:value="20"/>
+                        <String fx:value="21"/>
+                        <String fx:value="22"/>
+                        <String fx:value="23"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Label text=":"/>
+            <ComboBox fx:id="arrivalMinuteComboBox" styleClass="combo-box" promptText="Minute">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="00"/>
+                        <String fx:value="05"/>
+                        <String fx:value="10"/>
+                        <String fx:value="15"/>
+                        <String fx:value="20"/>
+                        <String fx:value="25"/>
+                        <String fx:value="30"/>
+                        <String fx:value="35"/>
+                        <String fx:value="40"/>
+                        <String fx:value="45"/>
+                        <String fx:value="50"/>
+                        <String fx:value="55"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
         </HBox>
-    </VBox>
 
-    <!-- Duration Field -->
-    <TextField fx:id="durationField" promptText="Flight Duration (Minutes)" styleClass="input-field"/>
+        <!-- Available Seats Field -->
+        <Label text="Available Seats:" styleClass="background-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <TextField fx:id="availableSeatsField" styleClass="input-field small-text-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-    <!-- Available Seats Field -->
-    <TextField fx:id="availableSeatsField" promptText="Available Seats" styleClass="input-field"/>
+        <!-- Base Price Field -->
+        <Label text="Base Price:" styleClass="background-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="priceField" styleClass="input-field small-text-field" GridPane.rowIndex="8" GridPane.columnIndex="1" promptText="0.0$"/>
 
-    <!-- Base Price Field -->
-    <TextField fx:id="priceField" promptText="Base Price" styleClass="input-field"/>
+        <!-- Flight Status ComboBox -->
+        <Label text="Flight Status:" styleClass="background-label" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="statusComboBox" styleClass="combo-box" GridPane.rowIndex="9" GridPane.columnIndex="1" promptText="Select Status">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Scheduled"/>
+                    <String fx:value="Delayed"/>
+                    <String fx:value="Cancelled"/>
+                    <String fx:value="Completed"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
 
-    <!-- Flight Status ComboBox -->
-    <ComboBox fx:id="statusComboBox" promptText="Select Flight Status" styleClass="input-field">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Scheduled"/>
-                <String fx:value="Delayed"/>
-                <String fx:value="Cancelled"/>
-                <String fx:value="Completed"/>
-            </FXCollections>
-        </items>
-    </ComboBox>
+        <!-- Image Selection Section -->
+        <Label text="Airline Logo:" styleClass="background-label" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+        <HBox spacing="5" GridPane.rowIndex="11" GridPane.columnIndex="1">
+            <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+            <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
+        </HBox>
 
-    <!-- Image Selection Section -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
-        <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
-    </HBox>
+        <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
 
-    <ImageView fx:id="airlineLogoPreview" fitHeight="100" fitWidth="200" preserveRatio="true"/>
-    <!-- Error Label -->
-    <Label fx:id="errorLabel" textFill="red"/>
+        <!-- Error Label -->
+        <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="11" GridPane.columnIndex="1">
+            <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+            <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
+        </HBox>
+        <!-- Action Buttons -->
 
-    <!-- Action Buttons -->
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
-        <Button fx:id="saveButton" text="Save Flight" onAction="#handleSaveFlight" styleClass="save-button"/>
-    </HBox>
+    </GridPane>
 </VBox>
+
+
+

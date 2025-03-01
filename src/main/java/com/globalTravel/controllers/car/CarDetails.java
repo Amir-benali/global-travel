@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

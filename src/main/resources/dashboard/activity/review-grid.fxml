@@ -32,7 +32,7 @@
                         </graphic>
                     </Button>
                     <!-- Bouton pour ajouter une revue -->
-                    <Button onAction="#addReview" styleClass="add-button-activity-activty" text="Add Review">
+                    <Button fx:id="btnAddReview" onAction="#addReview" styleClass="add-button-activity-activty" text="Add Review">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20">
                                 <Image url="@/icons/add-icon.png"/> <!-- Icône pour ajouter -->
