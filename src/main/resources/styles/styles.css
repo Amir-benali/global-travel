@@ -1086,7 +1086,6 @@
 .details-grid Label:nth-child(even) {
     -fx-text-fill: #7f8c8d;
 }
-
 .modern-button {
     -fx-background-radius: 20;
     -fx-padding: 8 16;
@@ -1852,9 +1851,9 @@
     -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2);
     -fx-text-fill: #121212;
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 1.2rem;
+    -fx-font-size: 1.2em;
     -fx-font-weight: bold;
-    -fx-padding:  1.2rem;
+    -fx-padding:  1.2em;
     -fx-border-width: 0;
     -fx-cursor: hand;
     -fx-transition: box-shadow 0.2s;
@@ -1870,9 +1869,9 @@
     -fx-background-radius: 12px; /* Bord arrondi */
     -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 1.2rem;
+    -fx-font-size: 1.2em;
     -fx-font-weight: bold;
-    -fx-padding:  1.2rem;
+    -fx-padding:  1.2em;
     -fx-border-width: 0;
     -fx-cursor: hand;
     -fx-transition: box-shadow 0.2s;
@@ -1890,9 +1889,9 @@
     -fx-background-radius: 12px; /* Bord arrondi */
     -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
     -fx-font-family: 'Inter', sans-serif;
-    -fx-font-size: 1.2rem;
+    -fx-font-size: 1.2em;
     -fx-font-weight: bold;
-    -fx-padding: 1.2rem;
+    -fx-padding: 1.2em;
     -fx-border-width: 0;
     -fx-cursor: hand;
     -fx-transition: box-shadow 0.2s;

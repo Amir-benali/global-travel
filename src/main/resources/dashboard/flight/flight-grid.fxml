@@ -16,9 +16,9 @@
                             <children>
                                 <Label styleClass="section-title" text="Flight List" />
                                 <Button onAction="#navigateToAirline" styleClass="view-details-button" text="Airline List" />
-                                <Button onAction="#navigateToTickets" styleClass="view-details-button" text="Ticket List" />
+                                <Button fx:id="btnNavigateToTicket" onAction="#navigateToTickets" styleClass="view-details-button" text="Ticket List" />
                                 <Region HBox.hgrow="ALWAYS" />
-                                <Button onAction="#addFlight" styleClass="add-button" text="+ AJOUTER" />
+                                <Button fx:id="btnAddFlight" onAction="#addFlight" styleClass="add-button" text="+ FLIGHT" />
                             </children>
                             <padding>
                                 <Insets left="20.0" right="20.0" />

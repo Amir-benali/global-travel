@@ -5,7 +5,7 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true" styleClass="dashboard-component" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.DashBoardContent">
+<ScrollPane fitToWidth="true" styleClass="dashboard-component" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.backoffice.DashBoardContent">
     <VBox spacing="20">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>

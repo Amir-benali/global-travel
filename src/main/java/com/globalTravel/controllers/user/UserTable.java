@@ -1,18 +1,16 @@
 package com.globalTravel.controllers.user;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 
 import java.sql.SQLException;
 import java.util.Date;

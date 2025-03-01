@@ -1,7 +1,9 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.utils.DataSource;
@@ -9,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +27,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class ActivityGrid implements Navigatable {
+public class ActivityGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddActivity;
     private DashBoard dashBoardController;
     private final ActivityService activityService = new ActivityService();
     private final Connection connection = DataSource.getInstance().getConnection(); // Connexion à la base de données
@@ -34,6 +38,7 @@ public class ActivityGrid implements Navigatable {
 
     @FXML
     private TextField searchField; // Ajout du champ de recherche
+    private FrontOffice frontOfficeController;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -62,6 +67,9 @@ public class ActivityGrid implements Navigatable {
             VBox activityCard = createActivityCard(activity);
             activitiesGrid.getChildren().add(activityCard);
         }
+
+        // Update button visibility based on the context (front office or back office)
+        updateButtonVisibility();
     }
 
     @FXML
@@ -200,6 +208,47 @@ public class ActivityGrid implements Navigatable {
         return card;
     }
 
+    private void updateButtonVisibility() {
+        for (Node node : activitiesGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        // Find the Update and Delete buttons by their text
+                        Button updateButton = (Button) buttonBox.getChildren().stream()
+                                .filter(btn -> btn instanceof Button && "Update Activity".equals(((Button) btn).getText()))
+                                .findFirst()
+                                .orElse(null);
+
+                        Button deleteButton = (Button) buttonBox.getChildren().stream()
+                                .filter(btn -> btn instanceof Button && "Delete".equals(((Button) btn).getText()))
+                                .findFirst()
+                                .orElse(null);
+
+                        // If in front office mode, hide the buttons
+                        if (frontOfficeController != null) {
+                            if (updateButton != null) {
+                                updateButton.setVisible(false);
+                            }
+                            if (deleteButton != null) {
+                                deleteButton.setVisible(false);
+                            }
+                        } else {
+                            // If in back office mode, ensure the buttons are visible
+                            if (updateButton != null) {
+                                updateButton.setVisible(true);
+                            }
+                            if (deleteButton != null) {
+                                deleteButton.setVisible(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private String getHotelNameById(int hotelId) {
         String query = "SELECT nom_h FROM hotel WHERE id_hotel_h = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -308,6 +357,17 @@ public class ActivityGrid implements Navigatable {
     }
 
     public void navigateToReview(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/activity/review-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
+        }
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddActivity.setVisible(false);
     }
 }

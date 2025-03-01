@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<ScrollPane fitToHeight="true" fitToWidth="true" styleClass="content-scroll" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.frontoffice.FrontOfficeContent">
+    <VBox spacing="25" styleClass="dashboard-content">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <!-- Welcome Section -->
+        <HBox styleClass="welcome-section">
+            <VBox>
+                <Label styleClass="welcome-text" text="Welcome back," />
+                <Label styleClass="welcome-name" text="Administrator" />
+            </VBox>
+        </HBox>
+
+        <!-- Statistics Cards -->
+        <HBox alignment="CENTER" spacing="20">
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <FontAwesomeIconView glyphName="PLANE" glyphSize="32" styleClass="stat-icon, stat-icon-flights" />
+                <Label styleClass="stat-value" text="156" />
+                <Label styleClass="stat-title" text="Active Flights" />
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <FontAwesomeIconView glyphName="CAR" glyphSize="32" styleClass="stat-icon, stat-icon-cars" />
+                <Label styleClass="stat-value" text="89" />
+                <Label styleClass="stat-title" text="Available Cars" />
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <FontAwesomeIconView glyphName="BUILDING" glyphSize="32" styleClass="stat-icon, stat-icon-hotels" />
+                <Label styleClass="stat-value" text="45" />
+                <Label styleClass="stat-title" text="Hotel Partners" />
+            </VBox>
+
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <FontAwesomeIconView glyphName="CALENDAR" glyphSize="32" styleClass="stat-icon, stat-icon-activities" />
+                <Label styleClass="stat-value" text="34" />
+                <Label styleClass="stat-title" text="Today's Activities" />
+            </VBox>
+        </HBox>
+
+        <!-- Charts Section -->
+        <HBox spacing="20">
+            <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" styleClass="chart-header">
+                    <Label styleClass="section-title" text="Booking Distribution" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button styleClass="chart-period-button" text="This Month" />
+                </HBox>
+                <PieChart fx:id="bookingDistribution" />
+            </VBox>
+
+            <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" styleClass="chart-header">
+                    <Label styleClass="section-title" text="Revenue by Service" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button styleClass="chart-period-button" text="This Month" />
+                </HBox>
+                <PieChart fx:id="revenueDistribution" />
+            </VBox>
+        </HBox>
+
+        <!-- Recent Bookings Table -->
+        <VBox styleClass="table-container">
+            <HBox alignment="CENTER_LEFT" styleClass="table-header">
+                <Label styleClass="section-title" text="Recent Bookings" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button styleClass="view-all-button" text="View All" />
+            </HBox>
+            <TableView fx:id="recentBookingsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="bookingIdColumn" text="Booking ID" />
+                    <TableColumn fx:id="customerColumn" text="Customer" />
+                    <TableColumn fx:id="serviceColumn" text="Service" />
+                    <TableColumn fx:id="dateColumn" text="Date" />
+                    <TableColumn fx:id="amountColumn" text="Amount" />
+                    <TableColumn fx:id="statusColumn" text="Status" />
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>

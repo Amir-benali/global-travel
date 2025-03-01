@@ -1,26 +1,31 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.car.Offer;
 import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.models.car.Route;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.time.format.DateTimeFormatter;
 
-public class OfferDetails implements Navigatable {
+public class OfferDetails implements Navigatable, FrontNavigatable {
     private DashBoard dashBoardController;
-
+    private FrontOffice frontOfficeController;
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
 
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+    }
     @FXML private ImageView offerImage;
     @FXML private Label priceLabel;
     @FXML private Label dateLabel;
@@ -42,8 +47,17 @@ public class OfferDetails implements Navigatable {
     @FXML
     public void initialize(Offer offer) {
         setOffer(offer);
+
         backButton.setOnAction(event -> onBackClicked());
         bookButton.setOnAction(event -> onBookClicked());
+        if(frontOfficeController != null) {
+            backButton.setVisible(false);
+            bookButton.setVisible(true);
+        }
+        else {
+            backButton.setVisible(true);
+            bookButton.setVisible(false);
+        }
     }
 
     public void setOffer(Offer offer) {
@@ -99,7 +113,9 @@ public class OfferDetails implements Navigatable {
 
     private void onBookClicked() {
         // TODO: Implement booking functionality
-        dashBoardController.navigateTo("dashboard/car/offer-book-form.fxml");
+        frontOfficeController.navigateTo("dashboard/car/offer-book-form.fxml");
 
     }
+
+
 }

@@ -1,17 +1,15 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.services.activity.ReviewService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.globalTravel.models.activity.Review;
-import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class ReviewUpdateForm implements Navigatable  {

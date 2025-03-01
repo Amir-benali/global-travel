@@ -23,7 +23,7 @@
                     <Image url="@/images/carlogo.png"/>
                 </image>
             </ImageView>
-            <VBox spacing="10" styleClass="offer-summary">
+            <VBox spacing="10" styleClass="offer-summary" HBox.hgrow="ALWAYS">
                 <Label fx:id="priceLabel" styleClass="price-label"/>
                 <Label fx:id="dateLabel" styleClass="date-label"/>
                 <Label fx:id="routeLabel" styleClass="route-label"/>

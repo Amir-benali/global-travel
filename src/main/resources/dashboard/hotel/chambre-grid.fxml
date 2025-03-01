@@ -15,7 +15,7 @@
                 <children>
                     <Label styleClass="section-title" text="Chambre List" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#addChambre" styleClass="add-button" text="+ ADD CHAMBRE" />
+                    <Button fx:id="btnAddChamber" onAction="#addChambre" styleClass="add-button" text="+ CHAMBER" />
                 </children>
             </HBox>
 

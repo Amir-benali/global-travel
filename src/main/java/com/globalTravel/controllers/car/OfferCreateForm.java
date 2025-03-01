@@ -1,12 +1,10 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.car.Offer;
-import com.globalTravel.models.car.Route;
 import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.services.car.OfferService;
-import com.globalTravel.services.car.RouteService;
 import com.globalTravel.services.car.PrivateCarService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

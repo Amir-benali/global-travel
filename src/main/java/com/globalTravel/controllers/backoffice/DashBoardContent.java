@@ -1,4 +1,4 @@
-package com.globalTravel.controllers;
+package com.globalTravel.controllers.backoffice;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
