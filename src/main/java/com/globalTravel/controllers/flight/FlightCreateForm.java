@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.flight;
 
-            import com.globalTravel.controllers.DashBoard;
-            import com.globalTravel.controllers.Navigatable;
+            import com.globalTravel.controllers.backoffice.DashBoard;
+            import com.globalTravel.controllers.backoffice.Navigatable;
             import com.globalTravel.models.flight.Flight;
             import com.globalTravel.models.flight.FlightStatus;
             import com.globalTravel.services.flight.AirportService;

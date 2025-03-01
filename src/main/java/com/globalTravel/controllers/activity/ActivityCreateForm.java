@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
@@ -10,13 +10,17 @@ import com.google.api.client.auth.oauth2.Credential;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class ActivityCreateForm implements Navigatable {
     private DashBoard dashBoardController;
@@ -34,12 +38,12 @@ public class ActivityCreateForm implements Navigatable {
     @FXML private ComboBox<String> endSecondComboBox;
     @FXML private TextField priceField;
     @FXML private TextField localisationField;
-    @FXML private ComboBox<String> hotelIdComboBox; // Affiche les noms d'hôtels
-    @FXML private ComboBox<String> carIdComboBox; // Affiche les marques de voitures
-    @FXML private ComboBox<String> flightIdComboBox; // Affiche les numéros de vol
+    @FXML private ComboBox<String> hotelIdComboBox;
+    @FXML private ComboBox<String> carIdComboBox;
+    @FXML private ComboBox<String> flightIdComboBox;
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
-
+    @FXML private ComboBox<String> suggestionsComboBox;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -62,8 +66,12 @@ public class ActivityCreateForm implements Navigatable {
 
         // Charger les noms d'hôtels, les marques de voitures et les numéros de vol depuis la base de données
         hotelIdComboBox.getItems().setAll(getNamesFromDatabase("hotel", "nom_h"));
-        carIdComboBox.getItems().setAll(getCarBrandsFromDatabase()); // Charger les marques de voitures
-        flightIdComboBox.getItems().setAll(getFlightNumbersFromDatabase()); // Charger les numéros de vol
+        carIdComboBox.getItems().setAll(getCarBrandsFromDatabase());
+        flightIdComboBox.getItems().setAll(getFlightNumbersFromDatabase());
+
+        // Initialiser le ComboBox des suggestions de localisation
+        suggestionsComboBox.setVisible(false);
+        suggestionsComboBox.setOnAction(event -> handleSuggestionSelection());
     }
 
     private List<String> getNamesFromDatabase(String tableName, String nameColumnName) {
@@ -161,6 +169,7 @@ public class ActivityCreateForm implements Navigatable {
             statusLabel.setStyle("-fx-text-fill: red;");
         }
     }
+
     private void addEventToGoogleCalendar(Activity activity) {
         try {
             Credential credential = GoogleCalendarAuth.authorize();
@@ -175,8 +184,6 @@ public class ActivityCreateForm implements Navigatable {
         }
     }
 
-
-
     private Activity createActivityFromInputs() {
         Timestamp startTimestamp = combineDateTime(startDatePicker.getValue(), startHourComboBox.getValue(), startMinuteComboBox.getValue(), startSecondComboBox.getValue());
         Timestamp endTimestamp = combineDateTime(endDatePicker.getValue(), endHourComboBox.getValue(), endMinuteComboBox.getValue(), endSecondComboBox.getValue());
@@ -189,9 +196,9 @@ public class ActivityCreateForm implements Navigatable {
                 parsePrice(priceField.getText()),
                 activityNameField.getText().trim(),
                 typeComboBox.getValue(),
-                getHotelIdByName(hotelIdComboBox.getValue()), // Récupérer l'ID de l'hôtel par son nom
-                getCarIdByBrand(carIdComboBox.getValue()), // Récupérer l'ID de la voiture par sa marque
-                getFlightIdByNumber(flightIdComboBox.getValue()) // Récupérer l'ID du vol par son numéro
+                getHotelIdByName(hotelIdComboBox.getValue()),
+                getCarIdByBrand(carIdComboBox.getValue()),
+                getFlightIdByNumber(flightIdComboBox.getValue())
         );
     }
 
@@ -206,7 +213,7 @@ public class ActivityCreateForm implements Navigatable {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération de l'ID de l'hôtel : " + e.getMessage());
         }
-        return 0; // Retourne 0 si l'hôtel n'est pas trouvé
+        return 0;
     }
 
     private int getCarIdByBrand(String brand) {
@@ -220,7 +227,7 @@ public class ActivityCreateForm implements Navigatable {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération de l'ID de la voiture : " + e.getMessage());
         }
-        return 0; // Retourne 0 si la voiture n'est pas trouvée
+        return 0;
     }
 
     private int getFlightIdByNumber(String flightNumber) {
@@ -234,7 +241,7 @@ public class ActivityCreateForm implements Navigatable {
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération de l'ID du vol : " + e.getMessage());
         }
-        return 0; // Retourne 0 si le vol n'est pas trouvé
+        return 0;
     }
 
     private Timestamp combineDateTime(java.time.LocalDate date, String hour, String minute, String second) {
@@ -246,31 +253,26 @@ public class ActivityCreateForm implements Navigatable {
     }
 
     private boolean validateInputs() {
-        // Contrôle du nom de l'activité
         if (activityNameField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le nom de l'activité est requis.");
             return false;
         }
 
-        // Contrôle de la description
         if (descriptionField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La description est requise.");
             return false;
         }
 
-        // Contrôle du prix
         if (!isValidPrice(priceField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le prix est invalide. Veuillez entrer un nombre positif.");
             return false;
         }
 
-        // Contrôle de la localisation
         if (localisationField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La localisation est requise.");
             return false;
         }
 
-        // Contrôle des dates de début et de fin
         if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Les dates de début et de fin sont requises.");
             return false;
@@ -281,20 +283,17 @@ public class ActivityCreateForm implements Navigatable {
             return false;
         }
 
-        // Contrôle des heures, minutes et secondes
         if (startHourComboBox.getValue() == null || startMinuteComboBox.getValue() == null || startSecondComboBox.getValue() == null ||
                 endHourComboBox.getValue() == null || endMinuteComboBox.getValue() == null || endSecondComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner une heure, une minute et une seconde valides.");
             return false;
         }
 
-        // Contrôle du type d'activité
         if (typeComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un type d'activité.");
             return false;
         }
 
-        // Contrôle du nom de l'hôtel
         if (hotelIdComboBox.getValue() == null || hotelIdComboBox.getValue().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un nom d'hôtel valide.");
             return false;
@@ -303,7 +302,6 @@ public class ActivityCreateForm implements Navigatable {
             return false;
         }
 
-        // Contrôle de la marque de la voiture
         if (carIdComboBox.getValue() == null || carIdComboBox.getValue().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner une marque de voiture valide.");
             return false;
@@ -312,7 +310,6 @@ public class ActivityCreateForm implements Navigatable {
             return false;
         }
 
-        // Contrôle du numéro de vol
         if (flightIdComboBox.getValue() == null || flightIdComboBox.getValue().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un numéro de vol valide.");
             return false;
@@ -330,7 +327,7 @@ public class ActivityCreateForm implements Navigatable {
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt(1) > 0; // Retourne true si le nom existe
+                return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la vérification du nom dans la table " + tableName + " : " + e.getMessage());
@@ -344,7 +341,7 @@ public class ActivityCreateForm implements Navigatable {
             statement.setString(1, brand);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt(1) > 0; // Retourne true si la marque existe
+                return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la vérification de la marque dans la table " + tableName + " : " + e.getMessage());
@@ -358,7 +355,7 @@ public class ActivityCreateForm implements Navigatable {
             statement.setString(1, flightNumber);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt(1) > 0; // Retourne true si le numéro de vol existe
+                return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la vérification du numéro de vol dans la table " + tableName + " : " + e.getMessage());
@@ -410,5 +407,60 @@ public class ActivityCreateForm implements Navigatable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private List<String> getLocationSuggestions(String query) {
+        List<String> suggestions = new ArrayList<>();
+        String apiKey = "b6ae308ab9e242b382916cd2bf04da70"; // Votre clé API OpenCage Data
+        String apiUrl = "https://api.opencagedata.com/geocode/v1/json?q=" + query + "&key=" + apiKey;
+
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            JSONArray results = jsonResponse.getJSONArray("results");
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject result = results.getJSONObject(i);
+                String formattedLocation = result.getString("formatted");
+                suggestions.add(formattedLocation);
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des suggestions de localisation : " + e.getMessage());
+        }
+
+        return suggestions;
+    }
+
+    @FXML
+    private void handleLocationInput() {
+        String query = localisationField.getText().trim();
+        if (query.length() > 2) { // Seulement si l'utilisateur a tapé plus de 2 caractères
+            List<String> suggestions = getLocationSuggestions(query);
+            suggestionsComboBox.getItems().setAll(suggestions);
+            suggestionsComboBox.setVisible(true);
+        } else {
+            suggestionsComboBox.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void handleSuggestionSelection() {
+        String selectedLocation = suggestionsComboBox.getValue();
+        if (selectedLocation != null) {
+            localisationField.setText(selectedLocation);
+            suggestionsComboBox.setVisible(false);
+        }
     }
 }

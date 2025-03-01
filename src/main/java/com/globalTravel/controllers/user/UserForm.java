@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.user;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import javafx.event.ActionEvent;
