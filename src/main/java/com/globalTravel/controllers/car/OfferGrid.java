@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.effect.DropShadow;
@@ -33,19 +34,26 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
     private DashBoard dashBoardController;
     private OfferService offerService = new OfferService();
     private FrontOffice frontOfficeController;
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
+
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
         this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddOffer.setVisible(false);
+
     }
 
     @FXML
     private FlowPane offersGrid;
 
     private List<Offer> offers;
+
+    @FXML private Button btnAddOffer;
 
     @FXML
     public void initialize() {
@@ -61,6 +69,7 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
             offersGrid.getChildren().add(offerCard);
         }
         System.out.println("Offers: " + offers);
+
     }
 
     private VBox createOfferCard(Offer offer) {
@@ -97,8 +106,6 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
         detailsGrid.add(createIcon(FontAwesomeIcon.DOLLAR, Color.ORANGE), 2, 0);
         detailsGrid.add(new Label("$" + offer.getPrice()), 3, 0);
 
-
-
         detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.PURPLE), 2, 1);
         detailsGrid.add(new Label(offer.getCar().getBrand() + " " + offer.getCar().getModel()), 3, 1);
 
@@ -126,10 +133,15 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
         deleteButton.getStyleClass().addAll("modern-button", "delete-button");
         deleteButton.setOnAction(e -> deleteOffer(offer));
 
-        buttonBox.getChildren().addAll(detailsButton, updateButton, deleteButton);
+        // Set visibility based on frontOfficeController
+        if (frontOfficeController != null) {
+            updateButton.setVisible(false);
+            deleteButton.setVisible(false);
+        }
 
         // Assemble all components
         offerInfo.getChildren().addAll(detailsGrid);
+        buttonBox.getChildren().addAll(detailsButton, updateButton, deleteButton);
         card.getChildren().addAll(offerImageView, offerInfo, buttonBox);
 
         // Add hover effect
@@ -139,6 +151,24 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
         return card;
     }
 
+    private void updateButtonVisibility() {
+        for (Node node : offersGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        Button updateButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("update-button")).get(0);
+                        Button deleteButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("delete-button")).get(0);
+
+                        if (frontOfficeController != null) {
+                            buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                        }
+                    }
+                }
+            }
+        }
+    }
     // Utility method to create FontAwesome icons with color
     private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
         FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
@@ -147,11 +177,14 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
         return iconView;
     }
 
-
-
     private void showOfferDetails(Offer offer) {
-        frontOfficeController.navigateTo("dashboard/car/offer-details.fxml");
-        ((OfferDetails) frontOfficeController.getController()).initialize(offer);
+        if (dashBoardController != null) {
+            dashBoardController.navigateTo("dashboard/car/offer-details.fxml");
+            ((OfferDetails) dashBoardController.getController()).initialize(offer);
+        } else {
+            frontOfficeController.navigateTo("dashboard/car/offer-details.fxml");
+            ((OfferDetails) frontOfficeController.getController()).initialize(offer);
+        }
     }
 
     private void deleteOffer(Offer offer) {
@@ -179,18 +212,27 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
     }
 
     public void addOffer(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/offer-create-form.fxml");
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/car/offer-create-form.fxml");
+        else
+            frontOfficeController.navigateTo("dashboard/car/offer-create-form.fxml");
     }
 
     public void navigateToRoute(ActionEvent actionEvent) {
-//        dashBoardController.navigateTo("dashboard/offer/route-grid.fxml");
+        // dashBoardController.navigateTo("dashboard/offer/route-grid.fxml");
     }
 
     public void navigateToCar(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
+        else
+            frontOfficeController.navigateTo("dashboard/car/car-grid.fxml");
     }
 
     public void navigateToDriver(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        else
+            frontOfficeController.navigateTo("dashboard/car/driver-grid.fxml");
     }
 }

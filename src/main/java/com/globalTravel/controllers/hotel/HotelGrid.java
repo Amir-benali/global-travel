@@ -2,6 +2,8 @@ package com.globalTravel.controllers.hotel;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.HotelService;
 import com.itextpdf.text.Document;
@@ -10,6 +12,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -29,9 +32,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HotelGrid implements Navigatable {
+public class HotelGrid implements Navigatable, FrontNavigatable {
 
+    @FXML private Button btnAddHotel;
     private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -59,12 +64,12 @@ public class HotelGrid implements Navigatable {
         hotels.sort((h1, h2) -> h1.getNom_h().compareToIgnoreCase(h2.getNom_h()));
 
         for (Hotel hotel : hotels) {
-            VBox hotelCard = createHotelCard(hotel);
+            Node hotelCard = createHotelCard(hotel);
             hotelsGrid.getChildren().add(hotelCard);
         }
     }
 
-    private VBox createHotelCard(Hotel hotel) {
+    private Node createHotelCard(Hotel hotel) {
         VBox card = new VBox(10);
         card.getStyleClass().add("hotel-card");
 
@@ -111,6 +116,36 @@ public class HotelGrid implements Navigatable {
         card.getChildren().add(hotelInfo);
 
         return card;
+    }
+
+    private void updateButtonVisibility() {
+        for (Node node : hotelsGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof VBox) {
+                        for (Node nestedchild : ((VBox) child).getChildren()) {
+                            if (nestedchild instanceof HBox) {
+                                HBox buttonBox = (HBox) nestedchild;
+                                // Filter buttons by their text
+                                Button updateButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Update".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                                Button deleteButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Delete".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+                                if (frontOfficeController != null && updateButton != null && deleteButton != null) {
+                                    buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void deleteHotel(Hotel hotel) {
@@ -181,7 +216,7 @@ public class HotelGrid implements Navigatable {
 
         hotelsGrid.getChildren().clear();
         for (Hotel hotel : filteredHotels) {
-            VBox hotelCard = createHotelCard(hotel);
+            Node hotelCard = createHotelCard(hotel);
             hotelsGrid.getChildren().add(hotelCard);
         }
     }
@@ -191,7 +226,10 @@ public class HotelGrid implements Navigatable {
     }
 
     public void navigateToChambre(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+        if (frontOfficeController != null)
+            frontOfficeController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+        else
+            dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
     }
 
     // Méthode pour exporter les hôtels en PDF
@@ -323,5 +361,13 @@ public class HotelGrid implements Navigatable {
                 errorAlert.showAndWait();
             }
         }
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        System.out.println("Setting FrontOfficeController: " + frontOfficeController);
+        updateButtonVisibility();
+        btnAddHotel.setVisible(false);
     }
 }

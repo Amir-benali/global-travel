@@ -64,7 +64,7 @@ public class Login {
 
     private void navigateToDashboard(User user) {
         try {
-            if(!user.getRoles().equals("admin")){
+            if(!user.getRoles().toLowerCase().equals("admin")){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontOffice/front-office.fxml"));
                 Parent root = loader.load();
                 FrontOffice frontOfficeController = loader.getController();

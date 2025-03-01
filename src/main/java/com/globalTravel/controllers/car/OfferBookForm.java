@@ -1,5 +1,11 @@
 package com.globalTravel.controllers.car;
 
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
+import com.globalTravel.models.car.Route;
+import com.globalTravel.utils.StripePayment;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.web.WebView;
@@ -15,7 +21,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
-public class OfferBookForm {
+public class OfferBookForm  implements Navigatable, FrontNavigatable {
 
     @FXML private TextField startLocationField;
     @FXML private TextField destinationField;
@@ -30,6 +36,8 @@ public class OfferBookForm {
     private double[] startCoords = null;
     private double[] destCoords = null;
     private final String apiKey = "cdd53807abc4440ea771e2beb6598c08";
+    private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @FXML
     public void initialize() {
@@ -158,11 +166,62 @@ public class OfferBookForm {
 
     @FXML
     private void handleBooking() {
-        System.out.println("Booking requested");
+        if (startCoords != null && destCoords != null) {
+            // Print start and destination coordinates
+            System.out.println("Start Coordinates: [" + startCoords[0] + ", " + startCoords[1] + "]");
+            System.out.println("Destination Coordinates: [" + destCoords[0] + ", " + destCoords[1] + "]");
+
+            // Calculate distance using Haversine formula
+            double distance = calculateDistance(startCoords[1], startCoords[0], destCoords[1], destCoords[0]);
+            System.out.println("Calculated Distance: " + distance + " km");
+
+            // Estimate travel time (assuming average speed of 60 km/h)
+            double averageSpeed = 60; // in km/h
+            double travelTime = distance / averageSpeed; // in hours
+            System.out.println("Estimated Travel Time: " + travelTime + " hours");
+            if (dashBoardController != null) {
+                dashBoardController.navigateTo("dashboard/car/payment-form.fxml");
+            }
+            else if (frontOfficeController != null) {
+                frontOfficeController.navigateTo("dashboard/car/payment-form.fxml");
+            }
+        } else {
+            System.out.println("Start or destination coordinates are not set.");
+        }
     }
 
+    // Haversine formula to calculate the distance between two coordinates
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371; // Radius of the earth in km
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c; // convert to kilometers
+
+        return distance;
+    }
     @FXML
     private void handleCancel() {
-        System.out.println("Booking cancelled");
+        if (dashBoardController != null) {
+            dashBoardController.navigateTo("dashboard/car/offer-details.fxml");
+        }
+        else if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/car/offer-details.fxml");
+        }
+
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+      this.dashBoardController = dashBoardController;
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 }

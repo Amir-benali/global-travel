@@ -26,7 +26,6 @@
             </ImageView>
         </graphic>
         <items>
-            <MenuItem styleClass="menu-card-item" text="Profile" onAction="#handleProfile" />
             <MenuItem styleClass="menu-card-item" text="Settings" onAction="#handleSettings" />
         </items>
     </MenuButton>

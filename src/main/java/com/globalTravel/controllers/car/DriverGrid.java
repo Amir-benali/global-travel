@@ -2,6 +2,8 @@ package com.globalTravel.controllers.car;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.CarDriverService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -10,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.effect.DropShadow;
@@ -27,10 +30,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class DriverGrid implements Navigatable {
+public class DriverGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddDriver;
     private DashBoard dashBoardController;
     private CarDriverService driverService = new CarDriverService();
-
+    private FrontOffice frontOfficeController;
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
@@ -44,6 +48,7 @@ public class DriverGrid implements Navigatable {
     @FXML
     public void initialize() {
         loadDrivers();
+
     }
 
     private void loadDrivers() {
@@ -54,6 +59,7 @@ public class DriverGrid implements Navigatable {
             VBox driverCard = createDriverCard(driver);
             driversGrid.getChildren().add(driverCard);
         }
+
     }
 
     private VBox createDriverCard(CarDriver driver) {
@@ -117,7 +123,24 @@ public class DriverGrid implements Navigatable {
 
         return card;
     }
+    private void updateButtonVisibility() {
+        for (Node node : driversGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        Button updateButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("update-button")).get(0);
+                        Button deleteButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("delete-button")).get(0);
 
+                        if (frontOfficeController != null) {
+                            buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                        }
+                    }
+                }
+            }
+        }
+    }
     // Utility method to create FontAwesome icons with color
     private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
         FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
@@ -156,12 +179,25 @@ public class DriverGrid implements Navigatable {
     }
 
     public void navigateToCar(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
-
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
+        else
+            frontOfficeController.navigateTo("dashboard/car/car-grid.fxml");
     }
 
     public void navigateToOffer(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        else
+            frontOfficeController.navigateTo("dashboard/car/offer-grid.fxml");
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddDriver.setVisible(false);
+
 
     }
 }

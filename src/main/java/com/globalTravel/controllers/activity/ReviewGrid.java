@@ -2,30 +2,31 @@ package com.globalTravel.controllers.activity;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import org.controlsfx.control.Rating;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class ReviewGrid implements Navigatable {
+public class ReviewGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddReview;
     private DashBoard dashBoardController;
     private final ReviewService reviewService = new ReviewService(); // Service des reviews
+    private FrontOffice frontOfficeController;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -48,6 +49,8 @@ public class ReviewGrid implements Navigatable {
             VBox reviewCard = createReviewCard(review);
             reviewsGrid.getChildren().add(reviewCard); // Ajoute chaque carte de revue dans le FlowPane
         }
+
+        // Update button visibility based on the context (front office or back office)
     }
 
     private VBox createReviewCard(Review review) {
@@ -104,6 +107,54 @@ public class ReviewGrid implements Navigatable {
         return card;
     }
 
+    private void updateButtonVisibility() {
+        for (Node node : reviewsGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (node instanceof VBox) {
+                        VBox reviewInfo = (VBox) child;
+                        for (Node nestedChild : reviewInfo.getChildren()) {
+
+                            if (nestedChild instanceof HBox) {
+                                System.out.println("HBox found");
+                                HBox buttonBox = (HBox) nestedChild;
+                                // Find the "Modifier" and "Supprimer" buttons by their text
+                                Button updateButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Modifier".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                                Button deleteButton = (Button) buttonBox.getChildren().stream()
+                                        .filter(btn -> btn instanceof Button && "Supprimer".equals(((Button) btn).getText()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                                // If in front office mode, hide the buttons
+                                if (frontOfficeController != null) {
+                                    if (updateButton != null) {
+                                        updateButton.setVisible(false);
+                                    }
+                                    if (deleteButton != null) {
+                                        deleteButton.setVisible(false);
+                                    }
+                                } else {
+                                    // If in back office mode, ensure the buttons are visible
+                                    if (updateButton != null) {
+                                        updateButton.setVisible(true);
+                                    }
+                                    if (deleteButton != null) {
+                                        deleteButton.setVisible(true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // Méthode pour créer un label stylisé
     private Label createStyledLabel(String text, String styleClass) {
         Label label = new Label(text);
@@ -145,7 +196,7 @@ public class ReviewGrid implements Navigatable {
 
     // Dialog de confirmation pour la suppression
     private void confirmDelete(Review review) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Supprimer la revue");
         alert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette revue ?");
         alert.setContentText("Cette action ne peut pas être annulée.");
@@ -182,6 +233,17 @@ public class ReviewGrid implements Navigatable {
     }
 
     public void navigateToReview(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/activity/review-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
+        }
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddReview.setVisible(false);
     }
 }
