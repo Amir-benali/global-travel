@@ -1,7 +1,9 @@
 package com.globalTravel.controllers.flight;
 
-        import com.globalTravel.controllers.DashBoard;
-        import com.globalTravel.controllers.Navigatable;
+        import com.globalTravel.controllers.backoffice.DashBoard;
+        import com.globalTravel.controllers.backoffice.Navigatable;
+        import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+        import com.globalTravel.controllers.frontoffice.FrontOffice;
         import com.globalTravel.models.flight.Airline;
         import com.globalTravel.services.flight.AirlineService;
         import javafx.event.ActionEvent;
@@ -13,9 +15,11 @@ package com.globalTravel.controllers.flight;
 
         import java.util.List;
 
-        public class AirlineGrid implements Navigatable {
+        public class AirlineGrid implements Navigatable, FrontNavigatable {
+            @FXML private Button btnAddAirline;
             private DashBoard dashBoardController;
             private final AirlineService airlineService = new AirlineService();
+            private FrontOffice frontOfficeController;
 
             public void setDashBoardController(DashBoard dashBoardController) {
                 this.dashBoardController = dashBoardController;
@@ -40,6 +44,7 @@ package com.globalTravel.controllers.flight;
                 nameColumn.setCellValueFactory(new PropertyValueFactory<>("airline_name"));
                 codeColumn.setCellValueFactory(new PropertyValueFactory<>("airline_code"));
                 countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+
                 actionColumn.setCellFactory(new Callback<>() {
                     @Override
                     public TableCell<Airline, Void> call(final TableColumn<Airline, Void> param) {
@@ -124,5 +129,12 @@ package com.globalTravel.controllers.flight;
 
             public void addAirline(ActionEvent actionEvent) {
                 dashBoardController.navigateTo("dashboard/flight/airline-create-form.fxml");
+            }
+
+            @Override
+            public void setFrontOfficeController(FrontOffice frontOfficeController) {
+                this.frontOfficeController = frontOfficeController;
+                actionColumn.setVisible(false);
+                btnAddAirline.setVisible(false);
             }
         }

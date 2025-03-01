@@ -1,6 +1,6 @@
 package com.globalTravel.controllers.flight;
 
-import com.globalTravel.controllers.DashBoard;
+import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.models.flight.Ticket;
 import com.globalTravel.models.flight.TicketClass;
 import com.globalTravel.models.flight.TicketStatus;

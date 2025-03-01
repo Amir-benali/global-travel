@@ -15,7 +15,7 @@
                 <children>
                     <Label styleClass="section-title" text="Airline List" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#addAirline" styleClass="add-button" text="+ ADD" />
+                    <Button fx:id="btnAddAirline" onAction="#addAirline" styleClass="add-button" text="+ AIRLINE" />
                 </children>
             </HBox>
             <TableView fx:id="airlineTable">

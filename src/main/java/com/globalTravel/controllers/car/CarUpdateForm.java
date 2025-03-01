@@ -1,13 +1,12 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.car.PrivateCar;
 import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.CarDriverService;
 import com.globalTravel.services.car.PrivateCarService;
 import com.globalTravel.utils.AzureBlobService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;

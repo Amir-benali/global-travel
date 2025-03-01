@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.flight;
 
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.flight.Flight;
 import com.globalTravel.models.flight.FlightStatus;
 import com.globalTravel.services.flight.AirlineService;
@@ -23,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FlightUpdateForm {
+public class FlightUpdateForm implements Navigatable {
 
     @FXML private TextField flightNumberField;
     @FXML private ComboBox<String> airline_nameField;
@@ -56,6 +58,12 @@ public class FlightUpdateForm {
         this.stage = stage;
     }
 
+    private DashBoard dashBoardController; // Reference to DashBoard controller
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
     @FXML
     public void initialize(Flight flight) {
         flightToEdit = flight;
@@ -119,7 +127,7 @@ public class FlightUpdateForm {
         });
 
         arrivalDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isBefore(departureDatePicker.getValue())) {
+            if (newValue != null && newValue.isBefore(departureDatePicker.getValue())) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Date", "Arrival date cannot be before departure date.");
                 arrivalDatePicker.setValue(null);
             }
@@ -263,7 +271,7 @@ public class FlightUpdateForm {
 
             flightService.modifier(flight);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Flight updated successfully.");
-            clearForm();
+            dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
             closeForm();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Error updating flight: " + e.getMessage());

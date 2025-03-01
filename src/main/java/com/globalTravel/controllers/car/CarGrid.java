@@ -1,9 +1,10 @@
 package com.globalTravel.controllers.car;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.car.PrivateCar;
-import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.services.car.PrivateCarService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
@@ -25,19 +26,22 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-public class CarGrid implements Navigatable {
+
+public class CarGrid implements Navigatable, FrontNavigatable {
+    @FXML private Button btnAddCar;
     private DashBoard dashBoardController;
     private PrivateCarService carService = new PrivateCarService();
+    private FrontOffice frontOfficeController;
+
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
+
 
     @FXML
     private FlowPane carsGrid;
@@ -110,7 +114,7 @@ public class CarGrid implements Navigatable {
         detailsGrid.add(createIcon(FontAwesomeIcon.CAR, Color.ORANGE), 0, 1);
         detailsGrid.add(new Label("Driver: " + ((car.getCarDriver() != null) ? car.getCarDriver().getFirstName() + " " + car.getCarDriver().getLastName() : "N/A")), 1, 1);
         detailsGrid.add(createIcon(FontAwesomeIcon.CREDIT_CARD, Color.RED), 2, 1);
-        detailsGrid.add(new Label("Driver ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
+        detailsGrid.add(new Label("DR ID: " + ((car.getCarDriver() != null) ? car.getCarDriver().getId() : "N/A")), 3, 1);
 
         detailsGrid.getStyleClass().add("details-grid");
 
@@ -183,11 +187,43 @@ public class CarGrid implements Navigatable {
     }
 
     public void navigateToDriver(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/car/driver-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+        }
     }
 
     public void navigateToOffer(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/car/offer-grid.fxml");
+        } else {
+            dashBoardController.navigateTo("dashboard/car/offer-grid.fxml");
+        }
 
+    }
+    private void updateButtonVisibility() {
+        for (Node node : carsGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        Button updateButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("update-button")).get(0);
+                        Button deleteButton = (Button) buttonBox.getChildren().filtered(btn -> btn.getStyleClass().contains("delete-button")).get(0);
+
+                        if (frontOfficeController != null) {
+                            buttonBox.getChildren().removeAll(updateButton, deleteButton);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
+        updateButtonVisibility();
+        btnAddCar.setVisible(false);
     }
 }

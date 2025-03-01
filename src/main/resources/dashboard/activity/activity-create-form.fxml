@@ -33,7 +33,10 @@
             <Label text="Informations de base" styleClass="section-label-activty"/>
             <TextField fx:id="activityNameField" promptText="Nom de l'activité" styleClass="form-field-activty"/>
             <TextArea fx:id="descriptionField" promptText="Description" styleClass="description-field-activty"/>
-            <TextField fx:id="localisationField" promptText="Localisation" styleClass="form-field-activty"/>
+            <TextField fx:id="localisationField" promptText="Localisation" styleClass="form-field-activty" onKeyReleased="#handleLocationInput"/>
+            <!-- ComboBox pour les suggestions de localisation -->
+            <ComboBox fx:id="suggestionsComboBox" promptText="Sélectionnez une localisation" styleClass="form-field-activty"
+                      visible="false" prefWidth="300"/>
         </VBox>
 
         <!-- Section : Date et Heure de début -->
