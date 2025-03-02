@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
+
 
 <VBox spacing="10" styleClass="hotel-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelUpdateForm">
     <padding>
