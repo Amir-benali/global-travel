@@ -21,6 +21,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import org.apache.hc.client5.http.fluent.Form;
+import org.apache.hc.client5.http.fluent.Request;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+
 public class Signup {
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
@@ -31,8 +39,14 @@ public class Signup {
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private CheckBox termsCheckBox;
+    @FXML private WebView captchaWebView;
+
 
     private Connection conn;
+
+    private static final String HCAPTCHA_SITEKEY = "dfbe2378-f644-45ae-81ca-4838f5720434";
+    private static final String HCAPTCHA_SECRET = "ES_020263b5a237461f8952d3e2997834db";
+
 
     // Clé API pour Email Validation
     private static final String EMAIL_API_KEY = "7fdf78ad74a44970b1a59a49087dbddc";
@@ -46,11 +60,17 @@ public class Signup {
 
     @FXML
     public void initialize() {
-        // Vérifier si le ComboBox est vide avant d'ajouter des éléments
         if (genderComboBox.getItems().isEmpty()) {
             genderComboBox.getItems().addAll("Homme", "Femme");
         }
+
+        // Chargement du widget hCaptcha
+        WebEngine webEngine = captchaWebView.getEngine();
+        String captchaHTML = "<html><body><script src='https://js.hcaptcha.com/1/api.js' async defer></script>"
+                + "<form action='' method='POST'><div class='h-captcha' data-sitekey='" + HCAPTCHA_SITEKEY + "'></div></form></body></html>";
+        webEngine.loadContent(captchaHTML);
     }
+
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -124,6 +144,13 @@ public class Signup {
             showAlert("Erreur", "L'email n'est pas valide ou n'est pas délivrable.", Alert.AlertType.ERROR);
             return;
         }
+
+        String captchaToken = getCaptchaToken();
+        if (captchaToken == null || captchaToken.isEmpty() || !verifyCaptcha(captchaToken)) {
+            showAlert("Erreur", "Veuillez valider le Captcha.", Alert.AlertType.ERROR);
+            return;
+        }
+
 
         // Hash du mot de passe avec BCrypt
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -232,4 +259,30 @@ public class Signup {
 
     public void handleLogin(ActionEvent actionEvent) {
     }
+
+    private String getCaptchaToken() {
+        return (String) captchaWebView.getEngine().executeScript("document.querySelector('textarea[name=h-captcha-response]').value");
+    }
+
+    private boolean verifyCaptcha(String token) {
+        try {
+            String response = Request.post("https://api.hcaptcha.com/siteverify")
+                    .bodyForm(Form.form()
+                            .add("secret", HCAPTCHA_SECRET)
+                            .add("response", token)
+                            .build())
+                    .execute().returnContent().asString();
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonResponse = (JSONObject) parser.parse(response);
+            return (boolean) jsonResponse.get("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
+
 }

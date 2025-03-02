@@ -8,6 +8,7 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
+<?import javafx.scene.web.WebView?>
 <StackPane styleClass="signup-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.auth.Signup">
     <VBox styleClass="signup-card" maxWidth="400" maxHeight="600" alignment="CENTER" spacing="15">
         <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
@@ -48,6 +49,9 @@
             <CheckBox fx:id="termsCheckBox" text="I agree to the " styleClass="terms-checkbox"/>
             <Hyperlink text="Terms and Conditions" onAction="#handleTermsAndConditions"/>
         </HBox>
+
+        <WebView fx:id="captchaWebView" maxHeight="100" maxWidth="300"/>
+
 
         <Button text="Sign Up" onAction="#handleSignup" styleClass="signup-button"/>
         <Separator/>
