@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class Navbar {
         if (user != null) {
             System.out.println("Navbar reçoit : " + user.getFirstName() + " " + user.getLastName());
             userMenuButton.setText(user.getFirstName() + " " + user.getLastName());
+            if (user.getImage() != null) {
+                imgUser.setImage(new Image(user.getImage()));
+            }
         } else {
             System.out.println("Aucun utilisateur reçu.");
         }

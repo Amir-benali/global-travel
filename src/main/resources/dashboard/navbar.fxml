@@ -19,7 +19,7 @@
 
     <MenuButton fx:id="userMenuButton" styleClass="user-menu-button">
         <graphic>
-            <ImageView fitHeight="51.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgUser" fitHeight="51.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@../images/user-icon.png" />
                 </image>
