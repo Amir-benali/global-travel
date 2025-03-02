@@ -4,6 +4,7 @@ import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.controllers.frontoffice.FrontNavigatable;
 import com.globalTravel.controllers.frontoffice.FrontOffice;
+import com.globalTravel.models.car.Offer;
 import com.globalTravel.models.car.Route;
 import com.globalTravel.utils.StripePayment;
 import javafx.fxml.FXML;
@@ -20,6 +21,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class OfferBookForm  implements Navigatable, FrontNavigatable {
 
@@ -39,8 +43,10 @@ public class OfferBookForm  implements Navigatable, FrontNavigatable {
     private DashBoard dashBoardController;
     private FrontOffice frontOfficeController;
 
+    private Offer offer;
     @FXML
-    public void initialize() {
+    public void initialize(Offer offer) {
+        this.offer = offer;
         routeMap = new RouteMap();
         webEngine = mapWebView.getEngine();
         webEngine.loadContent(routeMap.getHtmlContent());
@@ -179,11 +185,17 @@ public class OfferBookForm  implements Navigatable, FrontNavigatable {
             double averageSpeed = 60; // in km/h
             double travelTime = distance / averageSpeed; // in hours
             System.out.println("Estimated Travel Time: " + travelTime + " hours");
+            LocalDateTime dateTime = LocalDateTime.of(datePicker.getValue(), LocalTime.parse(timeField.getText()));
+            Route route = new Route(dateTime, "[" + startCoords[0] + ", " + startCoords[1] + "]", "[" + destCoords[0] + ", " + destCoords[1] + "]");
             if (dashBoardController != null) {
                 dashBoardController.navigateTo("dashboard/car/payment-form.fxml");
+                ((PaymentForm)dashBoardController.getController()).initialize(route,dashBoardController.getCurrentUser(),offer);
+
             }
             else if (frontOfficeController != null) {
                 frontOfficeController.navigateTo("dashboard/car/payment-form.fxml");
+                ((PaymentForm)frontOfficeController.getController()).initialize(route,frontOfficeController.getCurrentUser(),offer);
+
             }
         } else {
             System.out.println("Start or destination coordinates are not set.");

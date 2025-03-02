@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.paint.Color?>
+
+<HBox spacing="20" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.globalTravel.controllers.car.CarReservationDetails"
+      styleClass="booked-trip-container">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Left Half: Map -->
+    <VBox fx:id="mapContainer" HBox.hgrow="ALWAYS" styleClass="booked-trip-map-container">
+        <Label text="Route Map" styleClass="booked-trip-title"/>
+        <WebView fx:id="mapWebView" prefHeight="500" VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+    <!-- Right Half: Trip Details in White Card -->
+    <VBox spacing="20" styleClass="booked-trip-details-card" HBox.hgrow="ALWAYS">
+        <Label text="Trip Details" styleClass="booked-trip-title"/>
+
+        <!-- Start Location -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="MAP_MARKER" size="20" fill="DODGERBLUE"/>
+            <VBox spacing="2">
+                <Label text="Start Location" styleClass="booked-trip-label"/>
+                <Label fx:id="startLocationLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Destination -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="MAP_MARKER" size="20" fill="TOMATO"/>
+            <VBox spacing="2">
+                <Label text="Destination" styleClass="booked-trip-label"/>
+                <Label fx:id="destinationLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Date -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CALENDAR" size="20" fill="DARKSLATEGRAY"/>
+            <VBox spacing="2">
+                <Label text="Date" styleClass="booked-trip-label"/>
+                <Label fx:id="dateLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CLOCK_ALT" size="20" fill="DARKSLATEGRAY"/>
+            <VBox spacing="2">
+                <Label text="Time" styleClass="booked-trip-label"/>
+                <Label fx:id="timeLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Distance -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="ROAD" size="20" fill="DARKSLATEGRAY"/>
+            <VBox spacing="2">
+                <Label text="Distance" styleClass="booked-trip-label"/>
+                <Label fx:id="distanceLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Estimated Time -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="HOURGLASS" size="20" fill="DARKSLATEGRAY"/>
+            <VBox spacing="2">
+                <Label text="Estimated Time" styleClass="booked-trip-label"/>
+                <Label fx:id="estimatedTimeLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Delay Information -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="EXCLAMATION_TRIANGLE" size="20" fill="ORANGE"/>
+            <VBox spacing="2">
+                <Label text="Delay Information" styleClass="booked-trip-label"/>
+                <Label fx:id="delayLabel" styleClass="booked-trip-value"/>
+                <Label fx:id="expectedTimeAfterDelayLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Weather Conditions -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CLOUD" size="20" fill="DARKSLATEGRAY"/>
+            <VBox spacing="2">
+                <Label text="Weather Conditions" styleClass="booked-trip-label"/>
+                <Label fx:id="weatherConditionLabel" styleClass="booked-trip-value"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</HBox>

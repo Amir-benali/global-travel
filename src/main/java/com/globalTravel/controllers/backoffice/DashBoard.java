@@ -27,6 +27,10 @@ public class DashBoard {
     private Object controller;
     private User currentUser; // 🔥 Stocke l'utilisateur connecté
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void navigateTo(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlFile));
