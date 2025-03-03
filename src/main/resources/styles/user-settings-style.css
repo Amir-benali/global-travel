@@ -241,3 +241,55 @@
 .table-row-cell:hover {
     -fx-background-color: #e9ecef;
 }
+
+/* Main container */
+.booked-trip-container {
+    -fx-background-color: #f9f9f9; /* Light gray background */
+    -fx-padding: 20; /* Padding around the entire container */
+}
+
+/* Map container */
+.booked-trip-map-container {
+    -fx-background-color: white; /* White background for the map card */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 0); /* Subtle shadow */
+    -fx-padding: 20; /* Padding inside the map card */
+    -fx-spacing: 10; /* Spacing between elements inside the map card */
+}
+
+/* Trip details card */
+.booked-trip-details-card {
+    -fx-background-color: white; /* White background for the trip details card */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 0); /* Subtle shadow */
+    -fx-padding: 20; /* Padding inside the trip details card */
+    -fx-spacing: 20; /* Spacing between elements inside the trip details card */
+}
+
+/* Title styling */
+.booked-trip-title {
+    -fx-font-size: 18px; /* Larger font size for titles */
+    -fx-font-weight: bold; /* Bold font for titles */
+    -fx-text-fill: #333333; /* Dark gray text color */
+    -fx-padding: 0 0 10 0; /* Padding below the title */
+}
+
+/* Labels in details section */
+.booked-trip-label {
+    -fx-font-size: 14px; /* Medium font size for labels */
+    -fx-text-fill: #555555; /* Medium gray text color */
+    -fx-font-weight: bold; /* Bold font for labels */
+}
+
+/* Values in details section */
+.booked-trip-value {
+    -fx-font-size: 14px; /* Medium font size for values */
+    -fx-text-fill: #333333; /* Dark gray text color */
+}
+
+/* Icon styling (optional, if you want to add more styles to icons) */
+.booked-trip-icon {
+    -fx-fill: #333333; /* Default icon color (can be overridden in FXML) */
+}

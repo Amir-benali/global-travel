@@ -1,5 +1,14 @@
 package com.globalTravel.controllers.car;
 
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
+import com.globalTravel.models.car.CarReservation;
+import com.globalTravel.models.car.Offer;
+import com.globalTravel.models.car.Route;
+import com.globalTravel.models.car.TypeCarReservation;
+import com.globalTravel.models.user.User;
+import com.globalTravel.services.car.CarReservationService;
+import com.globalTravel.services.car.RouteService;
 import com.globalTravel.utils.StripePayment;
 import com.stripe.model.PaymentIntent;
 import javafx.fxml.FXML;
@@ -7,10 +16,19 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
-public class PaymentForm {
+import java.sql.Date;
+
+public class PaymentForm implements FrontNavigatable {
 
     @FXML
     private WebView webView;
+    private CarReservationService carReservationService = new CarReservationService();
+    private RouteService routeService = new RouteService();
+    private Route route;
+    private User currentUser;
+    private Offer offer;
+    private FrontOffice frontOfficeController;
+    private CarReservation carReservation;
 
     @FXML
     public void initialize() {
@@ -40,7 +58,7 @@ public class PaymentForm {
 
         StripePayment stripePayment = new StripePayment();
         try {
-            PaymentIntent intent = stripePayment.createPaymentIntent(5000, "usd", "Private Car Booking", paymentMethodId);
+            PaymentIntent intent = stripePayment.createPaymentIntent((long) (offer.getPrice()*1000), "usd", "Private Car Booking", paymentMethodId);
             if (intent.getStatus().equals("succeeded")) {
                 System.out.println("Payment successful!");
                 WebEngine webEngine = webView.getEngine();
@@ -63,10 +81,40 @@ public class PaymentForm {
 
     public void confirmPayment( ) {
         System.out.println("Payment confirmed: ");
-
+        carReservation.setStatus(TypeCarReservation.CONFIRMED);
+        carReservationService.modifier(carReservation);
+        frontOfficeController.navigateTo("dashboard/car/offer-reservation-grid.fxml");
     }
     public void rejectPayment() {
         System.out.println("Payment rejected: " );
+        carReservation.setStatus(TypeCarReservation.FAILED);
+        carReservationService.modifier(carReservation);
+        frontOfficeController.navigateTo("dashboard/car/offer-reservation-grid.fxml");
 
+
+    }
+
+    public void initialize(Route route, User currentUser, Offer offer ) {
+
+        System.out.println("Initializing PaymentForm...");
+        System.out.println("Route: " + route);
+        System.out.println("User: " + currentUser);
+        System.out.println("Offer: " + offer);
+
+        int id =routeService.addRoute(route);
+        System.out.println(id);
+        route.setId(id);
+        CarReservation carReservation = new CarReservation(new Date(System.currentTimeMillis()), TypeCarReservation.PENDING, route, offer, currentUser);
+        int idres = carReservationService.addCarReservation(carReservation);
+        carReservation.setId(idres);
+        this.route = route;
+        this.currentUser = currentUser;
+        this.offer = offer;
+        this.carReservation = carReservation;
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 }

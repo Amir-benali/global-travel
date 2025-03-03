@@ -33,6 +33,10 @@ public class DashBoard {
     private User currentUser; // 🔥 Stocke l'utilisateur connecté
     private Navbar navbarController; // Référence au contrôleur de la navbar
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void navigateTo(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + fxmlFile));
