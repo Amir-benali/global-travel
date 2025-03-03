@@ -136,7 +136,7 @@ public class FrontOffice implements FrontNavigatable {
 
     private void navigateToHotelReservations() {
         handleButtonSelection(hotelReservationsButton);
-        navigateTo("dashboard/hotel/hotel-reservations.fxml");
+        navigateTo("dashboard/hotel/list-reservation-h.fxml");
     }
 
     private void navigateToActivityList() {
