@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -31,8 +32,6 @@ import java.io.IOException;
 public class UserPaymentGrid implements FrontNavigatable {
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     private static final String API_KEY = "AIzaSyD_WURCUPe_1j7JKTSajZzDeheiH2Yo35k";
-
-
 
     @FXML
     private TextField inputField; // Input field for user messages
@@ -119,8 +118,9 @@ public class UserPaymentGrid implements FrontNavigatable {
         messageContainer.setPadding(new Insets(5, 10, 5, 10));
         messageContainer.setMaxWidth(Double.MAX_VALUE); // Allow the container to take up the full width
         messageContainer.setSpacing(10);
+
         // User image
-        ImageView userImage = new ImageView((this.userImage!=null) ? new Image(this.userImage): new Image(getClass().getResourceAsStream("/images/user-icon.png")));
+        ImageView userImage = new ImageView((this.userImage != null) ? new Image(this.userImage) : new Image(getClass().getResourceAsStream("/images/user-icon.png")));
         userImage.setFitWidth(40); // Set image width
         userImage.setFitHeight(40); // Set image height
         userImage.setSmooth(true); // Enable smooth resizing
@@ -131,11 +131,9 @@ public class UserPaymentGrid implements FrontNavigatable {
         textFlow.setStyle("-fx-background-color: #2196F3; -fx-background-radius: 10px; -fx-padding: 10px;");
         textFlow.setMaxWidth(Double.MAX_VALUE); // Allow the message bubble to take up the full width
 
-        Text text = new Text(message);
-        text.setFill(javafx.scene.paint.Color.WHITE);
-        text.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        // Parse the message for formatting
+        parseFormattedText(message, textFlow, javafx.scene.paint.Color.WHITE);
 
-        textFlow.getChildren().add(text);
         messageContainer.getChildren().addAll(textFlow, userImage); // Add message bubble and user image
         chatArea.getChildren().add(messageContainer);
 
@@ -163,16 +161,39 @@ public class UserPaymentGrid implements FrontNavigatable {
         textFlow.setStyle("-fx-background-color: #f1f1f1; -fx-background-radius: 10px; -fx-padding: 10px;");
         textFlow.setMaxWidth(Double.MAX_VALUE); // Allow the message bubble to take up the full width
 
-        Text text = new Text(message);
-        text.setFill(javafx.scene.paint.Color.BLACK);
-        text.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        // Parse the message for formatting
+        parseFormattedText(message, textFlow, javafx.scene.paint.Color.BLACK);
 
-        textFlow.getChildren().add(text);
         messageContainer.getChildren().addAll(botImage, textFlow); // Add bot image and message bubble
         chatArea.getChildren().add(messageContainer);
 
         // Scroll to the bottom of the chat area
         chatScrollPane.setVvalue(1.0);
+    }
+
+    /**
+     * Parses the message for basic formatting (bold, italic) and adds styled text to the TextFlow.
+     */
+    private void parseFormattedText(String message, TextFlow textFlow, javafx.scene.paint.Color textColor) {
+        String[] parts = message.split("\\*\\*|\\*"); // Split by ** or *
+        boolean isBold = false;
+        boolean isItalic = false;
+
+        for (String part : parts) {
+            Text text = new Text(part);
+            text.setFill(textColor);
+            text.setFont(Font.font("Arial", isBold ? FontWeight.BOLD : FontWeight.NORMAL, isItalic ? FontPosture.ITALIC : FontPosture.REGULAR, 14));
+            textFlow.getChildren().add(text);
+
+            // Toggle bold/italic state
+            if (part.isEmpty()) {
+                if (message.contains("**" + part + "**")) {
+                    isBold = !isBold;
+                } else if (message.contains("*" + part + "*")) {
+                    isItalic = !isItalic;
+                }
+            }
+        }
     }
 
     @Override
