@@ -203,17 +203,12 @@ public class ChambreGrid implements Navigatable, FrontNavigatable {
     }
 
     private void navigateToReservation(Chambre chambre) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/hotel/hotel-reservations.fxml"));
-            Parent reservationForm = loader.load();
-            HotelReservationForm reservationController = loader.getController();
-            reservationController.setSelectedChambre(chambre);
-            Stage stage = (Stage) chambresGrid.getScene().getWindow();
-            stage.getScene().setRoot(reservationForm);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de naviguer vers l'interface de réservation.");
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/hotel/hotel-reservations.fxml");
+        if (dashBoardController != null)
+            dashBoardController.navigateTo("dashboard/hotel/hotel-reservations.fxml");
         }
+
     }
 
     private void deleteChambre(Chambre chambre) {

@@ -12,6 +12,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 
@@ -73,9 +74,9 @@ public class FrontOffice implements FrontNavigatable {
         userProfileName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         if (currentUser.getImage() != null) {
             ImgUser.setImage(new Image(currentUser.getImage()));
-        }
-    }
 
+         }
+}
 
     /**
      * Navigate to a specific FXML view.

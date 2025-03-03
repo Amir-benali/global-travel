@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -83,7 +84,9 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
             if (currentUser.getImage() != null && !currentUser.getImage().isEmpty()) {
                 profileImage.setImage(new Image(currentUser.getImage()));
-            }
+                profileImage.setClip(new Circle(profileImage.getFitWidth() / 2, profileImage.getFitHeight() / 2, Math.min(profileImage.getFitWidth(), profileImage.getFitHeight()) / 2));
+
+        }
         } else {
             System.out.println("⚠ Aucun utilisateur connecté !");
         }
@@ -101,6 +104,8 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
         if (selectedImageFile != null) {
             profileImage.setImage(new Image(selectedImageFile.toURI().toString()));
+            profileImage.setClip(new Circle(profileImage.getFitWidth() / 2, profileImage.getFitHeight() / 2, Math.min(profileImage.getFitWidth(), profileImage.getFitHeight()) / 2));
+
         }
     }
 

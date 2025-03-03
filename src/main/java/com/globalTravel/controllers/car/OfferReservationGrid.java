@@ -45,7 +45,7 @@ public class OfferReservationGrid implements FrontNavigatable {
     private FilteredList<CarReservation> filteredReservations;
 
     private int currentPage = 1;
-    private int itemsPerPage = 10;
+    private int itemsPerPage = 5;
     private int totalPages = 1;
     private FrontOffice frontOfficeController;
 
