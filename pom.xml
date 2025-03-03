@@ -21,6 +21,12 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.2.1</version>
+        </dependency>
+
 
         <!-- Dépendances pour JavaFX -->
         <dependency>
@@ -34,11 +40,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>20.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.8</version>
         </dependency>
+
         <!-- Dépendance pour ControlsFX -->
 
         <dependency>
@@ -47,11 +55,7 @@
             <version>20231013</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.1.2</version>
-        </dependency>
+
 
         <!-- Dépendance pour jBCrypt -->
         <dependency>
@@ -143,6 +147,11 @@
             <version>9.1.2</version>
         </dependency>
         <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-storage-blob</artifactId>
             <version>12.28.1</version>
@@ -195,6 +204,8 @@
         </dependency>
 
 
+
+
     </dependencies>
 
     <build>
@@ -208,6 +219,7 @@
                     <mainClass>com.globalTravel.tests.MainGUI</mainClass>
                 </configuration>
             </plugin>
+
 
         </plugins>
     </build>

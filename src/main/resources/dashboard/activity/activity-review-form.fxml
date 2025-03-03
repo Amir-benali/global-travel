@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import org.controlsfx.control.Rating?>
+
+<?import java.net.URL?>
+<ScrollPane fitToWidth="true" fitToHeight="true" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.activity.ActivityReviewForm">
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
+
+    <VBox spacing="20" styleClass="review-form" alignment="CENTER">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <VBox spacing="10" styleClass="form-section-activty">
+            <VBox spacing="10" styleClass="form-section-review">
+                <Label text="Commentaire" styleClass="section-label-review"/>
+                <TextArea fx:id="commentaireField" promptText="Votre commentaire" styleClass="form-field-review"/>
+            </VBox>
+        </VBox>
+
+        <VBox spacing="10" styleClass="form-section-activty">
+            <VBox spacing="10" styleClass="form-section-review">
+                <Label text="Note" styleClass="section-label-review"/>
+                <Rating fx:id="noteRating" max="5" rating="0" styleClass="rating-field-review"/>
+            </VBox>
+        </VBox>
+
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button-activty"/>
+            <Button fx:id="saveButton" text="Enregistrer" onAction="#handleSaveReview" styleClass="save-button-activty"/>
+        </HBox>
+
+        <Label fx:id="statusLabel" text="" styleClass="status-label-review"/>
+    </VBox>
+</ScrollPane>

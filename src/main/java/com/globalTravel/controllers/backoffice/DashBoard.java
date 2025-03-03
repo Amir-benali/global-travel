@@ -17,6 +17,10 @@ public class DashBoard {
     @FXML
     private BorderPane mainContainer;  // Root layout container
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     @FXML private Button btnSideActivity;
     @FXML private Button btnSideCar;
     @FXML private Button btnSideDashboard;
