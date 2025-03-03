@@ -23,7 +23,7 @@
                     <Button onAction="#navigateToOffer" styleClass="view-details-button" text="Offer List" />
 
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button fx:id="btnAddDriver" onAction="#addDriver" styleClass="view-details-button" text="+ AJOUTER" />
+                    <Button fx:id="btnAddDriver" onAction="#addDriver" styleClass="view-details-button" text="+ ADD DRIVER" />
                 </children>
                 <padding>
                     <Insets left="20.0" right="20.0" />

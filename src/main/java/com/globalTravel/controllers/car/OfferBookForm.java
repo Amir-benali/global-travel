@@ -265,7 +265,9 @@ public class OfferBookForm implements Navigatable, FrontNavigatable {
     private List<User> fetchUsers() {
         // Replace this with your actual logic to fetch users from the database or service
         // For now, we'll return a dummy list
-        return userService.rechercher();
+        List <User> users = userService.rechercher();
+
+        return users.stream().filter(user -> user.getRoles().toLowerCase().equals("employee")).toList();
 
     }
 

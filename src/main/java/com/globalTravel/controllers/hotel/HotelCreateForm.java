@@ -259,6 +259,8 @@ public class HotelCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+
+        dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         closeForm();
     }
 

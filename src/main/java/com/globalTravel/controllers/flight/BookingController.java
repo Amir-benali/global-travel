@@ -2,6 +2,8 @@ package com.globalTravel.controllers.flight;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.flight.Flight;
 import com.globalTravel.models.flight.Ticket;
 import com.globalTravel.models.flight.TicketClass;
@@ -32,7 +34,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingController implements Navigatable {
+public class BookingController implements Navigatable, FrontNavigatable {
     public Button btnCancelBooking;
     @FXML private Label lblTicketPrice;
     @FXML private TextField txtPassengerName;
@@ -42,6 +44,7 @@ public class BookingController implements Navigatable {
     @FXML private VBox flightDetailsContainer;
     @FXML private GridPane seatGrid;
     private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -232,8 +235,9 @@ public class BookingController implements Navigatable {
     public void handleCancelBooking() {
         if (dashBoardController != null) {
             dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
-        } else {
-            System.out.println("DashBoard controller is null");
+        }
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/flight/flight-grid.fxml");
         }
     }
 
@@ -264,5 +268,10 @@ public class BookingController implements Navigatable {
         } else {
             lblTicketPrice.setText("");
         }
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 }

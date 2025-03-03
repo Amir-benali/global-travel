@@ -76,6 +76,14 @@ public class FrontOffice implements FrontNavigatable {
             ImgUser.setImage(new Image(currentUser.getImage()));
 
          }
+        if(currentUser.getRoles().toLowerCase().equals("employee")){
+            dashboardButton.setVisible(false);
+            flightManagementButton.setVisible(false);
+            carManagementButton.setVisible(false);
+            hotelManagementButton.setVisible(false);
+            activitiesButton.setVisible(false);
+
+        }
 }
 
     /**

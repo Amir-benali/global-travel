@@ -48,8 +48,6 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
     @FXML
     private Button saveButton;
 
-    @FXML
-    private Button cancelButton;
 
     private final UserService userService = new UserService();
     private User currentUser;
@@ -64,7 +62,6 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
         uploadImageButton.setOnAction(event -> handleImageUpload());
         saveButton.setOnAction(event -> handleSaveChanges());
-        cancelButton.setOnAction(event -> handleCancel());
     }
 
     // Méthode pour définir le contrôleur de la navbar

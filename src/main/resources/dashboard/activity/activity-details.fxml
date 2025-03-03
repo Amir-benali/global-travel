@@ -12,11 +12,10 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.globalTravel.controllers.activity.ActivityDetailsController"
-            prefHeight="500.0" prefWidth="700.0"
-            style="-fx-background-color: #f4f4f4; -fx-padding: 20;">
+            style="-fx-background-color: #f4f4f4; -fx-padding: 20;"  VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
 
     <!-- VBox principale pour organiser les éléments -->
-    <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;">
+    <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
         <!-- Titre de la page -->
         <Label text="Détails de l'Activité" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4CAF50; -fx-alignment: CENTER;"/>
 

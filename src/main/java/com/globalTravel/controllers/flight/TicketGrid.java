@@ -189,9 +189,7 @@ public class TicketGrid implements Navigatable, FrontNavigatable {
         });
     }
 
-    public void addTicket(ActionEvent actionEvent) {
-        dashBoardController.navigateTo("dashboard/flight/ticket-create-form.fxml");
-    }
+
 
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {

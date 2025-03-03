@@ -123,6 +123,7 @@ public class DriverUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
         closeForm();
     }
 

@@ -130,6 +130,8 @@ package com.globalTravel.controllers.flight;
 
                 @FXML
                 private void handleCancel() {
+                    dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
+
                     clearForm();
                     closeForm();
                 }
