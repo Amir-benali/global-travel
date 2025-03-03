@@ -21,11 +21,12 @@ public class ReviewService {
             return;
         }
 
-        String req = "INSERT INTO review (commentaire, note, dateReview, activityId) VALUES (?, ?, NOW(), ?)";
+        String req = "INSERT INTO review (commentaire, note, dateReview, activityId,userId) VALUES (?, ?, NOW(), ?,?)";
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, review.getCommentaire());
             pst.setInt(2, review.getNote());
             pst.setInt(3, review.getActivityId());
+            pst.setInt(4, review.getUserId());
 
             int rowsAffected = pst.executeUpdate();
             if (rowsAffected > 0) {
@@ -75,7 +76,7 @@ public class ReviewService {
 
     public List<Review> rechercher() {
         List<Review> reviews = new ArrayList<>();
-        String req = "SELECT * FROM review";
+        String req = "SELECT r.*, u.firstname, u.lastname FROM review r JOIN user u ON r.userId = u.id"; // Jointure avec la table user
         try (PreparedStatement pst = connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
@@ -85,8 +86,14 @@ public class ReviewService {
                         rs.getString("commentaire"),
                         rs.getInt("note"),
                         rs.getTimestamp("dateReview").toLocalDateTime(),
-                        rs.getInt("activityId")
+                        rs.getInt("activityId"),
+                        rs.getInt("userId"),
+                        rs.getString("lastname"),
+                        rs.getString("firstname")
                 );
+                // Ajouter le nom et le prénom de l'utilisateur à l'objet Review
+                review.setUserNom(rs.getString("lastname"));
+                review.setUserPrenom(rs.getString("firstname"));
                 reviews.add(review);
             }
         } catch (SQLException e) {

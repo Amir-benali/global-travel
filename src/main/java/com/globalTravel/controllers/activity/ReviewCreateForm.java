@@ -30,6 +30,7 @@ public class ReviewCreateForm implements Navigatable {
     private final ReviewService reviewService = new ReviewService();
     private final ActivityService activityService = new ActivityService();
     private Map<String, Integer> activityNameToIdMap = new HashMap<>(); // Pour associer les noms aux IDs
+    private int userId;
 
     // Méthode pour définir le Stage
     public void setStage(Stage stage) {
@@ -39,6 +40,7 @@ public class ReviewCreateForm implements Navigatable {
     // Méthode pour définir le DashBoardController
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
+        this.userId=this.dashBoardController.getCurrentUser().getId();
     }
 
     @FXML
@@ -95,7 +97,9 @@ public class ReviewCreateForm implements Navigatable {
         return new Review(
                 commentaireField.getText(),
                 (int) noteRating.getRating(), // Récupérer la note sous forme d'entier
-                activityId
+                activityId,
+                userId
+
         );
     }
 

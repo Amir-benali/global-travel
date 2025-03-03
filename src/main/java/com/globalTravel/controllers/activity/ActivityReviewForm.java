@@ -1,5 +1,6 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
 import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.Review;
@@ -11,7 +12,7 @@ import org.controlsfx.control.Rating;
 
 import java.time.LocalDateTime;
 
-public class ActivityReviewForm {
+public class ActivityReviewForm implements FrontNavigatable {
     private FrontOffice frontOfficeController;
     private Stage stage;
     private Activity activity;
@@ -22,13 +23,15 @@ public class ActivityReviewForm {
     @FXML private Label statusLabel;
 
     private final ReviewService reviewService = new ReviewService();
+    private int userId;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
         this.frontOfficeController = frontOfficeController;
+        this.userId=this.frontOfficeController.getCurrentUser().getId();
     }
 
     public void setActivity(Activity activity) {
@@ -49,8 +52,17 @@ public class ActivityReviewForm {
             int note = (int) noteRating.getRating();
             int activityId = activity.getId();
 
+            // Validation supplémentaire
+            if (commentaire.isEmpty()) {
+                throw new IllegalArgumentException("Le commentaire ne peut pas être vide.");
+            }
+
+            if (note < 1 || note > 5) {
+                throw new IllegalArgumentException("La note doit être comprise entre 1 et 5.");
+            }
+
             // Créer une nouvelle instance de Review
-            Review review = new Review(commentaire, note, activityId);
+            Review review = new Review(commentaire, note, activityId,userId);
 
             // Enregistrer la review dans la base de données
             reviewService.ajouter(review);
@@ -86,7 +98,15 @@ public class ActivityReviewForm {
 
     @FXML
     private void handleCancel() {
-        closeForm();
+        // Demander une confirmation avant de fermer le formulaire
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Êtes-vous sûr de vouloir annuler ?");
+        alert.setContentText("Toutes les modifications non enregistrées seront perdues.");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            closeForm();
+        }
     }
 
     // Méthode pour fermer le formulaire

@@ -63,6 +63,11 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         VBox reviewInfo = new VBox(10);
         reviewInfo.getStyleClass().add("review-info");
 
+        // Afficher le nom et le prénom de l'utilisateur
+        Label userLabel = new Label("Avis de : " + review.getUserPrenom() + " " + review.getUserNom());
+        userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        reviewInfo.getChildren().add(userLabel);
+
         // Commentaire avec icône FontAwesome
         FontAwesomeIconView commentIcon = new FontAwesomeIconView(FontAwesomeIcon.COMMENT);
         commentIcon.setSize("16px");
@@ -97,7 +102,7 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         Button updateButton = new Button("Modifier", editIcon);
         updateButton.setOnAction(e -> {
             try {
-                navigateToUpdateReview(review);
+                navigateToUpdateReview(review); // Méthode pour naviguer vers le formulaire de modification
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -110,12 +115,14 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         deleteIcon.setFill(Color.WHITE);
 
         Button deleteButton = new Button("Supprimer", deleteIcon);
-        deleteButton.setOnAction(e -> confirmDelete(review));
+        deleteButton.setOnAction(e -> confirmDelete(review)); // Méthode pour confirmer la suppression
         deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px;");
 
+        // Conteneur pour les boutons
         HBox buttonHbox = new HBox(15);
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
 
+        // Ajouter tous les éléments à la carte
         reviewInfo.getChildren().addAll(
                 commentBox, noteRating, dateBox, buttonHbox
         );
