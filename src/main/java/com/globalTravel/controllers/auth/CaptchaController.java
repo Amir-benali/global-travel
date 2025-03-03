@@ -89,15 +89,8 @@ public class CaptchaController {
         try {
             // Charger la vue login.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/login.fxml"));
-            Parent loginView = loader.load();
-
-            // Obtenir la scène actuelle
-            Scene currentScene = captchaWebView.getScene();
-
-            // Remplacer la scène actuelle par la scène de login
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(loginView));
-            stage.show();
+            Parent root = loader.load();
+            captchaWebView.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible de charger la page de connexion.", Alert.AlertType.ERROR);
@@ -143,11 +136,8 @@ public class CaptchaController {
 
             // Obtenir la scène actuelle
             Scene currentScene = captchaWebView.getScene();
+            currentScene.setRoot(signupView);
 
-            // Remplacer la scène actuelle par la scène de signup
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(signupView));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible de charger la page de signup.", Alert.AlertType.ERROR);

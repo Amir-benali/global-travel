@@ -17,7 +17,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,8 +29,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-
 
 public class Signup extends NanoHTTPD {
     @FXML private TextField firstNameField;
@@ -42,8 +43,6 @@ public class Signup extends NanoHTTPD {
     @FXML private WebView captchaWebView;
 
     public static HashMap<String, String> userData = new HashMap<>();
-
-
 
     private Connection conn;
 
@@ -60,8 +59,58 @@ public class Signup extends NanoHTTPD {
     public Signup() throws IOException {
         super(CAPTCHA_SERVER_PORT); // Start the local server for hCaptcha
         conn = DataSource.getInstance().getConnection();
-        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-        System.out.println("hCaptcha server running on port " + CAPTCHA_SERVER_PORT);
+        startServer();
+    }
+
+    private void startServer() {
+        if (isPortInUse(CAPTCHA_SERVER_PORT)) {
+            terminateProcessUsingPort(CAPTCHA_SERVER_PORT);
+        }
+        try {
+            start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+            System.out.println("hCaptcha server running on port " + CAPTCHA_SERVER_PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isPortInUse(int port) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            return false;
+        } catch (IOException e) {
+            return true;
+        }
+    }
+
+    private void terminateProcessUsingPort(int port) {
+        try {
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                // For Windows
+                Process process = Runtime.getRuntime().exec("netstat -ano | findstr :" + port);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains("LISTENING")) {
+                        String[] parts = line.trim().split("\\s+");
+                        String pid = parts[parts.length - 1];
+                        Runtime.getRuntime().exec("taskkill /PID " + pid + " /F");
+                        System.out.println("Terminated process with PID: " + pid);
+                    }
+                }
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+                // For Unix/Linux/Mac
+                Process process = Runtime.getRuntime().exec("lsof -t -i:" + port);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String pid = reader.readLine();
+                if (pid != null) {
+                    Runtime.getRuntime().exec("kill -9 " + pid);
+                    System.out.println("Terminated process with PID: " + pid);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -75,8 +124,8 @@ public class Signup extends NanoHTTPD {
     @FXML
     public void initialize() {
         // Load the hCaptcha widget from the local server
-//        WebEngine webEngine = captchaWebView.getEngine();
-//        webEngine.load("http://localhost:" + CAPTCHA_SERVER_PORT);
+        // WebEngine webEngine = captchaWebView.getEngine();
+        // webEngine.load("http://localhost:" + CAPTCHA_SERVER_PORT);
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
@@ -154,8 +203,6 @@ public class Signup extends NanoHTTPD {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         Signup.userData.put("hashedPassword", hashedPassword);
 
-
-
         // Si tout est valide, on passe à la page Captcha
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/captcha.fxml"));
@@ -166,7 +213,6 @@ public class Signup extends NanoHTTPD {
             showAlert("Erreur", "Impossible de charger la page Captcha.", Alert.AlertType.ERROR);
         }
     }
-
 
     // Méthode pour valider la date de naissance
     private boolean isValidBirthDate(LocalDate birthDate) {
@@ -267,5 +313,23 @@ public class Signup extends NanoHTTPD {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // Method to stop the hCaptcha server
+    public void stopCaptchaServer() {
+        try {
+            if (this.isAlive()) {
+                this.stop();
+                System.out.println("hCaptcha server stopped.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error stopping hCaptcha server: " + e.getMessage());
+        }
+    }
+
+    // Call this method when the application is closing or when captcha validation is complete
+    public void onApplicationClose() {
+        stopCaptchaServer();
+        // Other cleanup code...
     }
 }
