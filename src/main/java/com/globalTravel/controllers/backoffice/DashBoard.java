@@ -171,6 +171,7 @@ public class DashBoard {
         }
     }
 
+
     public void navigateToSettings(ActionEvent actionEvent) {
         navigateTo("user-settings/profile-settings.fxml");
     }

@@ -94,6 +94,14 @@
             <version>1.42.3</version>
         </dependency>
 
+        <!--Dependency for mailjet API(for email sending)-->
+            <dependency>
+                <groupId>com.mailjet</groupId>
+                <artifactId>mailjet-client</artifactId>
+                <version>5.2.5</version>
+            </dependency>
+
+
         <!-- Dépendance pour Gson (JSON parsing) -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
