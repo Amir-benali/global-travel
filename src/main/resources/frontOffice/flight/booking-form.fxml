@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+                                    <?import javafx.geometry.Insets?>
+                                    <?import javafx.scene.control.Button?>
+                                    <?import javafx.scene.control.ComboBox?>
+                                    <?import javafx.scene.control.Label?>
+                                    <?import javafx.scene.control.TextField?>
+                                    <?import javafx.scene.layout.GridPane?>
+                                    <?import javafx.scene.layout.HBox?>
+                                    <?import javafx.scene.layout.VBox?>
+                                    <?import javafx.scene.layout.RowConstraints?>
+                                    <?import javafx.scene.layout.ColumnConstraints?>
+
+                                    <HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.flight.BookingController" spacing="20" styleClass="form-container">
+
+                                        <children>
+
+                                            <!-- Flight Details Section (Left) -->
+                                            <VBox spacing="20" styleClass="flight-details-container">
+                                                <Label text="Flight Details" styleClass="section-title"/>
+                                                <VBox fx:id="flightDetailsContainer" prefWidth="320" minHeight="230" />
+                                            </VBox>
+
+                                            <!-- Booking Form Section (Center) -->
+                                            <VBox styleClass="form-container" spacing="20">
+
+                                                <Label text="Flight Booking Form" styleClass="form-title"/>
+
+                                                <GridPane hgap="20" vgap="20">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints halignment="RIGHT" minWidth="200"/>
+                                                        <ColumnConstraints halignment="LEFT" minWidth="230"/>
+                                                    </columnConstraints>
+
+                                                    <children>
+                                                        <Label text="Passenger Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                                        <TextField fx:id="txtPassengerName" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Enter name"/>
+
+                                                        <Label text="Passenger Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                                        <TextField fx:id="txtPassengerEmail" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Enter email"/>
+
+                                                        <Label text="Ticket Class:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                                        <ComboBox fx:id="cmbTicketClass" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Select ticket class"/>
+
+                                                        <Label text="Ticket Price:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                                        <Label fx:id="lblTicketPrice" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                                    </children>
+                                                </GridPane>
+
+                                                <HBox alignment="CENTER_RIGHT" spacing="20">
+
+                                                    <Button fx:id="btnConfirmBooking" text="Confirm Booking" onAction="#handleConfirmBooking" styleClass="flight-save-button"/>
+                                                    <Button fx:id="btnCancelBooking" text="Cancel" onAction="#handleCancelBooking" styleClass="flight-cancel-button"/>
+                                                </HBox>
+                                            </VBox>
+
+                                            <!-- Seat Selection Section (Right) -->
+                                            <VBox spacing="20" styleClass="seat-selection-container">
+                                                <Label text="Select Seat" styleClass="section-title"/>
+                                                <GridPane fx:id="seatGrid" hgap="10" vgap="10"/>
+                                            </VBox>
+
+                                        </children>
+                                    </HBox>
