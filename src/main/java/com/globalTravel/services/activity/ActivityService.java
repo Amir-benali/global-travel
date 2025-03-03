@@ -39,7 +39,7 @@ public class ActivityService implements IActivityService<Activity> {
 
     @Override
     public boolean modifier(Activity activity) {
-        String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, prixTotal=?, nomActivity=?, typeActivity=?, joinHotelId=?, joinVoitureId=?, joinVolsId=? ,user_id=? WHERE id=?";
+        String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, prixTotal=?, nomActivity=?, typeActivity=?, joinHotelId=?, joinVoitureId=?, joinVolsId=? WHERE id=?";
         try (PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
             pst.setTimestamp(2, new java.sql.Timestamp(activity.getDateFin().getTime()));
@@ -51,7 +51,7 @@ public class ActivityService implements IActivityService<Activity> {
             pst.setInt(8, activity.getJoinHotelId());
             pst.setInt(9, activity.getJoinVoitureId());
             pst.setInt(10, activity.getJoinVolsId());
-            pst.setInt(11, activity.getUser_id());
+            pst.setInt(11, activity.getId());
 
             pst.executeUpdate();
             System.out.println("Activité modifiée avec succès ");
