@@ -1,13 +1,17 @@
 package com.globalTravel.controllers.auth;
 
 import com.globalTravel.utils.DataSource;
+import fi.iki.elonen.NanoHTTPD;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import org.mindrot.jbcrypt.BCrypt;
 import org.apache.hc.client5.http.fluent.Content;
+import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,17 +23,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import org.apache.hc.client5.http.fluent.Form;
-import org.apache.hc.client5.http.fluent.Request;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 
-public class Signup {
+public class Signup extends NanoHTTPD {
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
@@ -41,36 +41,43 @@ public class Signup {
     @FXML private CheckBox termsCheckBox;
     @FXML private WebView captchaWebView;
 
+    public static HashMap<String, String> userData = new HashMap<>();
+
+
 
     private Connection conn;
 
     private static final String HCAPTCHA_SITEKEY = "dfbe2378-f644-45ae-81ca-4838f5720434";
     private static final String HCAPTCHA_SECRET = "ES_020263b5a237461f8952d3e2997834db";
 
-
     // Clé API pour Email Validation
     private static final String EMAIL_API_KEY = "7fdf78ad74a44970b1a59a49087dbddc";
-
-    // URL de l'API de validation d'email
     private static final String EMAIL_API_URL = "https://emailvalidation.abstractapi.com/v1/";
 
-    public Signup() {
+    // Local server for hCaptcha
+    private static final int CAPTCHA_SERVER_PORT = 8081;
+
+    public Signup() throws IOException {
+        super(CAPTCHA_SERVER_PORT); // Start the local server for hCaptcha
         conn = DataSource.getInstance().getConnection();
+        start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+        System.out.println("hCaptcha server running on port " + CAPTCHA_SERVER_PORT);
+    }
+
+    @Override
+    public Response serve(IHTTPSession session) {
+        // Serve the hCaptcha widget HTML
+        String htmlContent = "<html><body><script src='https://js.hcaptcha.com/1/api.js' async defer></script>" +
+                "<form action='' method='POST'><div class='h-captcha' data-sitekey='" + HCAPTCHA_SITEKEY + "'></div></form></body></html>";
+        return newFixedLengthResponse(htmlContent);
     }
 
     @FXML
     public void initialize() {
-        if (genderComboBox.getItems().isEmpty()) {
-            genderComboBox.getItems().addAll("Homme", "Femme");
-        }
-
-        // Chargement du widget hCaptcha
-        WebEngine webEngine = captchaWebView.getEngine();
-        String captchaHTML = "<html><body><script src='https://js.hcaptcha.com/1/api.js' async defer></script>"
-                + "<form action='' method='POST'><div class='h-captcha' data-sitekey='" + HCAPTCHA_SITEKEY + "'></div></form></body></html>";
-        webEngine.loadContent(captchaHTML);
+        // Load the hCaptcha widget from the local server
+//        WebEngine webEngine = captchaWebView.getEngine();
+//        webEngine.load("http://localhost:" + CAPTCHA_SERVER_PORT);
     }
-
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -98,25 +105,21 @@ public class Signup {
             return;
         }
 
-        // Vérification de la date de naissance
         if (!isValidBirthDate(birthDate)) {
-            showAlert("Erreur", "Vous devez avoir au moins 18 ans et la date de naissance ne peut pas être dans le futur.", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Vous devez avoir au moins 18 ans.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Vérification du format de l'email
         if (!isValidEmail(email)) {
             showAlert("Erreur", "Veuillez entrer un email valide.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Vérification du format du numéro de téléphone (8 chiffres)
         if (!isValidPhoneNumber(phoneNumber)) {
-            showAlert("Erreur", "Veuillez entrer un numéro de téléphone valide (8 chiffres).", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Numéro de téléphone invalide (8 chiffres).", Alert.AlertType.ERROR);
             return;
         }
 
-        // Vérification du mot de passe
         if (!isValidPassword(password)) {
             showAlert("Erreur", "Le mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre.", Alert.AlertType.ERROR);
             return;
@@ -127,64 +130,48 @@ public class Signup {
             return;
         }
 
-        // Vérification des conditions d'utilisation
         if (!agreedToTerms) {
             showAlert("Erreur", "Vous devez accepter les conditions d'utilisation.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Vérifier si l'utilisateur existe déjà
         if (userExists(email)) {
             showAlert("Erreur", "L'email est déjà utilisé.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Vérification de l'email via l'API
         if (!validateEmailWithAPI(email)) {
             showAlert("Erreur", "L'email n'est pas valide ou n'est pas délivrable.", Alert.AlertType.ERROR);
             return;
         }
 
-        String captchaToken = getCaptchaToken();
-        if (captchaToken == null || captchaToken.isEmpty() || !verifyCaptcha(captchaToken)) {
-            showAlert("Erreur", "Veuillez valider le Captcha.", Alert.AlertType.ERROR);
-            return;
-        }
-
-
-        // Hash du mot de passe avec BCrypt
+        Signup.userData.put("firstName", firstName);
+        Signup.userData.put("lastName", lastName);
+        Signup.userData.put("email", email);
+        Signup.userData.put("gender", gender);
+        Signup.userData.put("birthDate", birthDate.toString());
+        Signup.userData.put("phoneNumber", phoneNumber);
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        Signup.userData.put("hashedPassword", hashedPassword);
 
-        // Insertion dans la base de données
-        String sql = "INSERT INTO user (firstname, lastname, email, genre, date_naissance, phone_number, password, roles, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, firstName);
-            pstmt.setString(2, lastName);
-            pstmt.setString(3, email);
-            pstmt.setString(4, gender);
-            pstmt.setDate(5, java.sql.Date.valueOf(birthDate));
-            pstmt.setString(6, phoneNumber);
-            pstmt.setString(7, hashedPassword);
-            pstmt.setString(8, "USER"); // Rôle par défaut
-            pstmt.setString(9, "Actif"); // Statut par défaut
 
-            int rowsInserted = pstmt.executeUpdate();
-            if (rowsInserted > 0) {
-                showAlert("Succès", "Compte créé avec succès !", Alert.AlertType.INFORMATION);
-                navigateToLogin();
-            }
-        } catch (SQLException | IOException e) {
+
+        // Si tout est valide, on passe à la page Captcha
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/captcha.fxml"));
+            Parent root = loader.load();
+            emailField.getScene().setRoot(root);
+        } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Échec de l'inscription. Essayez encore.", Alert.AlertType.ERROR);
+            showAlert("Erreur", "Impossible de charger la page Captcha.", Alert.AlertType.ERROR);
         }
     }
+
 
     // Méthode pour valider la date de naissance
     private boolean isValidBirthDate(LocalDate birthDate) {
         LocalDate today = LocalDate.now();
         LocalDate minBirthDate = today.minusYears(18); // L'utilisateur doit avoir au moins 18 ans
-
-        // Vérifier que la date de naissance n'est pas dans le futur et que l'utilisateur a au moins 18 ans
         return !birthDate.isAfter(today) && !birthDate.isAfter(minBirthDate);
     }
 
@@ -281,8 +268,4 @@ public class Signup {
             return false;
         }
     }
-
-
-
-
 }
