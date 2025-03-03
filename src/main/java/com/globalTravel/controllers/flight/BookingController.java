@@ -11,28 +11,34 @@ import com.globalTravel.models.flight.TicketStatus;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.flight.FlightBookingService;
 import com.globalTravel.services.flight.FlightService;
+import com.globalTravel.services.user.UserService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.resource.Emailv31;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BookingController implements Navigatable, FrontNavigatable {
     public Button btnCancelBooking;
@@ -43,6 +49,9 @@ public class BookingController implements Navigatable, FrontNavigatable {
     @FXML private Button btnConfirmBooking;
     @FXML private VBox flightDetailsContainer;
     @FXML private GridPane seatGrid;
+    @FXML private TextField selectedUserField;
+    @FXML private Button selectUserButton;
+    @FXML private TextField searchField;
     private DashBoard dashBoardController;
     private FrontOffice frontOfficeController;
 
@@ -53,7 +62,9 @@ public class BookingController implements Navigatable, FrontNavigatable {
 
     private Flight flight;
     private User currentUser;
+    private User selectedUser;
     private FlightBookingService flightBookingService = new FlightBookingService();
+    private UserService userService = new UserService();
     private Button selectedSeatButton;
 
     private static final int TOTAL_SEATS = 40; // Set total seats per flight
@@ -66,6 +77,90 @@ public class BookingController implements Navigatable, FrontNavigatable {
         populateSeatGrid(); // Generates 40 seats dynamically
         populateTicketClasses();
 
+        selectUserButton.setOnAction(e -> handleSelectUser());
+    }
+
+    private void handleSelectUser() {
+        List<User> users = fetchUsers();
+
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Select User");
+        dialog.setHeaderText("Choose a user from the list");
+
+        ButtonType selectButtonType = new ButtonType("Select", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(selectButtonType, ButtonType.CANCEL);
+
+        ListView<User> userListView = new ListView<>();
+        userListView.getItems().addAll(users);
+
+        userListView.setCellFactory(param -> new ListCell<User>() {
+            private final ImageView imageView = new ImageView();
+            private final Label nameLabel = new Label();
+
+            {
+                imageView.setFitWidth(40);
+                imageView.setFitHeight(40);
+                imageView.setPreserveRatio(true);
+
+                setStyle("-fx-padding: 10; -fx-background-color: #f4f4f4; -fx-border-color: #ddd; -fx-border-width: 1;");
+                nameLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #333;");
+            }
+
+            @Override
+            protected void updateItem(User user, boolean empty) {
+                super.updateItem(user, empty);
+
+                if (empty || user == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    String imageUrl = user.getImage();
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        imageView.setImage(new Image(imageUrl));
+                    } else {
+                        imageView.setImage(new Image("/images/user-icon.png"));
+                    }
+
+                    nameLabel.setText(user.getFirstName() + " " + user.getLastName());
+
+                    HBox hbox = new HBox(10, imageView, nameLabel);
+                    hbox.setAlignment(Pos.CENTER_LEFT);
+
+                    setGraphic(hbox);
+                }
+            }
+        });
+
+        searchField = new TextField();
+        searchField.setPromptText("Search users...");
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            List<User> filteredUsers = users.stream()
+                    .filter(user -> user.getFirstName().toLowerCase().contains(newValue.toLowerCase()) ||
+                            user.getLastName().toLowerCase().contains(newValue.toLowerCase()))
+                    .collect(Collectors.toList());
+            userListView.getItems().setAll(filteredUsers);
+        });
+
+        VBox dialogContent = new VBox(10, searchField, userListView);
+        dialog.getDialogPane().setContent(dialogContent);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == selectButtonType) {
+                return userListView.getSelectionModel().getSelectedItem();
+            }
+            return null;
+        });
+
+        Optional<User> result = dialog.showAndWait();
+        result.ifPresent(user -> {
+            selectedUser = user;
+            selectedUserField.setText(user.getFirstName() + " " + user.getLastName());
+        });
+    }
+
+    private List<User> fetchUsers() {
+        List<User> users = userService.rechercher();
+        return users.stream().filter(user -> user.getRoles().toLowerCase().equals("employee")).collect(Collectors.toList());
     }
 
     private List<String> getFlightDetailsText(Flight flight) {
@@ -126,7 +221,7 @@ public class BookingController implements Navigatable, FrontNavigatable {
         });
     }
 
-        private void handleSeatSelection(Button seatButton) {
+    private void handleSeatSelection(Button seatButton) {
         if (selectedSeatButton != null) {
             selectedSeatButton.getStyleClass().remove("selected-seat");
         }
@@ -134,10 +229,8 @@ public class BookingController implements Navigatable, FrontNavigatable {
         selectedSeatButton.getStyleClass().add("selected-seat");
     }
 
-
     @FXML
-   // BookingController.java
-    private void handleConfirmBooking() throws MailjetException {
+    private void handleConfirmBooking() {
         String passengerName = txtPassengerName.getText();
         String passengerEmail = txtPassengerEmail.getText();
         String seatNumber = selectedSeatButton != null ? selectedSeatButton.getText() : null;
@@ -153,6 +246,11 @@ public class BookingController implements Navigatable, FrontNavigatable {
             return;
         }
 
+        if (selectedUser == null) {
+            showAlert("Error", "Please select a user.");
+            return;
+        }
+
         double ticketPrice = calculateTicketPrice(flight.getBase_price(), ticketClass);
 
         Ticket ticket = new Ticket(
@@ -162,67 +260,76 @@ public class BookingController implements Navigatable, FrontNavigatable {
                 seatNumber,
                 ticketClass,
                 ticketPrice,
-                TicketStatus.Booked,
-                new Timestamp(System.currentTimeMillis())
+                TicketStatus.Not_Booked,
+                new Timestamp(System.currentTimeMillis()),
+                selectedUser.getId()
         );
 
-        boolean success = flightBookingService.bookFlight(ticket);
-        if (success) {
+        try {
             sendConfirmationEmail(passengerEmail, passengerName, seatNumber, ticketClass, ticketPrice);
-            showAlert("Success", "Booking confirmed!");
+        } catch (Exception e) {
+            showAlert("Error", "An error occurred. Please try again.");
+            return;
+        }
 
-            // Decrement available seats
-            FlightService flightService = new FlightService();
-            flightService.decrementAvailableSeats(flight.getId_flight());
-        } else {
-            showAlert("Error", "Booking failed. Please try again.");
+        // Navigate to payment form
+        if (dashBoardController != null) {
+            dashBoardController.navigateTo("dashboard/flight/FlightPaymentForm.fxml");
+            ((FlightPaymentForm) dashBoardController.getController()).initialize(ticket, flight, currentUser);
+        } else if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/flight/FlightPaymentForm.fxml");
+            ((FlightPaymentForm) frontOfficeController.getController()).initialize(ticket, flight, currentUser);
+        }
+        else {
+            showAlert("Error", "An error occurred. Please try again.");
         }
     }
 
-   private void sendConfirmationEmail(String email, String name, String seatNumber, TicketClass ticketClass, double ticketPrice) throws MailjetException {
-       MailjetRequest request;
-       MailjetResponse response;
-       ClientOptions options = ClientOptions.builder()
-               .apiKey("0a7f1ea93da8c099802fd68d7bc4075c")
-               .apiSecretKey("23ed580b04b4d1b04b7c4c1f553cb5bc")
-               .build();
 
-       MailjetClient client = new MailjetClient(options);
-       request = new MailjetRequest(Emailv31.resource)
-               .property(Emailv31.MESSAGES, new JSONArray()
-                       .put(new JSONObject()
-                               .put(Emailv31.Message.FROM, new JSONObject()
-                                       .put("Email", "global.travel.companyteam@gmail.com")
-                                       .put("Name", "GlobalTravel"))
-                               .put(Emailv31.Message.TO, new JSONArray()
-                                       .put(new JSONObject()
-                                               .put("Email", email)
-                                               .put("Name", name)))
-                               .put(Emailv31.Message.SUBJECT, "Flight Booking Confirmation")
-                               .put(Emailv31.Message.TEXTPART, "Greetings from GlobalTravel!")
-                               .put(Emailv31.Message.HTMLPART, "<h3>Dear " + name + ",</h3>"
-                                       +"<div style='font-family: Arial, sans-serif; color: #333;'>"
-                                               + "<h2 style='color: #0056b3;'>Your Booking Confirmation</h2>"
-                                               + "<p>We are pleased to confirm your flight booking. Below are your flight details:</p>"
-                                               + "<div style='border: 1px solid #ddd; padding: 10px; border-radius: 8px; background-color: #f9f9f9;'>"
-                                               + "<p><strong>Flight Number:</strong> " + flight.getFlight_number() + "</p>"
-                                               + "<p><strong>Departure:</strong> " + flight.getDeparture_country() + " - "
-                                               + flight.getDeparture_airport() + " at " + flight.getDeparture_time() + "</p>"
-                                               + "<p><strong>Arrival:</strong> " + flight.getArrival_country() + " - "
-                                               + flight.getArrival_airport() + " at " + flight.getArrival_time() + "</p>"
-                                               + "<p><strong>Seat Number:</strong> " + seatNumber + "</p>"
-                                               + "<p><strong>Ticket Class:</strong> " + ticketClass + "</p>"
-                                               + "<p><strong>Price:</strong> $" +ticketPrice + "</p>"
-                                               + "</div>"
-                                               + "<p>Thank you for choosing <strong>GlobalTravel</strong>!</p>"
-                                               + "<p>Have a great flight,</p>"
-                                               + "<p><strong>GlobalTravel Team</strong></p>"
-                                               + "</div>")));
+    public void sendConfirmationEmail(String email, String name, String seatNumber, TicketClass ticketClass, double ticketPrice) throws MailjetException {
+        MailjetRequest request;
+        MailjetResponse response;
+        ClientOptions options = ClientOptions.builder()
+                .apiKey("0a7f1ea93da8c099802fd68d7bc4075c")
+                .apiSecretKey("23ed580b04b4d1b04b7c4c1f553cb5bc")
+                .build();
 
-       response = client.post(request);
-       System.out.println(response.getStatus());
-       System.out.println(response.getData());
-   }
+        MailjetClient client = new MailjetClient(options);
+        request = new MailjetRequest(Emailv31.resource)
+                .property(Emailv31.MESSAGES, new JSONArray()
+                        .put(new JSONObject()
+                                .put(Emailv31.Message.FROM, new JSONObject()
+                                        .put("Email", "global.travel.companyteam@gmail.com")
+                                        .put("Name", "GlobalTravel"))
+                                .put(Emailv31.Message.TO, new JSONArray()
+                                        .put(new JSONObject()
+                                                .put("Email", email)
+                                                .put("Name", name)))
+                                .put(Emailv31.Message.SUBJECT, "Flight Booking Confirmation")
+                                .put(Emailv31.Message.TEXTPART, "Greetings from GlobalTravel!")
+                                .put(Emailv31.Message.HTMLPART, "<h3>Dear " + name + ",</h3>"
+                                        +"<div style='font-family: Arial, sans-serif; color: #333;'>"
+                                                + "<h2 style='color: #0056b3;'>Your Booking Confirmation</h2>"
+                                                + "<p>We are pleased to confirm your flight booking. Below are your flight details:</p>"
+                                                + "<div style='border: 1px solid #ddd; padding: 10px; border-radius: 8px; background-color: #f9f9f9;'>"
+                                                + "<p><strong>Flight Number:</strong> " + flight.getFlight_number() + "</p>"
+                                                + "<p><strong>Departure:</strong> " + flight.getDeparture_country() + " - "
+                                                + flight.getDeparture_airport() + " at " + flight.getDeparture_time() + "</p>"
+                                                + "<p><strong>Arrival:</strong> " + flight.getArrival_country() + " - "
+                                                + flight.getArrival_airport() + " at " + flight.getArrival_time() + "</p>"
+                                                + "<p><strong>Seat Number:</strong> " + seatNumber + "</p>"
+                                                + "<p><strong>Ticket Class:</strong> " + ticketClass + "</p>"
+                                                + "<p><strong>Price:</strong> $" +ticketPrice + "</p>"
+                                                + "</div>"
+                                                + "<p>Thank you for choosing <strong>GlobalTravel</strong>!</p>"
+                                                + "<p>Have a great flight,</p>"
+                                                + "<p><strong>GlobalTravel Team</strong></p>"
+                                                + "</div>")));
+
+        response = client.post(request);
+        System.out.println(response.getStatus());
+        System.out.println(response.getData());
+    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -257,9 +364,8 @@ public class BookingController implements Navigatable, FrontNavigatable {
             default:
                 throw new IllegalArgumentException("Unknown ticket class: " + ticketClass);
         }
-
-
     }
+
     private void updateTicketPrice() {
         TicketClass selectedClass = cmbTicketClass.getValue();
         if (selectedClass != null) {

@@ -44,10 +44,15 @@
 
                                                         <Label text="Ticket Price:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                                         <Label fx:id="lblTicketPrice" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                                        <Label text="Selected User:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                                        <TextField fx:id="selectedUserField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="Selected User" />
+                                                        <Button fx:id="selectUserButton" text="Select User" GridPane.rowIndex="4" GridPane.columnIndex="2" />
                                                     </children>
                                                 </GridPane>
 
                                                 <HBox alignment="CENTER_RIGHT" spacing="20">
+
 
                                                     <Button fx:id="btnConfirmBooking" text="Confirm Booking" onAction="#handleConfirmBooking" styleClass="flight-save-button"/>
                                                     <Button fx:id="btnCancelBooking" text="Cancel" onAction="#handleCancelBooking" styleClass="flight-cancel-button"/>

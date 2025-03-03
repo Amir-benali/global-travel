@@ -58,7 +58,8 @@ public class TicketCreateForm implements Navigatable, FrontNavigatable {
                     TicketClass.valueOf(ticketClassField.getText()),
                     Double.parseDouble(ticketPriceField.getText()),
                     TicketStatus.valueOf(ticketStatusField.getText()),
-                    Timestamp.valueOf(bookingDateField.getText())
+                    Timestamp.valueOf(bookingDateField.getText()),
+                    -1
             );
 
             ticketService.ajouter(ticket);

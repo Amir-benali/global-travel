@@ -8,9 +8,8 @@ import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.flight.Flight;
 import com.globalTravel.models.flight.Ticket;
 import com.globalTravel.models.user.User;
-import com.globalTravel.services.flight.FlightService;
 import com.globalTravel.services.flight.TicketService;
-import javafx.event.ActionEvent;
+import com.globalTravel.services.flight.FlightService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -28,10 +27,11 @@ public class TicketGrid implements Navigatable, FrontNavigatable {
     private DashBoard dashBoardController;
     private FrontOffice frontOfficeController;
     private final TicketService ticketService = new TicketService();
+    private final FlightService flightService = new FlightService();
 
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
-        loadTicketsForBackOffice();
+        loadTickets();
     }
 
     @FXML
@@ -40,71 +40,47 @@ public class TicketGrid implements Navigatable, FrontNavigatable {
     @FXML
     public void initialize() {
         System.out.println("TicketGrid initialized");
-        if (frontOfficeController != null) {
-            loadTicketsForFrontOffice();
-        } else if (dashBoardController != null) {
-            loadTicketsForBackOffice();
-        }
+        loadTickets();
     }
 
-    private void loadTicketsForBackOffice() {
+    private void loadTickets() {
         ticketsGrid.getChildren().clear();
-        List<Ticket> tickets = ticketService.rechercher();
-        System.out.println("Tickets found: " + tickets.size());
-        for (Ticket ticket : tickets) {
-            VBox ticketCard = createBackOfficeTicketCard(ticket);
-            ticketsGrid.getChildren().add(ticketCard);
-        }
-    }
-
-    private void loadTicketsForFrontOffice() {
-        ticketsGrid.getChildren().clear();
-        if (frontOfficeController != null) {
-            User currentUser = frontOfficeController.getCurrentUser();
-            if (currentUser != null) {
-                List<Ticket> tickets = ticketService.getTicketsByUserId(currentUser.getId());
-                System.out.println("Tickets found: " + tickets.size());
-                for (Ticket ticket : tickets) {
-                    VBox ticketCard = createFrontOfficeTicketCard(ticket);
-                    ticketsGrid.getChildren().add(ticketCard);
-                }
-            } else {
-                System.out.println("Current user is null");
+        User currentUser = getCurrentUser();
+        if (currentUser != null && currentUser.getRoles().toLowerCase().equals("employee")) {
+            int selectedUserId =currentUser.getId(); // Method to get the selected user ID
+            List<Ticket> tickets = ticketService.getTicetsbySelectedUserId(selectedUserId);
+            System.out.println("Tickets found: " + tickets.size());
+            for (Ticket ticket : tickets) {
+                VBox ticketCard = createTicketCard(ticket);
+                ticketsGrid.getChildren().add(ticketCard);
             }
-        } else {
-            System.out.println("FrontOfficeController is null");
+        }
+                else if (currentUser != null && currentUser.getRoles().toLowerCase().equals("user")) {
+                    int currentUserId = currentUser.getId();
+                    List<Ticket> tickets = ticketService.getTicketsByUserId(currentUserId);
+                    System.out.println("Tickets found: " + tickets.size());
+                    for (Ticket ticket : tickets) {
+                        VBox ticketCard = createTicketCard(ticket);
+                        ticketsGrid.getChildren().add(ticketCard);
+                    }
+                }
+        else {
+            System.out.println("Current user is not an employee or is null");
         }
     }
 
-    private VBox createBackOfficeTicketCard(Ticket ticket) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("flight-offer-card");
 
-        ImageView ticketLogoView = new ImageView(new Image("/images/ticket.png"));
-        ticketLogoView.setFitWidth(200);
-        ticketLogoView.setFitHeight(150);
-        ticketLogoView.setPreserveRatio(true);
 
-        VBox ticketInfo = new VBox(5);
-        ticketInfo.getStyleClass().add("flight-info");
-
-        Label seatLabel = new Label("Seat: " + ticket.getSeat_number());
-        seatLabel.getStyleClass().add("flight-title");
-
-        Label priceLabel = new Label("Price: $" + String.format("%.2f", ticket.getTicket_price()));
-        priceLabel.getStyleClass().add("flight-price");
-
-        Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("view-details-button");
-        deleteButton.setOnAction(e -> handleDeleteTicket(ticket));
-
-        ticketInfo.getChildren().addAll(seatLabel, priceLabel, deleteButton);
-        card.getChildren().addAll(ticketLogoView, ticketInfo);
-
-        return card;
+    private User getCurrentUser() {
+        if (frontOfficeController != null) {
+            return frontOfficeController.getCurrentUser();
+        } else if (dashBoardController != null) {
+            return dashBoardController.getCurrentUser();
+        }
+        return null;
     }
 
-    private VBox createFrontOfficeTicketCard(Ticket ticket) {
+    private VBox createTicketCard(Ticket ticket) {
         VBox card = new VBox(10);
         card.getStyleClass().add("flight-offer-card");
 
@@ -140,39 +116,22 @@ public class TicketGrid implements Navigatable, FrontNavigatable {
     }
 
     private void handleViewDetails(Ticket ticket) {
-        FlightService flightService = new FlightService();
+        // Assuming you have a method to get flight details by flight ID
         Flight flight = flightService.getFlightById(ticket.getFlight_id());
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Ticket Details");
-        alert.setHeaderText("Ticket and Flight Information");
-        alert.setContentText("Ticket ID: " + ticket.getTicket_id() + "\n" +
-                "Flight ID: " + ticket.getFlight_id() + "\n" +
-                "Seat Number: " + ticket.getSeat_number() + "\n" +
-                "Passenger Email: " + ticket.getPassenger_email() + "\n" +
-                "Class: " + ticket.getTicketClass() + "\n" +
-                "Price: $" + ticket.getTicket_price() + "\n" +
-                "Status: " + ticket.getStatus() + "\n" +
-                "Booking Date: " + ticket.getBooking_date() + "\n\n" +
+        alert.setHeaderText("Ticket ID: " + ticket.getTicket_id());
+        alert.setContentText("Seat: " + ticket.getSeat_number() + "\n" +
+                "Price: $" + String.format("%.2f", ticket.getTicket_price()) + "\n" +
+                "Class: " + ticket.getTicketClass().name() + "\n" +
+                "Status: " + ticket.getStatus().name() + "\n" +
+                "Booking Date: " + ticket.getBooking_date() + "\n" +
                 "Flight Number: " + flight.getFlight_number() + "\n" +
-                "Departure: " + flight.getDeparture_country()+ " - " + flight.getDeparture_airport()+ " (" + flight.getDeparture_time() + "\n" +
-                "Arrival: " + flight.getArrival_country()+ " - " + flight.getArrival_airport()+ " (" + flight.getArrival_time()+ "\n" +
-                "Status: " + flight.getStatus());
+                "Departure: " + flight.getDeparture_country()+ ", " + flight.getDeparture_airport()+ "at " + flight.getDeparture_time() + " + \n" +
+                "Arrival: " + flight.getArrival_country()+ ", " + flight.getArrival_airport()+ "at " + flight.getArrival_time());
+
         alert.showAndWait();
-    }
-
-    private void handleDeleteTicket(Ticket ticket) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Ticket");
-        alert.setHeaderText("Are you sure you want to delete this ticket?");
-        alert.setContentText("Ticket ID: " + ticket.getTicket_id());
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                ticketService.supprimer(ticket);
-                loadTicketsForBackOffice();
-            }
-        });
     }
 
     private void handleCancelTicket(Ticket ticket) {
@@ -184,16 +143,14 @@ public class TicketGrid implements Navigatable, FrontNavigatable {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 ticketService.supprimer(ticket);
-                loadTicketsForFrontOffice();
+                loadTickets();
             }
         });
     }
 
-
-
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
         this.frontOfficeController = frontOfficeController;
-        loadTicketsForFrontOffice(); // Call loadTickets after setting the controller
+        loadTickets(); // Call loadTickets after setting the controller
     }
 }
