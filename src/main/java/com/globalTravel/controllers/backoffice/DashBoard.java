@@ -145,4 +145,8 @@ public class DashBoard {
             e.printStackTrace();
         }
     }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
 }

@@ -1,10 +1,14 @@
 package com.globalTravel.controllers.flight;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.flight.Ticket;
 import com.globalTravel.models.flight.TicketClass;
 import com.globalTravel.models.flight.TicketStatus;
 import com.globalTravel.services.flight.TicketService;
+import com.globalTravel.models.user.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -13,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.sql.Timestamp;
 
-public class TicketCreateForm {
+public class TicketCreateForm implements Navigatable, FrontNavigatable {
 
     @FXML private TextField flightIdField;
     @FXML private TextField seatNumberField;
@@ -48,6 +52,8 @@ public class TicketCreateForm {
         try {
             Ticket ticket = new Ticket(
                     Integer.parseInt(flightIdField.getText()),
+                    dashBoardController.getCurrentUser().getId(),
+                    dashBoardController.getCurrentUser().getEmail(),
                     seatNumberField.getText(),
                     TicketClass.valueOf(ticketClassField.getText()),
                     Double.parseDouble(ticketPriceField.getText()),
@@ -131,5 +137,11 @@ public class TicketCreateForm {
     @FXML
     private void handleBack() {
         dashBoardController.navigateTo("dashboard/flight/ticket-grid.fxml");
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+
+
     }
 }

@@ -216,6 +216,7 @@ public class FrontOffice implements FrontNavigatable {
     public void navigateToSettings(ActionEvent actionEvent) {
         navigateTo("user-settings/profile-settings.fxml");
 
+
     }
 }
 
