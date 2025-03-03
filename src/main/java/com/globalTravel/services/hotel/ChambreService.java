@@ -12,7 +12,7 @@ import java.util.List;
 public class ChambreService implements IService<Chambre> {
 
     private Connection connection = DataSource.getInstance().getConnection();
-    private HotelService hotelService = new HotelService();
+    private HotelService hotelService = new HotelService(); // Déclaration et initialisation de hotelService
 
     @Override
     public void ajouter(Chambre c) {
@@ -72,7 +72,7 @@ public class ChambreService implements IService<Chambre> {
                         rs.getInt("prix_nuit_h"),
                         rs.getDate("dispo_h").toLocalDate(),
                         rs.getString("option_h"),
-                        hotelService.getHOTELById(rs.getInt("id_hotel_j"))
+                        hotelService.getHOTELById(rs.getInt("id_hotel_j")) // Utilisation de hotelService
                 ));
             }
         } catch (SQLException e) {
@@ -94,12 +94,34 @@ public class ChambreService implements IService<Chambre> {
                         rs.getInt("prix_nuit_h"),
                         rs.getDate("dispo_h").toLocalDate(),
                         rs.getString("option_h"),
-                        hotelService.getHOTELById(rs.getInt("id_hotel_j"))
+                        hotelService.getHOTELById(rs.getInt("id_hotel_j")) // Utilisation de hotelService
                 );
             }
         } catch (SQLException e) {
             System.out.println("Erreur getChambreById : " + e.getMessage());
         }
         return chambre;
+    }
+
+    public List<Chambre> rechercherParHotelId(int hotelId) {
+        List<Chambre> chambres = new ArrayList<>();
+        String req = "SELECT * FROM chambre WHERE id_hotel_j = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setInt(1, hotelId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                chambres.add(new Chambre(
+                        rs.getInt("id_Chambre_h"),
+                        rs.getString("type_chambre_h"),
+                        rs.getInt("prix_nuit_h"),
+                        rs.getDate("dispo_h").toLocalDate(),
+                        rs.getString("option_h"),
+                        hotelService.getHOTELById(rs.getInt("id_hotel_j")) // Utilisation de hotelService
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche par ID d'hôtel : " + e.getMessage());
+        }
+        return chambres;
     }
 }

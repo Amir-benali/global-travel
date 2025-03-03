@@ -33,6 +33,9 @@ public class Login {
     private Preferences prefs;
     private boolean isPasswordVisible = false;
 
+
+    private static User currentUser;
+
     public Login() {
         conn = DataSource.getInstance().getConnection();
         userService = new UserService();
@@ -64,20 +67,23 @@ public class Login {
 
     private void navigateToDashboard(User user) {
         try {
-            if(!user.getRoles().toLowerCase().equals("admin")){
+
+            String role = (user.getRoles() != null) ? user.getRoles().toLowerCase() : "";
+
+            if (!role.equals("admin")) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontOffice/front-office.fxml"));
                 Parent root = loader.load();
                 FrontOffice frontOfficeController = loader.getController();
                 frontOfficeController.setCurrentUser(user);
                 emailField.getScene().setRoot(root);
+            } else {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/dashboard.fxml"));
+                Parent root = loader.load();
+                DashBoard dashboardController = loader.getController();
+                dashboardController.setCurrentUser(user);
+                emailField.getScene().setRoot(root);
             }
-            else{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/dashboard.fxml"));
-            Parent root = loader.load();
-            DashBoard dashboardController = loader.getController();
-            dashboardController.setCurrentUser(user);
-            emailField.getScene().setRoot(root);
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir le tableau de bord.", Alert.AlertType.ERROR);
@@ -106,6 +112,9 @@ public class Login {
                 if (isCorrectPassword) {
                     User user = userService.getUserByEmail(email);
                     if (user != null) {
+                        currentUser = user;
+
+                        // Gestion du "Remember Me"
                         if (rememberMeCheckBox.isSelected()) {
                             prefs.put("email", email);
                         } else {
@@ -152,9 +161,8 @@ public class Login {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/reset-password.fxml"));
         Parent root = loader.load();
 
-        // Passer l'email à la page de réinitialisation de mot de passe
         ResetPassword resetPasswordController = loader.getController();
-        resetPasswordController.setEmail(emailField.getText().trim()); // Pré-remplir le champ email
+        resetPasswordController.setEmail(emailField.getText().trim());
 
         emailField.getScene().setRoot(root);
     }
@@ -165,6 +173,9 @@ public class Login {
         Parent root = loader.load();
         emailField.getScene().setRoot(root);
     }
+
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
 }
-
-

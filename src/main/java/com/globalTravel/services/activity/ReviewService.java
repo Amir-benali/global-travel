@@ -1,5 +1,6 @@
 package com.globalTravel.services.activity;
 
+import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.IActivityService;
 import com.globalTravel.utils.DataSource;
@@ -20,11 +21,12 @@ public class ReviewService {
             return;
         }
 
-        String req = "INSERT INTO review (commentaire, note, dateReview, activityId) VALUES (?, ?, NOW(), ?)";
+        String req = "INSERT INTO review (commentaire, note, dateReview, activityId,userId) VALUES (?, ?, NOW(), ?,?)";
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, review.getCommentaire());
             pst.setInt(2, review.getNote());
             pst.setInt(3, review.getActivityId());
+            pst.setInt(4, review.getUserId());
 
             int rowsAffected = pst.executeUpdate();
             if (rowsAffected > 0) {
@@ -74,7 +76,7 @@ public class ReviewService {
 
     public List<Review> rechercher() {
         List<Review> reviews = new ArrayList<>();
-        String req = "SELECT * FROM review";
+        String req = "SELECT r.*, u.firstname, u.lastname FROM review r JOIN user u ON r.userId = u.id"; // Jointure avec la table user
         try (PreparedStatement pst = connection.prepareStatement(req);
              ResultSet rs = pst.executeQuery()) {
 
@@ -84,8 +86,14 @@ public class ReviewService {
                         rs.getString("commentaire"),
                         rs.getInt("note"),
                         rs.getTimestamp("dateReview").toLocalDateTime(),
-                        rs.getInt("activityId")
+                        rs.getInt("activityId"),
+                        rs.getInt("userId"),
+                        rs.getString("lastname"),
+                        rs.getString("firstname")
                 );
+                // Ajouter le nom et le prénom de l'utilisateur à l'objet Review
+                review.setUserNom(rs.getString("lastname"));
+                review.setUserPrenom(rs.getString("firstname"));
                 reviews.add(review);
             }
         } catch (SQLException e) {
@@ -134,6 +142,8 @@ public class ReviewService {
             System.out.println("Erreur lors de la récupération des IDs des activités : " + e.getMessage());
         }
         return activityIds;
+
+
     }
 
 
@@ -143,6 +153,48 @@ public class ReviewService {
 
 
 
+    public List<Activity> getAllActivities() {
+        List<Activity> activities = new ArrayList<>();
+        String req = "SELECT id, nomActivity FROM activity"; // Récupérer l'ID et le nom de l'activité
+        try (PreparedStatement pst = connection.prepareStatement(req);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                // Utiliser un constructeur avec des paramètres
+                Activity activity = new Activity(
+                        rs.getInt("id"), // ID de l'activité
+                        null, // dateDebut (valeur par défaut)
+                        null, // dateFin (valeur par défaut)
+                        "", // description (valeur par défaut)
+                        "", // localisation (valeur par défaut)
+                        0, // prixTotal (valeur par défaut)
+                        rs.getString("nomActivity"), // nomActivity
+                        null, // typeActivity (valeur par défaut)
+                        0, // joinHotelId (valeur par défaut)
+                        0, // joinVoitureId (valeur par défaut)
+                        0, // joinVolsId (valeur par défaut)
+                        0 // user_id (valeur par défaut)
+                );
+                activities.add(activity);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des activités : " + e.getMessage());
+        }
+        return activities;
+    }
+    public String getNomActivity(int activityId) {
+        String req = "SELECT nomActivity FROM activity WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setInt(1, activityId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nomActivity");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom de l'activité : " + e.getMessage());
+        }
+        return null; // Retourne null si l'activité n'est pas trouvée
+    }
 
 
 

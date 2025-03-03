@@ -21,6 +21,12 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.2.1</version>
+        </dependency>
+
 
         <!-- Dépendances pour JavaFX -->
         <dependency>
@@ -34,11 +40,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>20.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.8</version>
         </dependency>
+
         <!-- Dépendance pour ControlsFX -->
 
         <dependency>
@@ -47,11 +55,7 @@
             <version>20231013</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.1.2</version>
-        </dependency>
+
 
         <!-- Dépendance pour jBCrypt -->
         <dependency>
@@ -118,7 +122,7 @@
             <artifactId>fontawesomefx-fontawesome</artifactId>
             <version>4.7.0-9.1.2</version>
         </dependency>
-        
+
       <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -141,6 +145,11 @@
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-commons</artifactId>
             <version>9.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.azure</groupId>
@@ -167,6 +176,35 @@
             <artifactId>stripe-java</artifactId>
             <version>27.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
+
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        <!-- Simple SLF4J implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.nanohttpd</groupId>
+            <artifactId>nanohttpd</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
@@ -182,6 +220,8 @@
                 </configuration>
             </plugin>
 
+
         </plugins>
     </build>
+
 </project>

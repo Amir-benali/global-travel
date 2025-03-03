@@ -168,6 +168,7 @@ public class ActivityUpdateForm implements Navigatable {
 
                 // Create updated Activity object
                 Activity activity = new Activity(
+
                         activityToEdit.getId(),
                         Timestamp.valueOf(startDatePicker.getValue().atTime(LocalTime.parse(startTime))),
                         Timestamp.valueOf(endDatePicker.getValue().atTime(LocalTime.parse(endTime))),
@@ -178,7 +179,9 @@ public class ActivityUpdateForm implements Navigatable {
                         selectedType,
                         hotelId,
                         carId,
-                        flightId
+                        flightId,
+                        0
+
                 );
 
                 // Update activity in the database

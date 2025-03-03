@@ -9,12 +9,15 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
 public class FrontOffice implements FrontNavigatable {
 
+    @FXML private ImageView ImgUser;
     @FXML private Button activityTrackingButton;
     @FXML private Button hotelReservationsButton;
     @FXML private Button activitiesButton;
@@ -68,6 +71,9 @@ public class FrontOffice implements FrontNavigatable {
             return;
         }
         userProfileName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+        if (currentUser.getImage() != null) {
+            ImgUser.setImage(new Image(currentUser.getImage()));
+        }
     }
 
 
@@ -130,7 +136,7 @@ public class FrontOffice implements FrontNavigatable {
 
     private void navigateToHotelReservations() {
         handleButtonSelection(hotelReservationsButton);
-        navigateTo("dashboard/hotel/hotel-reservations.fxml");
+        navigateTo("dashboard/hotel/list-reservation-h.fxml");
     }
 
     private void navigateToActivityList() {

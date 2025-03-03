@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.globalTravel.controllers.hotel.ListReservationHotel"
+            prefHeight="800.0" prefWidth="1200.0"> <!-- Augmentation de la taille de l'AnchorPane -->
+
+    <!-- ScrollPane pour permettre le défilement -->
+    <ScrollPane layoutX="10.0" layoutY="10.0" prefHeight="780.0" prefWidth="1180.0">
+        <!-- TableView avec une taille agrandie -->
+        <TableView fx:id="reservationTable" prefHeight="780.0" prefWidth="1180.0">
+            <columns>
+                <!-- Colonne ID -->
+                <TableColumn fx:id="idColumn" prefWidth="100.0" text="ID" />
+
+                <!-- Colonne Check-In Date -->
+                <TableColumn fx:id="checkInDateColumn" prefWidth="200.0" text="Check-In Date" />
+
+                <!-- Colonne Check-Out Date -->
+                <TableColumn fx:id="checkOutDateColumn" prefWidth="200.0" text="Check-Out Date" />
+
+                <!-- Colonne Nombre Chambres -->
+                <TableColumn fx:id="nombreChambresColumn" prefWidth="150.0" text="Nombre Chambres" />
+
+                <!-- Colonne Statut -->
+                <TableColumn fx:id="statutColumn" prefWidth="150.0" text="Statut" />
+
+                <!-- Colonne Moyen Paiement -->
+                <TableColumn fx:id="moyenPaiementColumn" prefWidth="200.0" text="Moyen Paiement" />
+
+                <!-- Colonne Chambre -->
+                <TableColumn fx:id="chambreColumn" prefWidth="300.0" text="Chambre" />
+            </columns>
+        </TableView>
+    </ScrollPane>
+
+</AnchorPane>

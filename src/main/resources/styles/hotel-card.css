@@ -1,0 +1,74 @@
+/* Style de base pour la carte d'hôtel */
+.hotel-card {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
+    -fx-padding: 15px;
+    -fx-spacing: 15px;
+}
+
+/* Effet de survol pour la carte d'hôtel */
+.hotel-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 0);
+}
+
+/* Style de l'image de l'hôtel */
+.hotel-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+    -fx-fit-width: 300px;
+    -fx-fit-height: 200px;
+    -fx-preserve-ratio: false;
+}
+
+/* Style du nom de l'hôtel */
+.hotel-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Style de la grille des détails */
+.details-grid {
+    -fx-hgap: 15px;
+    -fx-vgap: 10px;
+    -fx-padding: 10px;
+}
+
+/* Style des icônes dans la grille des détails */
+.icon {
+    -fx-glyph-size: 20px;
+}
+
+/* Style des labels dans la grille des détails */
+.details-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+/* Style des boutons */
+.hotel-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+/* Style spécifique pour le bouton "Update" */
+.update-button {
+    -fx-text-fill: #2196F3;
+}
+
+/* Style spécifique pour le bouton "Delete" */
+.delete-button {
+    -fx-text-fill: #F44336;
+}
+
+/* Style spécifique pour le bouton "Réserver" */
+.reserve-button {
+    -fx-text-fill: #4CAF50;
+}
+
+/* Effet de survol pour les boutons */
+.hotel-button:hover {
+    -fx-opacity: 0.8;
+}

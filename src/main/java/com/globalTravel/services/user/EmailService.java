@@ -35,12 +35,26 @@ public class EmailService {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Réinitialisation de votre mot de passe");
 
-            // Contenu de l'email
-            String emailContent = "Voici votre token de réinitialisation de mot de passe : \n\n"
-                    + resetToken + "\n\n"
-                    + "Copiez ce token et collez-le dans la page de réinitialisation de mot de passe pour continuer.";
+            // Contenu HTML de l'email avec le logo
+            String htmlContent = "<html>"
+                    + "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>"
+                    + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: center;'>"
+                    + "<img src=\"https://i.imgur.com/o6mJ0gJ.jpeg\" alt=\"Logo GlobalTravel\" style=\"max-width: 150px; margin: 20px auto; display: block;\"/>\n" // Remplace l'URL par celle de ton logo
+                    + "<h1 style='color: #333333;'>Réinitialisation de votre mot de passe</h1>"
+                    + "<p style='color: #555555; font-size: 16px;'>Vous avez demandé à réinitialiser votre mot de passe. Voici votre token de réinitialisation :</p>"
+                    + "<div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+                    + "<p style='font-size: 18px; font-weight: bold; color: #007BFF;'>" + resetToken + "</p>"
+                    + "</div>"
+                    + "<p style='color: #555555; font-size: 16px;'>Copiez ce token et collez-le dans la page de réinitialisation de mot de passe pour continuer.</p>"
+                    + "<p style='color: #555555; font-size: 16px;'>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.</p>"
+                    + "<p style='color: #555555; font-size: 16px;'>Cordialement,<br>L'équipe GlobalTravel</p>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>";
 
-            message.setText(emailContent);
+
+            // Définir le contenu du message comme HTML
+            message.setContent(htmlContent, "text/html");
 
             // Envoi du message
             Transport.send(message);

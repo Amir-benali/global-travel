@@ -32,11 +32,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.effect.DropShadow;
+
+import javafx.scene.layout.GridPane;
+
+import javafx.scene.paint.Color;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+
 public class HotelGrid implements Navigatable, FrontNavigatable {
 
-    @FXML private Button btnAddHotel;
-    private DashBoard dashBoardController;
-    private FrontOffice frontOfficeController;
+    @FXML private Button btnAddHotel; // Bouton pour ajouter un hôtel
+    @FXML private FlowPane hotelsGrid; // Conteneur pour les cartes d'hôtel
+    @FXML private TextField searchField; // Champ de recherche
+
+    private DashBoard dashBoardController; // Contrôleur du tableau de bord
+    private FrontOffice frontOfficeController; // Contrôleur du front office
+    private List<Hotel> hotels; // Liste des hôtels
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -44,57 +58,90 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
     }
 
     @FXML
-    private FlowPane hotelsGrid;
-
-    @FXML
-    private TextField searchField;
-
-    private List<Hotel> hotels;
-
-    @FXML
     public void initialize() {
-        loadHotels();
+        loadHotels(); // Charger les hôtels au démarrage
     }
 
+    /**
+     * Charge les hôtels dans le FlowPane hotelsGrid.
+     */
     private void loadHotels() {
-        hotelsGrid.getChildren().clear();
-        hotels = getHotels();
+        hotelsGrid.getChildren().clear(); // Vider le contenu actuel
+        hotels = getHotels(); // Récupérer les hôtels
 
         // Trier les hôtels par nom
         hotels.sort((h1, h2) -> h1.getNom_h().compareToIgnoreCase(h2.getNom_h()));
 
+        // Ajouter les cartes d'hôtel au FlowPane
         for (Hotel hotel : hotels) {
             Node hotelCard = createHotelCard(hotel);
             hotelsGrid.getChildren().add(hotelCard);
         }
     }
 
+    /**
+     * Crée une carte d'hôtel avec les informations et les boutons.
+     *
+     * @param hotel L'hôtel à afficher.
+     * @return Une VBox représentant la carte d'hôtel.
+     */
     private Node createHotelCard(Hotel hotel) {
-        VBox card = new VBox(10);
+        VBox card = new VBox(15);
         card.getStyleClass().add("hotel-card");
+        card.setPadding(new Insets(15));
 
-        VBox hotelInfo = new VBox(5);
+        // Image de l'hôtel
+        String imagePath = "/images/hotelLogo.jpg"; // Image par défaut
+        Image hotelImage = new Image(getClass().getResource(imagePath).toExternalForm(), 300, 200, false, true);
+        ImageView hotelImageView = new ImageView(hotelImage);
+        hotelImageView.setFitWidth(300);
+        hotelImageView.setFitHeight(200);
+        hotelImageView.setPreserveRatio(false);
+        hotelImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
+        hotelImageView.getStyleClass().add("hotel-image");
+
+        // Informations de l'hôtel
+        VBox hotelInfo = new VBox(10);
         hotelInfo.getStyleClass().add("hotel-info");
 
-        // Hotel image
-        ImageView hotelLogoView = new ImageView(new Image("/images/hotelLogo.jpg", 200, 150, true, true));
-        hotelLogoView.getStyleClass().add("hotel-logo");
+        // Nom de l'hôtel avec icône
+        FontAwesomeIconView buildingIcon = new FontAwesomeIconView(FontAwesomeIcon.BUILDING);
+        buildingIcon.setFill(Color.DARKORANGE);
+        buildingIcon.setGlyphSize(20);
+        Label nameLabel = new Label();
+        nameLabel.setGraphic(buildingIcon);
+        nameLabel.setText(" " + hotel.getNom_h());
+        nameLabel.getStyleClass().add("hotel-name");
 
-        // Hotel details
-        Label nameLabel = new Label("Hotel: " + hotel.getNom_h());
-        nameLabel.getStyleClass().add("hotel-title");
+        // Grille pour les détails de l'hôtel
+        GridPane detailsGrid = new GridPane();
+        detailsGrid.setHgap(10);
+        detailsGrid.setVgap(10);
+        detailsGrid.getStyleClass().add("details-grid");
 
-        Label addressLabel = new Label("Address: " + hotel.getAdresse_h());
-        addressLabel.getStyleClass().add("hotel-address");
+        // Adresse avec icône
+        detailsGrid.add(createIcon(FontAwesomeIcon.MAP_MARKER, Color.BLUE), 0, 0);
+        detailsGrid.add(new Label(hotel.getAdresse_h()), 1, 0);
 
-        Label cityLabel = new Label("City: " + hotel.getVille_h());
-        cityLabel.getStyleClass().add("hotel-city");
+        // Ville avec icône
+        detailsGrid.add(createIcon(FontAwesomeIcon.GLOBE, Color.GREEN), 0, 1);
+        detailsGrid.add(new Label(hotel.getVille_h()), 1, 1);
 
-        Label categoryLabel = new Label("Category: " + hotel.getCategorie_h() + " Stars");
-        categoryLabel.getStyleClass().add("hotel-category");
+        // Catégorie avec icône
+        detailsGrid.add(createIcon(FontAwesomeIcon.STAR, Color.ORANGE), 0, 2);
+        detailsGrid.add(new Label(hotel.getCategorie_h() + " Stars"), 1, 2);
 
-        // Buttons
-        Button updateButton = new Button("Update");
+        // Conteneur pour les boutons
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        buttonBox.getStyleClass().add("button-box");
+
+        // Bouton "Update" avec icône
+        Button updateButton = new Button();
+        FontAwesomeIconView updateIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
+        updateIcon.setSize("1.5em");
+        updateButton.setGraphic(updateIcon);
+        updateButton.getStyleClass().addAll("hotel-button", "update-button");
         updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateHotel(hotel);
@@ -102,59 +149,76 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
                 throw new RuntimeException(ex);
             }
         });
-        updateButton.getStyleClass().add("view-details-button");
 
-        Button deleteButton = new Button("Delete");
-        deleteButton.getStyleClass().add("delete-button");
+        // Bouton "Delete" avec icône
+        Button deleteButton = new Button();
+        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+        deleteIcon.setSize("1.5em");
+        deleteButton.setGraphic(deleteIcon);
+        deleteButton.getStyleClass().addAll("hotel-button", "delete-button");
         deleteButton.setOnAction(e -> deleteHotel(hotel));
 
-        HBox buttonHbox = new HBox(10);
-        buttonHbox.getStyleClass().add("button-hbox");
-        buttonHbox.getChildren().addAll(updateButton, deleteButton);
+        // Bouton "Details" avec icône
+        Button detailsButton = new Button();
+        FontAwesomeIconView detailsIcon = new FontAwesomeIconView(FontAwesomeIcon.SEARCH);
+        detailsIcon.setSize("1.5em");
+        detailsButton.setGraphic(detailsIcon);
+        detailsButton.getStyleClass().addAll("hotel-button", "details-button");
+        detailsButton.setOnAction(e -> navigateToChambreManagement(hotel));
 
-        hotelInfo.getChildren().addAll(hotelLogoView, nameLabel, addressLabel, cityLabel, categoryLabel, buttonHbox);
-        card.getChildren().add(hotelInfo);
+        // Ajouter les boutons au conteneur
+        buttonBox.getChildren().addAll(updateButton, deleteButton, detailsButton);
+
+        // Assembler tous les composants
+        hotelInfo.getChildren().addAll(nameLabel, detailsGrid);
+        card.getChildren().addAll(hotelImageView, hotelInfo, buttonBox);
+
+        // Effet de survol
+        card.setOnMouseEntered(e -> card.setEffect(new DropShadow(20, Color.rgb(0, 0, 0, 0.3))));
+        card.setOnMouseExited(e -> card.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.1))));
 
         return card;
     }
 
-    private void updateButtonVisibility() {
-        for (Node node : hotelsGrid.getChildren()) {
-            if (node instanceof VBox) {
-                VBox card = (VBox) node;
-                for (Node child : card.getChildren()) {
-                    if (child instanceof VBox) {
-                        for (Node nestedchild : ((VBox) child).getChildren()) {
-                            if (nestedchild instanceof HBox) {
-                                HBox buttonBox = (HBox) nestedchild;
-                                // Filter buttons by their text
-                                Button updateButton = (Button) buttonBox.getChildren().stream()
-                                        .filter(btn -> btn instanceof Button && "Update".equals(((Button) btn).getText()))
-                                        .findFirst()
-                                        .orElse(null);
+    /**
+     * Crée une icône avec une couleur spécifique.
+     *
+     * @param icon  L'icône à créer.
+     * @param color La couleur de l'icône.
+     * @return Une FontAwesomeIconView.
+     */
+    private FontAwesomeIconView createIcon(FontAwesomeIcon icon, Color color) {
+        FontAwesomeIconView iconView = new FontAwesomeIconView(icon);
+        iconView.setGlyphSize(20);
+        iconView.setFill(color);
+        return iconView;
+    }
 
-                                Button deleteButton = (Button) buttonBox.getChildren().stream()
-                                        .filter(btn -> btn instanceof Button && "Delete".equals(((Button) btn).getText()))
-                                        .findFirst()
-                                        .orElse(null);
-                                if (frontOfficeController != null && updateButton != null && deleteButton != null) {
-                                    buttonBox.getChildren().removeAll(updateButton, deleteButton);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    /**
+     * Navigue vers la gestion des chambres pour un hôtel spécifique.
+     *
+     * @param hotel L'hôtel sélectionné.
+     */
+    private void navigateToChambreManagement(Hotel hotel) {
+        if (frontOfficeController != null) {
+            frontOfficeController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+            ChambreGrid chambreGrid = (ChambreGrid) frontOfficeController.getController();
+            chambreGrid.setHotelId(hotel.getId_hotel_h()); // Passer l'ID de l'hôtel à ChambreGrid
+        } else {
+            dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+            ChambreGrid chambreGrid = (ChambreGrid) dashBoardController.getController();
+            chambreGrid.setHotelId(hotel.getId_hotel_h()); // Passer l'ID de l'hôtel à ChambreGrid
         }
     }
 
+    /**
+     * Supprime un hôtel.
+     *
+     * @param hotel L'hôtel à supprimer.
+     */
     private void deleteHotel(Hotel hotel) {
         if (hotel == null) {
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Erreur");
-            errorAlert.setHeaderText(null);
-            errorAlert.setContentText("Veuillez sélectionner un hôtel à supprimer.");
-            errorAlert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez sélectionner un hôtel à supprimer.");
             return;
         }
 
@@ -169,42 +233,63 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
                     HotelService hotelService = new HotelService();
                     hotelService.supprimer(hotel);
                     System.out.println("Hôtel supprimé avec succès : " + hotel);
-                    loadHotels();
-
-                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Succès");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("L'hôtel a été supprimé avec succès !");
-                    successAlert.showAndWait();
+                    loadHotels(); // Recharger les hôtels
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "L'hôtel a été supprimé avec succès !");
                 } catch (Exception e) {
                     System.err.println("Erreur lors de la suppression de l'hôtel : " + e.getMessage());
-
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Erreur");
-                    errorAlert.setHeaderText(null);
-                    errorAlert.setContentText("Erreur lors de la suppression de l'hôtel !");
-                    errorAlert.showAndWait();
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la suppression de l'hôtel !");
                 }
             }
         });
     }
 
+    /**
+     * Affiche une alerte.
+     *
+     * @param alertType Le type d'alerte.
+     * @param title     Le titre de l'alerte.
+     * @param message   Le message de l'alerte.
+     */
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Navigue vers le formulaire de mise à jour d'un hôtel.
+     *
+     * @param hotel L'hôtel à mettre à jour.
+     * @throws IOException Si une erreur d'E/S se produit.
+     */
     private void navigateToUpdateHotel(Hotel hotel) throws IOException {
         dashBoardController.navigateTo("dashboard/hotel/hotel-update-form.fxml");
         HotelUpdateForm updateForm = (HotelUpdateForm) dashBoardController.getController();
         updateForm.setHotelToEdit(hotel);
     }
 
+    /**
+     * Récupère tous les hôtels.
+     *
+     * @return Une liste d'hôtels.
+     */
     private List<Hotel> getHotels() {
         HotelService hotelService = new HotelService();
         return hotelService.rechercher();
     }
 
+    /**
+     * Recherche les hôtels par nom.
+     *
+     * @param event L'événement de clic.
+     */
     @FXML
     private void searchHotelByName(ActionEvent event) {
         String searchText = searchField.getText().trim();
         if (searchText.isEmpty()) {
-            loadHotels();
+            loadHotels(); // Recharger tous les hôtels si le champ de recherche est vide
             return;
         }
 
@@ -221,41 +306,37 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
         }
     }
 
+    /**
+     * Navigue vers le formulaire de création d'un hôtel.
+     *
+     * @param actionEvent L'événement de clic.
+     */
     public void addHotel(ActionEvent actionEvent) {
         dashBoardController.navigateTo("dashboard/hotel/hotel-create-form.fxml");
     }
 
-    public void navigateToChambre(ActionEvent actionEvent) {
-        if (frontOfficeController != null)
-            frontOfficeController.navigateTo("dashboard/hotel/chambre-grid.fxml");
-        else
-            dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
-    }
-
-    // Méthode pour exporter les hôtels en PDF
+    /**
+     * Exporte la liste des hôtels en PDF.
+     *
+     * @param event L'événement de clic.
+     */
     @FXML
     private void exportToPDF(ActionEvent event) {
-        // Créer un FileChooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Enregistrer le fichier PDF");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
-        fileChooser.setInitialFileName("HotelsList.pdf"); // Nom par défaut du fichier
+        fileChooser.setInitialFileName("HotelsList.pdf");
 
-        // Afficher la boîte de dialogue pour choisir l'emplacement
         File file = fileChooser.showSaveDialog(hotelsGrid.getScene().getWindow());
 
-        // Vérifier si l'utilisateur a choisi un fichier
         if (file != null) {
             try {
-                // Créer le document PDF
                 Document document = new Document();
                 PdfWriter.getInstance(document, new FileOutputStream(file));
                 document.open();
 
-                // Ajouter un titre au PDF
                 document.add(new Paragraph("Liste des Hôtels\n\n"));
 
-                // Ajouter les détails de chaque hôtel
                 for (Hotel hotel : hotels) {
                     document.add(new Paragraph("Nom: " + hotel.getNom_h()));
                     document.add(new Paragraph("Adresse: " + hotel.getAdresse_h()));
@@ -269,96 +350,10 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
 
                 document.close();
 
-                // Afficher une alerte de succès
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Succès");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Le fichier PDF a été généré avec succès !");
-                successAlert.showAndWait();
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Le fichier PDF a été généré avec succès !");
             } catch (DocumentException | IOException e) {
                 e.printStackTrace();
-
-                // Afficher une alerte d'erreur
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Erreur");
-                errorAlert.setHeaderText(null);
-                errorAlert.setContentText("Erreur lors de la génération du PDF !");
-                errorAlert.showAndWait();
-            }
-        }
-    }
-
-    // Méthode pour calculer la répartition des hôtels par catégorie
-    private Map<Integer, Long> getHotelsByCategory() {
-        return hotels.stream()
-                .collect(Collectors.groupingBy(Hotel::getCategorie_h, Collectors.counting()));
-    }
-
-    // Méthode pour afficher la répartition des hôtels par catégorie
-    @FXML
-    private void showHotelsByCategory() {
-        Map<Integer, Long> hotelsByCategory = getHotelsByCategory();
-
-        // Construire le message à afficher
-        StringBuilder message = new StringBuilder("Répartition des hôtels par catégorie :\n\n");
-        for (Map.Entry<Integer, Long> entry : hotelsByCategory.entrySet()) {
-            message.append(entry.getKey()).append(" étoiles : ").append(entry.getValue()).append(" hôtels\n");
-        }
-
-        // Afficher une boîte de dialogue avec les résultats
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Statistiques des hôtels");
-        alert.setHeaderText(null);
-        alert.setContentText(message.toString());
-        alert.showAndWait();
-    }
-
-    // Méthode pour exporter les statistiques au format PDF
-    @FXML
-    private void exportStatisticsToPDF(ActionEvent event) {
-        Map<Integer, Long> hotelsByCategory = getHotelsByCategory();
-
-        // Créer un FileChooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Enregistrer les statistiques en PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
-        fileChooser.setInitialFileName("HotelsStatistics.pdf");
-
-        // Afficher la boîte de dialogue pour choisir l'emplacement
-        File file = fileChooser.showSaveDialog(hotelsGrid.getScene().getWindow());
-
-        if (file != null) {
-            try {
-                // Créer le document PDF
-                Document document = new Document();
-                PdfWriter.getInstance(document, new FileOutputStream(file));
-                document.open();
-
-                // Ajouter un titre au PDF
-                document.add(new Paragraph("Statistiques des hôtels par catégorie\n\n"));
-
-                // Ajouter les détails de chaque catégorie
-                for (Map.Entry<Integer, Long> entry : hotelsByCategory.entrySet()) {
-                    document.add(new Paragraph(entry.getKey() + " étoiles : " + entry.getValue() + " hôtels"));
-                }
-
-                document.close();
-
-                // Afficher une alerte de succès
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Succès");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Le fichier PDF a été généré avec succès !");
-                successAlert.showAndWait();
-            } catch (DocumentException | IOException e) {
-                e.printStackTrace();
-
-                // Afficher une alerte d'erreur
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Erreur");
-                errorAlert.setHeaderText(null);
-                errorAlert.setContentText("Erreur lors de la génération du PDF !");
-                errorAlert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la génération du PDF !");
             }
         }
     }
@@ -369,5 +364,26 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
         System.out.println("Setting FrontOfficeController: " + frontOfficeController);
         updateButtonVisibility();
         btnAddHotel.setVisible(false);
+    }
+
+    /**
+     * Masque les boutons "Update" et "Delete" si le contrôleur FrontOffice est actif.
+     */
+    private void updateButtonVisibility() {
+        for (Node node : hotelsGrid.getChildren()) {
+            if (node instanceof VBox) {
+                VBox card = (VBox) node;
+                for (Node child : card.getChildren()) {
+                    if (child instanceof HBox) {
+                        HBox buttonBox = (HBox) child;
+                        // Masquer les boutons "Update" et "Delete"
+                        buttonBox.getChildren().removeIf(btn ->
+                                btn instanceof Button &&
+                                        (btn.getStyleClass().contains("update-button") || btn.getStyleClass().contains("delete-button"))
+                        );
+                    }
+                }
+            }
+        }
     }
 }
