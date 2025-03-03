@@ -14,7 +14,6 @@
     <Region prefHeight="51.0" prefWidth="189.0" />
     <Label styleClass="header-title" text="Admin" />
     <Region prefHeight="51.0" prefWidth="103.0" />
-    <TextField fx:id="searchField1" prefHeight="26.0" prefWidth="643.0" promptText="Rechercher..." />
     <Region prefHeight="51.0" prefWidth="31.0" HBox.hgrow="ALWAYS" />
 
     <MenuButton fx:id="userMenuButton" styleClass="user-menu-button">

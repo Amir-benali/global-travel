@@ -1,7 +1,11 @@
 package com.globalTravel.controllers.user;
 
 import com.globalTravel.controllers.auth.Login;
+import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navbar;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.user.UserService;
 import com.globalTravel.utils.AzureBlobService;
@@ -17,7 +21,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-public class ProfileSettings {
+public class ProfileSettings implements FrontNavigatable, Navigatable {
 
     @FXML
     private ImageView profileImage;
@@ -50,6 +54,8 @@ public class ProfileSettings {
     private User currentUser;
     private File selectedImageFile;
     private Navbar navbarController; // Référence au contrôleur de la navbar
+    private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @FXML
     public void initialize() {
@@ -119,6 +125,7 @@ public class ProfileSettings {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors du téléversement de l'image.");
                 return;
             }
+
         }
 
         // Sauvegarder les modifications dans la base de données
@@ -126,13 +133,23 @@ public class ProfileSettings {
             userService.modifier(currentUser);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Votre profil a été mis à jour avec succès !");
 
+            if (dashBoardController != null) {
+                dashBoardController.setCurrentUser(currentUser); // Rafraîchir le tableau de bord
+                dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+            }
+            if (frontOfficeController != null) {
+                frontOfficeController.setCurrentUser(currentUser); // Rafraîchir le front office
+                frontOfficeController.navigateTo("frontoffice/front-office-content.fxml");
+            }
             // Mettre à jour la navbar avec les nouvelles informations
             if (navbarController != null) {
                 navbarController.setCurrentUser(currentUser); // Rafraîchir la navbar
             }
+
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors de la mise à jour du profil.");
         }
+
     }
 
     @FXML
@@ -181,5 +198,15 @@ public class ProfileSettings {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 }

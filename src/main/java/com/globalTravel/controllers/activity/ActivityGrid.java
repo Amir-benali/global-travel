@@ -243,16 +243,16 @@ public class ActivityGrid implements Navigatable, FrontNavigatable {
                                 .filter(btn -> btn instanceof Button && "Delete".equals(((Button) btn).getText()))
                                 .findFirst()
                                 .orElse(null);
-
-                        Button acceptButton = (Button) buttonBox.getChildren().stream()
-                                .filter(btn -> btn instanceof Button && "Accepter".equals(((Button) btn).getText()))
-                                .findFirst()
-                                .orElse(null);
-
-                        Button cancelButton = (Button) buttonBox.getChildren().stream()
-                                .filter(btn -> btn instanceof Button && "Annuler".equals(((Button) btn).getText()))
-                                .findFirst()
-                                .orElse(null);
+//
+//                        Button acceptButton = (Button) buttonBox.getChildren().stream()
+//                                .filter(btn -> btn instanceof Button && "Accepter".equals(((Button) btn).getText()))
+//                                .findFirst()
+//                                .orElse(null);
+//
+//                        Button cancelButton = (Button) buttonBox.getChildren().stream()
+//                                .filter(btn -> btn instanceof Button && "Annuler".equals(((Button) btn).getText()))
+//                                .findFirst()
+//                                .orElse(null);
 
                         // If in front office mode, hide the buttons
                         if (frontOfficeController != null) {
@@ -262,12 +262,12 @@ public class ActivityGrid implements Navigatable, FrontNavigatable {
                             if (deleteButton != null) {
                                 deleteButton.setVisible(false);
                             }
-                            if (acceptButton != null) {
-                                acceptButton.setVisible(false);
-                            }
-                            if (cancelButton != null) {
-                                cancelButton.setVisible(false);
-                            }
+//                            if (acceptButton != null) {
+//                                acceptButton.setVisible(false);
+//                            }
+//                            if (cancelButton != null) {
+//                                cancelButton.setVisible(false);
+//                            }
                         } else {
                             // If in back office mode, ensure the buttons are visible
                             if (updateButton != null) {
@@ -276,12 +276,12 @@ public class ActivityGrid implements Navigatable, FrontNavigatable {
                             if (deleteButton != null) {
                                 deleteButton.setVisible(true);
                             }
-                            if (acceptButton != null) {
-                                acceptButton.setVisible(true);
-                            }
-                            if (cancelButton != null) {
-                                cancelButton.setVisible(true);
-                            }
+//                            if (acceptButton != null) {
+//                                acceptButton.setVisible(true);
+//                            }
+//                            if (cancelButton != null) {
+//                                cancelButton.setVisible(true);
+//                            }
                         }
                     }
                 }

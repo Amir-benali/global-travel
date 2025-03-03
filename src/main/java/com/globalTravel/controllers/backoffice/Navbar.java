@@ -20,8 +20,6 @@ public class Navbar {
     @FXML
     private Label lbRole;
 
-    @FXML
-    private TextField searchField1;
 
 
 
