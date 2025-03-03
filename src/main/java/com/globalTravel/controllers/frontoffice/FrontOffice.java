@@ -76,7 +76,11 @@ public class FrontOffice implements FrontNavigatable {
         userProfileName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         if (currentUser.getImage() != null) {
             ImgUser.setImage(new Image(currentUser.getImage()));
-
+            ImgUser.setFitWidth(35); // Set image width
+            ImgUser.setFitHeight(35); // Set image height
+            ImgUser.setSmooth(true); // Enable smooth resizing
+            ImgUser.setPreserveRatio(false);
+            ImgUser.setClip(new Circle(ImgUser.getFitWidth() / 2, ImgUser.getFitHeight() / 2, Math.min(ImgUser.getFitWidth(), ImgUser.getFitHeight()) / 2));
          }
         if(currentUser.getRoles().toLowerCase().equals("employee")){
             dashboardButton.setVisible(false);
@@ -227,7 +231,7 @@ public class FrontOffice implements FrontNavigatable {
 
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
-        this.frontOfficeController = frontOfficeController; 
+        this.frontOfficeController = frontOfficeController;
     }
 
     public void navigateToSettings(ActionEvent actionEvent) {

@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
@@ -15,45 +15,50 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.user.UserPaymentGrid" spacing="10" alignment="TOP_CENTER" style="-fx-background-color: #f4f4f4;">
-    <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
-    </padding>
-
-    <!-- En-tête du chatbot -->
-    <HBox alignment="CENTER" spacing="10">
-        <!-- Icône du chatbot -->
-        <StackPane>
-            <Circle radius="25" fill="#4CAF50" />
-            <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
-                <image>
-                    <Image url="@/images/chatbot-icon.png" /> <!-- Remplacez par le chemin de votre icône -->
-                </image>
-            </ImageView>
-        </StackPane>
-        <!-- Titre du chatbot -->
-        <Label text="AI Chatbot" style="-fx-text-fill: #333333; -fx-font-size: 24px; -fx-font-weight: bold;" />
-    </HBox>
-
-    <!-- Zone de conversation -->
-    <TextArea fx:id="outputArea" editable="false" wrapText="true" prefHeight="400" prefWidth="600" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 5px; -fx-padding: 10px;" />
-
-    <!-- Champ de texte pour l'entrée utilisateur -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <TextField fx:id="inputField" promptText="Type your message here..." prefWidth="500" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 5px; -fx-padding: 10px;" />
-        <!-- Bouton pour envoyer la requête -->
-        <Button text="Send" onAction="#handleSendRequest" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 20px;">
-            <graphic>
-                <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.user.UserPaymentGrid" style="-fx-background-color: #ffffff;">
+    <!-- Top Header -->
+    <top>
+        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0; -fx-padding: 10px;">
+            <!-- Chatbot Icon -->
+            <StackPane>
+                <Circle radius="20" fill="#2196F3" />
+                <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
                     <image>
-                        <Image url="@/images/send-icon.png" /> <!-- Remplacez par le chemin de votre icône -->
+                        <Image url="@/images/chatbot-icon.png" /> <!-- Replace with your icon path -->
                     </image>
                 </ImageView>
-            </graphic>
-        </Button>
-    </HBox>
+            </StackPane>
+            <!-- Chatbot Title -->
+            <Label text="AI Chatbot" style="-fx-text-fill: #2196F3; -fx-font-size: 18px; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
 
-    <!-- Bouton pour effacer les champs -->
-    <Button text="Clear Chat" onAction="#handleClear" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 20px;" />
-</VBox>
+    <!-- Chat Area (Scrollable) -->
+    <center>
+        <ScrollPane fx:id="chatScrollPane" style="-fx-background-color: #f9f9f9; -fx-border-color: #e0e0e0; -fx-border-width: 0;" fitToWidth="true">
+            <VBox fx:id="chatArea" spacing="10" style="-fx-background-color: #f9f9f9; -fx-padding: 10px;" />
+        </ScrollPane>
+    </center>
+
+    <!-- Input Bar (Fixed at Bottom) -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0; -fx-padding: 10px;">
+            <!-- Input Field -->
+            <TextField fx:id="inputField" promptText="Type your message..." style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-radius: 20px; -fx-padding: 10px 15px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);" HBox.hgrow="ALWAYS" />
+            <!-- Send Button -->
+            <Button text="Send" onAction="#handleSendRequest" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-border-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/send-icon.png" /> <!-- Replace with your icon path -->
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </bottom>
+</BorderPane>
