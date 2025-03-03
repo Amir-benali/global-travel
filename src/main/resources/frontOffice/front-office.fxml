@@ -116,7 +116,7 @@
                     <!-- Spacer to push the following elements to the right -->
                     <Region HBox.hgrow="ALWAYS" />
 
-                    <Button fx:id="paymentButton" styleClass="nav-button">
+                    <Button fx:id="paymentButton" styleClass="nav-button" onAction="#goToAIPage">
                         <graphic>
                             <FontAwesomeIconView glyphName="INFO" glyphSize="20" styleClass="nav-icon" />
                         </graphic>
