@@ -2,6 +2,7 @@ package com.globalTravel.services.activity;
 
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
+import com.globalTravel.models.user.User;
 import com.globalTravel.services.IActivityService;
 import com.globalTravel.utils.DataSource;
 
@@ -15,7 +16,7 @@ public class ActivityService implements IActivityService<Activity> {
 
     @Override
     public boolean ajouter(Activity activity) {
-        String req = "INSERT INTO activity (dateDebut, dateFin, description, localisation, prixTotal, nomActivity, typeActivity, joinHotelId, joinVoitureId, joinVolsId) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String req = "INSERT INTO activity (dateDebut, dateFin, description, localisation, prixTotal, nomActivity, typeActivity, joinHotelId, joinVoitureId, joinVolsId, user_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
             pst.setTimestamp(2, new java.sql.Timestamp(activity.getDateFin().getTime()));
@@ -27,6 +28,7 @@ public class ActivityService implements IActivityService<Activity> {
             pst.setInt(8, activity.getJoinHotelId());
             pst.setInt(9, activity.getJoinVoitureId());
             pst.setInt(10, activity.getJoinVolsId());
+            pst.setInt(11, activity.getUser_id());
             pst.executeUpdate();
             System.out.println("Activité ajoutée avec succès ");
         } catch (SQLException e) {
@@ -37,7 +39,7 @@ public class ActivityService implements IActivityService<Activity> {
 
     @Override
     public boolean modifier(Activity activity) {
-        String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, prixTotal=?, nomActivity=?, typeActivity=?, joinHotelId=?, joinVoitureId=?, joinVolsId=? WHERE id=?";
+        String req = "UPDATE activity SET dateDebut=?, dateFin=?, description=?, localisation=?, prixTotal=?, nomActivity=?, typeActivity=?, joinHotelId=?, joinVoitureId=?, joinVolsId=? ,user_id=? WHERE id=?";
         try (PreparedStatement pst = connection.prepareStatement(req)) {
             pst.setTimestamp(1, new java.sql.Timestamp(activity.getDateDebut().getTime()));
             pst.setTimestamp(2, new java.sql.Timestamp(activity.getDateFin().getTime()));
@@ -49,7 +51,8 @@ public class ActivityService implements IActivityService<Activity> {
             pst.setInt(8, activity.getJoinHotelId());
             pst.setInt(9, activity.getJoinVoitureId());
             pst.setInt(10, activity.getJoinVolsId());
-            pst.setInt(11, activity.getId());
+            pst.setInt(11, activity.getUser_id());
+
             pst.executeUpdate();
             System.out.println("Activité modifiée avec succès ");
         } catch (SQLException e) {
@@ -89,7 +92,8 @@ public class ActivityService implements IActivityService<Activity> {
                         getTypeActivityFromString(rs.getString("typeActivity")),
                         rs.getInt("joinHotelId"),
                         rs.getInt("joinVoitureId"),
-                        rs.getInt("joinVolsId")
+                        rs.getInt("joinVolsId"),
+                        rs.getInt("user_id")
                 );
                 activities.add(activity);
             }
@@ -125,7 +129,8 @@ public class ActivityService implements IActivityService<Activity> {
                         getTypeActivityFromString(rs.getString("typeActivity")),
                         rs.getInt("joinHotelId"),
                         rs.getInt("joinVoitureId"),
-                        rs.getInt("joinVolsId")
+                        rs.getInt("joinVolsId"),
+                        rs.getInt("user_id")
                 );
                 activities.add(activity);
             }
@@ -158,4 +163,60 @@ public class ActivityService implements IActivityService<Activity> {
         }
         return false;
     }
+
+
+
+
+
+    public void associateUserToActivity(int userId, int activityId) {
+        String sql = "INSERT INTO user_activity (user_id, activity_id) VALUES (?, ?)";
+        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+            pst.setInt(1, userId);
+            pst.setInt(2, activityId);
+            pst.executeUpdate();
+            System.out.println("Utilisateur associé à l'activité avec succès.");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'association de l'utilisateur à l'activité : " + e.getMessage());
+        }
+    }
+
+
+    public List<Activity> getActivitiesForUser(int userId) {
+        List<Activity> activities = new ArrayList<>();
+        String query = "SELECT a.* FROM activity a " +
+                "JOIN user_activity ua ON a.id = ua.activity_id " +
+                "WHERE ua.user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Activity activity = new Activity(
+                        resultSet.getInt("id"),
+                        resultSet.getTimestamp("dateDebut"),
+                        resultSet.getTimestamp("dateFin"),
+                        resultSet.getString("description"),
+                        resultSet.getString("localisation"),
+                        resultSet.getInt("prixTotal"),
+                        resultSet.getString("nomActivity"),
+                        TypeActivity.valueOf(resultSet.getString("typeActivity")),
+                        resultSet.getInt("joinHotelId"),
+                        resultSet.getInt("joinVoitureId"),
+                        resultSet.getInt("joinVolsId"),
+                        resultSet.getInt("user_id")
+                );
+                activities.add(activity);
+            }
+        } catch (SQLException e) {
+
+            System.out.println("Erreur lors de la récupération des activités : " + e.getMessage());
+        }
+        return activities;
+    }
+
+    public void rejectActivity(int activityId) {
+        // Implémentez la logique pour marquer l'activité comme refusée ou la supprimer de la base de données.
+        // Par exemple, exécuter une requête SQL pour mettre à jour ou supprimer l'activité.
+        System.out.println("Activité refusée (ID: " + activityId + ") dans la base de données.");
+    }
+
 }

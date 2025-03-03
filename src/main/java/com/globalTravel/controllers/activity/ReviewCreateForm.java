@@ -2,6 +2,7 @@ package com.globalTravel.controllers.activity;
 
 import com.globalTravel.controllers.backoffice.DashBoard;
 import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
 import com.globalTravel.services.activity.ActivityService;
@@ -12,7 +13,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReviewCreateForm implements Navigatable {
     private DashBoard dashBoardController;
@@ -20,12 +23,13 @@ public class ReviewCreateForm implements Navigatable {
 
     @FXML private TextArea commentaireField;
     @FXML private Rating noteRating;
-    @FXML private ComboBox<Integer> activityIdComboBox;
+    @FXML private ComboBox<String> activityIdComboBox; // Changé pour afficher des noms
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
 
     private final ReviewService reviewService = new ReviewService();
     private final ActivityService activityService = new ActivityService();
+    private Map<String, Integer> activityNameToIdMap = new HashMap<>(); // Pour associer les noms aux IDs
 
     // Méthode pour définir le Stage
     public void setStage(Stage stage) {
@@ -43,14 +47,23 @@ public class ReviewCreateForm implements Navigatable {
         noteRating.setMax(5);
         noteRating.setRating(0); // Par défaut, aucune étoile sélectionnée
 
-        // Remplir dynamiquement le ComboBox des IDs d'activités
-        loadActivityIds();
+        // Remplir dynamiquement le ComboBox des noms d'activités
+        loadActivityNames();
     }
 
-    private void loadActivityIds() {
-        List<Integer> activityIds = reviewService.getAllActivityIds();
-        ObservableList<Integer> observableActivityIds = FXCollections.observableArrayList(activityIds);
-        activityIdComboBox.setItems(observableActivityIds);
+    private void loadActivityNames() {
+        // Récupérer la liste des activités avec leurs noms
+        List<Activity> activities = reviewService.getAllActivities();
+
+        // Créer une liste observable pour les noms des activités
+        ObservableList<String> observableActivityNames = FXCollections.observableArrayList();
+        for (Activity activity : activities) {
+            observableActivityNames.add(activity.getNomActivity());
+            activityNameToIdMap.put(activity.getNomActivity(), activity.getId()); // Associer le nom à l'ID
+        }
+
+        // Remplir le ComboBox avec les noms des activités
+        activityIdComboBox.setItems(observableActivityNames);
     }
 
     @FXML
@@ -76,10 +89,13 @@ public class ReviewCreateForm implements Navigatable {
     }
 
     private Review createReviewFromInputs() {
+        String selectedActivityName = activityIdComboBox.getValue(); // Récupérer le nom sélectionné
+        int activityId = activityNameToIdMap.get(selectedActivityName); // Récupérer l'ID correspondant
+
         return new Review(
                 commentaireField.getText(),
                 (int) noteRating.getRating(), // Récupérer la note sous forme d'entier
-                activityIdComboBox.getValue()
+                activityId
         );
     }
 
@@ -96,11 +112,6 @@ public class ReviewCreateForm implements Navigatable {
 
         if (activityIdComboBox.getValue() == null) {
             showAlert("Erreur", "Veuillez sélectionner une activité.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (!reviewService.activityExists(activityIdComboBox.getValue())) {
-            showAlert("Erreur", "L'ID de l'activité sélectionné n'existe pas dans la base de données.", Alert.AlertType.WARNING);
             return false;
         }
 

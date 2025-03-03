@@ -6,16 +6,17 @@ import com.globalTravel.controllers.frontoffice.FrontNavigatable;
 import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.controlsfx.control.Rating;
 
 import java.io.IOException;
@@ -50,7 +51,8 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
             reviewsGrid.getChildren().add(reviewCard); // Ajoute chaque carte de revue dans le FlowPane
         }
 
-        // Update button visibility based on the context (front office or back office)
+        // Mettre à jour la visibilité des boutons en fonction du contexte (front office ou back office)
+        updateButtonVisibility();
     }
 
     private VBox createReviewCard(Review review) {
@@ -61,12 +63,13 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         VBox reviewInfo = new VBox(10);
         reviewInfo.getStyleClass().add("review-info");
 
-        // Commentaire avec icône
+        // Commentaire avec icône FontAwesome
+        FontAwesomeIconView commentIcon = new FontAwesomeIconView(FontAwesomeIcon.COMMENT);
+        commentIcon.setSize("16px");
+        commentIcon.setFill(Color.web("#2C3E50")); // Couleur de l'icône
+
         HBox commentBox = new HBox(10);
         commentBox.setAlignment(Pos.CENTER_LEFT);
-        ImageView commentIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/comment-icon.png")));
-        commentIcon.setFitHeight(20);
-        commentIcon.setFitWidth(20);
         Label commentaireLabel = createStyledLabel(review.getCommentaire(), "review-commentaire");
         commentBox.getChildren().addAll(commentIcon, commentaireLabel);
 
@@ -76,25 +79,39 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         noteRating.setMax(5); // Maximum de 5 étoiles
         noteRating.setDisable(true); // Désactiver l'interaction utilisateur
 
-        // Date de revue avec icône
+        // Date de revue avec icône FontAwesome
+        FontAwesomeIconView dateIcon = new FontAwesomeIconView(FontAwesomeIcon.CALENDAR);
+        dateIcon.setSize("16px");
+        dateIcon.setFill(Color.web("#2C3E50")); // Couleur de l'icône
+
         HBox dateBox = new HBox(10);
         dateBox.setAlignment(Pos.CENTER_LEFT);
-        ImageView dateIcon = new ImageView(new Image(getClass().getResourceAsStream("/icons/start-date-icon.png")));
-        dateIcon.setFitHeight(20);
-        dateIcon.setFitWidth(20);
         Label dateReviewLabel = createStyledLabel("Date de revue: " + formatDate(review.getDateReview()), "review-date");
         dateBox.getChildren().addAll(dateIcon, dateReviewLabel);
 
-        // Boutons d'action pour modifier ou supprimer la revue
-        Button updateButton = createStyledButton("Modifier", e -> {
+        // Bouton "Modifier" avec icône FontAwesome
+        FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.EDIT);
+        editIcon.setSize("16px");
+        editIcon.setFill(Color.WHITE);
+
+        Button updateButton = new Button("Modifier", editIcon);
+        updateButton.setOnAction(e -> {
             try {
                 navigateToUpdateReview(review);
             } catch (IOException ex) {
-                ex.printStackTrace(); // Affichage de l'erreur dans la console pour le debug
+                ex.printStackTrace();
             }
-        }, "#0080ff", "white"); // Green background with white text
+        });
+        updateButton.setStyle("-fx-background-color: #0080ff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px;");
 
-        Button deleteButton = createStyledButton("Supprimer", e -> confirmDelete(review), "#F44336", "white"); // Red background with white text
+        // Bouton "Supprimer" avec icône FontAwesome
+        FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+        deleteIcon.setSize("16px");
+        deleteIcon.setFill(Color.WHITE);
+
+        Button deleteButton = new Button("Supprimer", deleteIcon);
+        deleteButton.setOnAction(e -> confirmDelete(review));
+        deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 15; -fx-background-radius: 25px;");
 
         HBox buttonHbox = new HBox(15);
         buttonHbox.getChildren().addAll(updateButton, deleteButton);
@@ -112,14 +129,12 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
             if (node instanceof VBox) {
                 VBox card = (VBox) node;
                 for (Node child : card.getChildren()) {
-                    if (node instanceof VBox) {
+                    if (child instanceof VBox) {
                         VBox reviewInfo = (VBox) child;
                         for (Node nestedChild : reviewInfo.getChildren()) {
-
                             if (nestedChild instanceof HBox) {
-                                System.out.println("HBox found");
                                 HBox buttonBox = (HBox) nestedChild;
-                                // Find the "Modifier" and "Supprimer" buttons by their text
+                                // Trouver les boutons "Modifier" et "Supprimer" par leur texte
                                 Button updateButton = (Button) buttonBox.getChildren().stream()
                                         .filter(btn -> btn instanceof Button && "Modifier".equals(((Button) btn).getText()))
                                         .findFirst()
@@ -130,7 +145,7 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
                                         .findFirst()
                                         .orElse(null);
 
-                                // If in front office mode, hide the buttons
+                                // Si en mode front office, masquer les boutons
                                 if (frontOfficeController != null) {
                                     if (updateButton != null) {
                                         updateButton.setVisible(false);
@@ -139,7 +154,7 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
                                         deleteButton.setVisible(false);
                                     }
                                 } else {
-                                    // If in back office mode, ensure the buttons are visible
+                                    // Si en mode back office, s'assurer que les boutons sont visibles
                                     if (updateButton != null) {
                                         updateButton.setVisible(true);
                                     }
@@ -188,13 +203,13 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
         return button;
     }
 
-    // Helper method to darken the color for hover effect
+    // Méthode pour assombrir la couleur (effet hover)
     private String darkenColor(String color) {
-        // You can implement a simple logic to darken the color, e.g., by reducing the brightness
-        return "#1565C0"; // Example: Darker shade of blue
+        // Vous pouvez implémenter une logique pour assombrir la couleur, par exemple en réduisant la luminosité
+        return "#1565C0"; // Exemple : Nuance plus foncée de bleu
     }
 
-    // Dialog de confirmation pour la suppression
+    // Boîte de dialogue de confirmation pour la suppression
     private void confirmDelete(Review review) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Supprimer la revue");
