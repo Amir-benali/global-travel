@@ -1,101 +1,212 @@
 package com.globalTravel.controllers.user;
 
+import com.globalTravel.controllers.auth.Login;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navbar;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
+import com.globalTravel.models.user.User;
+import com.globalTravel.services.user.UserService;
+import com.globalTravel.utils.AzureBlobService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
 
-public class ProfileSettings {
-
-    @FXML
-    private ImageView profileImage; // Profile image view
-
-    @FXML
-    private TextField firstNameField; // First name field
+public class ProfileSettings implements FrontNavigatable, Navigatable {
 
     @FXML
-    private TextField lastNameField; // Last name field
+    private ImageView profileImage;
 
     @FXML
-    private TextField emailField; // Email field
+    private TextField firstNameField;
 
     @FXML
-    private TextField phoneField; // Phone field
+    private TextField lastNameField;
 
     @FXML
-    private TextField roleField; // Role field (disabled)
+    private TextField emailField;
 
     @FXML
-    private Button uploadImageButton; // Upload image button
+    private TextField phoneField;
 
     @FXML
-    private Button saveButton; // Save changes button
+    private TextField roleField;
 
     @FXML
-    private Button cancelButton; // Cancel button
+    private Button uploadImageButton;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button cancelButton;
+
+    private final UserService userService = new UserService();
+    private User currentUser;
+    private File selectedImageFile;
+    private Navbar navbarController; // Référence au contrôleur de la navbar
+    private DashBoard dashBoardController;
+    private FrontOffice frontOfficeController;
 
     @FXML
     public void initialize() {
-        // Set up button actions
+        loadUserData();
+
         uploadImageButton.setOnAction(event -> handleImageUpload());
         saveButton.setOnAction(event -> handleSaveChanges());
         cancelButton.setOnAction(event -> handleCancel());
     }
 
-    /**
-     * Handle the image upload button click event.
-     */
-    @FXML
-    private void handleImageUpload() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Profile Picture");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-        );
+    // Méthode pour définir le contrôleur de la navbar
+    public void setNavbarController(Navbar navbarController) {
+        this.navbarController = navbarController;
+    }
 
-        // Show the file chooser dialog
-        File selectedFile = fileChooser.showOpenDialog(new Stage());
+    private void loadUserData() {
+        currentUser = Login.getCurrentUser();
 
-        if (selectedFile != null) {
-            // Load the selected image into the profileImage view
-            String imagePath = selectedFile.toURI().toString();
-            profileImage.setImage(new javafx.scene.image.Image(imagePath));
-            profileImage.setClip(new javafx.scene.shape.Circle(profileImage.getFitWidth() / 2, profileImage.getFitHeight() / 2, Math.min(profileImage.getFitWidth(), profileImage.getFitHeight()) / 2));
-            System.out.println("Profile picture uploaded: " + imagePath);
+        if (currentUser != null) {
+            firstNameField.setText(currentUser.getFirstName());
+            lastNameField.setText(currentUser.getLastName());
+            emailField.setText(currentUser.getEmail());
+            phoneField.setText(currentUser.getPhoneNumber());
+            roleField.setText(currentUser.getRoles());
+
+            if (currentUser.getImage() != null && !currentUser.getImage().isEmpty()) {
+                profileImage.setImage(new Image(currentUser.getImage()));
+            }
+        } else {
+            System.out.println("⚠ Aucun utilisateur connecté !");
         }
     }
 
-    /**
-     * Handle the save changes button click event.
-     */
-    private void handleSaveChanges() {
-        // Save the changes to the user's profile
-        String firstName = firstNameField.getText();
-        String lastName = lastNameField.getText();
-        String email = emailField.getText();
-        String phone = phoneField.getText();
+    @FXML
+    private void handleImageUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une image de profil");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
 
-        // Perform validation and save logic here
-        System.out.println("Saving changes...");
-        System.out.println("First Name: " + firstName);
-        System.out.println("Last Name: " + lastName);
-        System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone);
+        selectedImageFile = fileChooser.showOpenDialog(new Stage());
+
+        if (selectedImageFile != null) {
+            profileImage.setImage(new Image(selectedImageFile.toURI().toString()));
+        }
     }
 
-    /**
-     * Handle the cancel button click event.
-     */
+    @FXML
+    private void handleSaveChanges() {
+        if (!validateInputs()) {
+            return;
+        }
+
+        // Mettre à jour les informations de l'utilisateur
+        currentUser.setFirstName(firstNameField.getText());
+        currentUser.setLastName(lastNameField.getText());
+        currentUser.setEmail(emailField.getText());
+        currentUser.setPhoneNumber(phoneField.getText());
+
+        // Mettre à jour l'image si une nouvelle image a été sélectionnée
+        if (selectedImageFile != null) {
+            try {
+                String imageUrl = AzureBlobService.uploadImage(selectedImageFile);
+                currentUser.setImage(imageUrl); // Sauvegarder l'URL de l'image dans la base de données
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors du téléversement de l'image.");
+                return;
+            }
+
+        }
+
+        // Sauvegarder les modifications dans la base de données
+        try {
+            userService.modifier(currentUser);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Votre profil a été mis à jour avec succès !");
+
+            if (dashBoardController != null) {
+                dashBoardController.setCurrentUser(currentUser); // Rafraîchir le tableau de bord
+                dashBoardController.navigateTo("dashboard/user/user-table.fxml");
+            }
+            if (frontOfficeController != null) {
+                frontOfficeController.setCurrentUser(currentUser); // Rafraîchir le front office
+                frontOfficeController.navigateTo("frontoffice/front-office-content.fxml");
+            }
+            // Mettre à jour la navbar avec les nouvelles informations
+            if (navbarController != null) {
+                navbarController.setCurrentUser(currentUser); // Rafraîchir la navbar
+            }
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors de la mise à jour du profil.");
+        }
+
+    }
+
+    @FXML
     private void handleCancel() {
-        // Reset the form fields or close the window
-        firstNameField.clear();
-        lastNameField.clear();
-        emailField.clear();
-        phoneField.clear();
-        System.out.println("Changes canceled...");
+        loadUserData();
+    }
+
+    private boolean validateInputs() {
+        // Vérification des champs vides
+        if (firstNameField.getText().isEmpty() || lastNameField.getText().isEmpty() || emailField.getText().isEmpty() || phoneField.getText().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Tous les champs doivent être remplis.");
+            return false;
+        }
+
+        // Vérification du format de l'email
+        if (!isValidEmail(emailField.getText())) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez entrer un email valide.");
+            return false;
+        }
+
+        // Vérification du format du numéro de téléphone (8 chiffres)
+        if (!isValidPhoneNumber(phoneField.getText())) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez entrer un numéro de téléphone valide (8 chiffres).");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Méthode pour valider le format de l'email
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return Pattern.compile(emailRegex).matcher(email).matches();
+    }
+
+    // Méthode pour valider le format du numéro de téléphone (8 chiffres)
+    private boolean isValidPhoneNumber(String phone) {
+        return phone.matches("\\d{8}");
+    }
+
+
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController = frontOfficeController;
     }
 }

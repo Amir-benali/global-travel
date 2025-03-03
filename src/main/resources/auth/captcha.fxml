@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.web.WebView?>
+
+<StackPane styleClass="signup-container" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.auth.CaptchaController">
+    <VBox styleClass="signup-card" maxWidth="400" maxHeight="750" alignment="CENTER" spacing="15">
+        <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+            <image>
+                <Image url="@../images/logo.jpg"/>
+            </image>
+        </ImageView>
+        <Label text="Validate CAPTCHA" styleClass="title"/>
+
+        <!-- WebView pour afficher le CAPTCHA -->
+        <WebView fx:id="captchaWebView" prefHeight="600.0" prefWidth="400.0" />
+
+        <Separator/>
+
+        <!-- Boutons alignés horizontalement -->
+        <HBox alignment="CENTER" spacing="20">
+            <!-- Bouton pour retourner à la page de signup -->
+            <Button text="Back to Sign Up" onAction="#navigateBackToSignup" styleClass="secondary-button" prefWidth="120"/>
+
+            <!-- Bouton pour valider le CAPTCHA -->
+            <Button text="Validate" onAction="#handleCaptchaValidation" styleClass="signup-button" prefWidth="150"/>
+        </HBox>
+    </VBox>
+    <Circle styleClass="background-circle" radius="300" StackPane.alignment="BOTTOM_RIGHT"/>
+    <Circle styleClass="background-circle" radius="200" StackPane.alignment="TOP_LEFT"/>
+</StackPane>

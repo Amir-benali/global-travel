@@ -46,6 +46,7 @@
                             </ImageView>
                         </graphic>
                     </Button>
+
                     <!-- Bouton pour ajouter une activité -->
                     <Button fx:id="btnAddActivity" onAction="#addActivity" styleClass="add-button-activity-activty" text="Add Activity">
                         <graphic>

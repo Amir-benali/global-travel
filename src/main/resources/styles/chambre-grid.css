@@ -1,0 +1,75 @@
+/* Style général de la ScrollPane */
+.chambres-grid-container {
+    -fx-background-color: #f4f4f4;
+}
+
+/* Style du titre de la section */
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Style du bouton Ajouter */
+.add-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.add-button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Style des cartes de chambre */
+.chambre-card {
+    -fx-background-color: white;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.chambre-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 0);
+}
+
+/* Style des labels dans les cartes de chambre */
+.chambre-type {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.chambre-price {
+    -fx-font-size: 16px;
+    -fx-text-fill: #4CAF50;
+}
+
+.chambre-availability {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+.chambre-options {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+/* Style des boutons dans les cartes de chambre */
+.reserve-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 3px;
+}
+
+.reserve-button:hover {
+    -fx-background-color: #1e88e5;
+}

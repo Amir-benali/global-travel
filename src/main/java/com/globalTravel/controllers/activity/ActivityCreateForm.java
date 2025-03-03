@@ -187,8 +187,9 @@ public class ActivityCreateForm implements Navigatable {
     private Activity createActivityFromInputs() {
         Timestamp startTimestamp = combineDateTime(startDatePicker.getValue(), startHourComboBox.getValue(), startMinuteComboBox.getValue(), startSecondComboBox.getValue());
         Timestamp endTimestamp = combineDateTime(endDatePicker.getValue(), endHourComboBox.getValue(), endMinuteComboBox.getValue(), endSecondComboBox.getValue());
-
+        int userId = getCurrentUserId();
         return new Activity(
+
                 startTimestamp,
                 endTimestamp,
                 descriptionField.getText().trim(),
@@ -198,7 +199,13 @@ public class ActivityCreateForm implements Navigatable {
                 typeComboBox.getValue(),
                 getHotelIdByName(hotelIdComboBox.getValue()),
                 getCarIdByBrand(carIdComboBox.getValue()),
-                getFlightIdByNumber(flightIdComboBox.getValue())
+                getFlightIdByNumber(flightIdComboBox.getValue()),
+                userId
+
+
+
+
+
         );
     }
 
@@ -393,6 +400,7 @@ public class ActivityCreateForm implements Navigatable {
         typeComboBox.setValue(null);
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
+
     }
 
     private void closeForm() {
@@ -462,5 +470,10 @@ public class ActivityCreateForm implements Navigatable {
             localisationField.setText(selectedLocation);
             suggestionsComboBox.setVisible(false);
         }
+    }
+    private int getCurrentUserId() {
+        // Exemple : Récupérer l'ID de l'utilisateur actuel à partir de la session
+        // Remplacez cette logique par votre propre mécanisme de récupération de l'ID utilisateur
+        return 1; // Exemple : ID de l'utilisateur actuel (à remplacer par une logique dynamique)
     }
 }
