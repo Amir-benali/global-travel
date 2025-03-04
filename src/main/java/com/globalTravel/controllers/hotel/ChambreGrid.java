@@ -205,6 +205,8 @@ public class ChambreGrid implements Navigatable, FrontNavigatable {
     private void navigateToReservation(Chambre chambre) {
         if (frontOfficeController != null) {
             frontOfficeController.navigateTo("dashboard/hotel/hotel-reservations.fxml");
+            HotelReservationForm controller = (HotelReservationForm) frontOfficeController.getController();
+            controller.setSelectedChambre(chambre);
         if (dashBoardController != null)
             dashBoardController.navigateTo("dashboard/hotel/hotel-reservations.fxml");
         }
