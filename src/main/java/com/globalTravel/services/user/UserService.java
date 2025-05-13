@@ -119,7 +119,33 @@ public class UserService implements IService<User> {
         }
         return null;
     }
-
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM user WHERE id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("genre"),
+                        rs.getDate("date_naissance"),
+                        rs.getString("adresse"),
+                        rs.getString("email"),
+                        rs.getString("roles"),
+                        rs.getString("password"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("phone_number"),
+                        rs.getString("image"),
+                        rs.getString("statut"),
+                        ""
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de l'utilisateur : " + e.getMessage());
+        }
+        return null;
+    }
     // Méthode pour vérifier si un email existe déjà dans la base de données
     public boolean emailExists(String email) {
         String sql = "SELECT id FROM user WHERE email = ?";

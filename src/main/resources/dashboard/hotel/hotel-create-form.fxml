@@ -16,8 +16,8 @@
     <TextField fx:id="hotelNameField" promptText="Hotel Name"/>
 
     <!-- Sélection du pays et de la ville -->
-    <ComboBox fx:id="countryComboBox" promptText="Choisir un pays"/>
-    <ComboBox fx:id="cityComboBox" promptText="Choisir une ville"/>
+    <ComboBox fx:id="countryComboBox" promptText="Select a country"/>
+    <ComboBox fx:id="cityComboBox" promptText="Select a city"/>
 
     <!-- Champ pour l'adresse -->
     <TextField fx:id="addressField" promptText="Address"/>
@@ -41,14 +41,14 @@
 
 
     <!-- Section pour la traduction des avis -->
-    <Label text="Choisir la langue de traduction :"/>
+    <Label text="Select a language to translate"/>
     <ComboBox fx:id="languageComboBox" promptText="Choisir une langue"/>
 
     <!-- Bouton pour déclencher la traduction -->
-    <Button fx:id="translateButton" text="Traduire" onAction="#handleTranslate"/>
+    <Button fx:id="translateButton" text="Translate" onAction="#handleTranslate"/>
 
     <!-- Zone de texte pour afficher l'avis traduit -->
-    <Label text="Avis traduit :"/>
+    <Label text="Translated review :"/>
     <TextArea fx:id="translatedReviewTextArea" prefHeight="100" wrapText="true" editable="false"/>
 
     <!-- Boutons d'action -->

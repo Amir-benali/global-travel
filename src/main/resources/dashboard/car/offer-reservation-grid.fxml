@@ -1,14 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.globalTravel.controllers.car.OfferReservationGrid"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.globalTravel.controllers.car.OfferReservationGrid"
+      styleClass="car-reservations-container"
+     >
 
-</AnchorPane>
+    <!-- Header Section -->
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20"/>
+        </padding>
+
+        <Label styleClass="header-title" text="Car Reservations"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Search Field -->
+        <TextField fx:id="searchField" promptText="Search reservations..." styleClass="search-field"/>
+
+        <!-- Status Filter ComboBox -->
+        <ComboBox fx:id="statusFilter" promptText="Filter by Status" styleClass="status-filter"/>
+
+        <!-- Add Reservation Button -->
+
+    </HBox>
+
+    <!-- Table Section -->
+    <TableView fx:id="reservationsTable" VBox.vgrow="ALWAYS" styleClass="reservations-table">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" styleClass="table-column"/>
+            <TableColumn fx:id="dateColumn" text="Date" styleClass="table-column"/>
+            <TableColumn fx:id="routeColumn" text="Route" styleClass="table-column"/>
+            <TableColumn fx:id="offerColumn" text="Offer" styleClass="table-column"/>
+            <TableColumn fx:id="userColumn" text="User" styleClass="table-column"/>
+            <TableColumn fx:id="statusColumn" text="Status" styleClass="table-column"/>
+            <TableColumn fx:id="actionsColumn" text="Actions" styleClass="table-column"/>
+        </columns>
+    </TableView>
+
+    <!-- Pagination Section -->
+    <HBox styleClass="pagination" alignment="CENTER" spacing="10">
+        <Button fx:id="prevButton" text="Previous" onAction="#handlePrevPage" styleClass="pagination-button"/>
+        <Label fx:id="pageInfo" text="Page 1 of 1" styleClass="page-info"/>
+        <Button fx:id="nextButton" text="Next" onAction="#handleNextPage" styleClass="pagination-button"/>
+    </HBox>
+
+</VBox>

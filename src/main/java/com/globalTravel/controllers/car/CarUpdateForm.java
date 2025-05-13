@@ -194,7 +194,7 @@ public class CarUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
-        closeForm();
+        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
     }
 
     private void closeForm() {
