@@ -12,6 +12,10 @@ public class Reservation_hotel {
     private String moyen_Paiement_h;
     private Chambre id_chambre_j;
 
+    // Constructeur par défaut
+    public Reservation_hotel() {
+    }
+
     // Constructeur modifié pour utiliser LocalDate
     public Reservation_hotel(int id_reservation_h, LocalDate date_checkin_h, LocalDate date_checkout_h, int nombre_chambres_h, String statut_h, String moyen_Paiement_h, Chambre id_chambre_j) {
         this.id_reservation_h = id_reservation_h;
@@ -91,14 +95,12 @@ public class Reservation_hotel {
 
     @Override
     public String toString() {
-        return "reservation_hotel{" +
-                "id_reservation_h=" + id_reservation_h +
-                ", date_checkin_h=" + date_checkin_h +
-                ", date_checkout_h=" + date_checkout_h +
-                ", nombre_chambres_h=" + nombre_chambres_h +
-                ", statut_h='" + statut_h + '\'' +
-                ", moyen_Paiement_h='" + moyen_Paiement_h + '\'' +
-                ", id_chambre_j='" + id_chambre_j + '\'' +
-                '}';
+        return "Réservation #" + id_reservation_h +
+                " - Check-in: " + date_checkin_h +
+                ", Check-out: " + date_checkout_h +
+                ", Statut: " + statut_h +
+                ", Moyen de paiement: " + moyen_Paiement_h +
+                ", Chambre: " + id_chambre_j;
     }
+
 }

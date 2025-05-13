@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.ChambreService;
@@ -10,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class ChambreCreateForm {
+public class ChambreCreateForm implements Navigatable {
 
     @FXML private Label formTitleLabel;
     @FXML private TextField typeField;
@@ -24,6 +26,7 @@ public class ChambreCreateForm {
     private ChambreService chambreService = new ChambreService();
     private HotelService hotelService = new HotelService();
     private Stage stage;
+    private DashBoard dashBoardController;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -158,6 +161,8 @@ public class ChambreCreateForm {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+
         closeForm();
     }
 
@@ -173,5 +178,10 @@ public class ChambreCreateForm {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
     }
 }

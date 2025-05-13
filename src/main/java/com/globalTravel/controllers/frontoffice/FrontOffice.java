@@ -6,12 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -73,9 +76,21 @@ public class FrontOffice implements FrontNavigatable {
         userProfileName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         if (currentUser.getImage() != null) {
             ImgUser.setImage(new Image(currentUser.getImage()));
-        }
-    }
+            ImgUser.setFitWidth(35); // Set image width
+            ImgUser.setFitHeight(35); // Set image height
+            ImgUser.setSmooth(true); // Enable smooth resizing
+            ImgUser.setPreserveRatio(false);
+            ImgUser.setClip(new Circle(ImgUser.getFitWidth() / 2, ImgUser.getFitHeight() / 2, Math.min(ImgUser.getFitWidth(), ImgUser.getFitHeight()) / 2));
+         }
+        if(currentUser.getRoles().toLowerCase().equals("employee")){
+            dashboardButton.setVisible(false);
+            flightManagementButton.setVisible(false);
+            carManagementButton.setVisible(false);
+            hotelManagementButton.setVisible(false);
+            activitiesButton.setVisible(false);
 
+        }
+}
 
     /**
      * Navigate to a specific FXML view.
@@ -136,7 +151,7 @@ public class FrontOffice implements FrontNavigatable {
 
     private void navigateToHotelReservations() {
         handleButtonSelection(hotelReservationsButton);
-        navigateTo("dashboard/hotel/hotel-reservations.fxml");
+        navigateTo("dashboard/hotel/list-reservation-h.fxml");
     }
 
     private void navigateToActivityList() {
@@ -216,12 +231,32 @@ public class FrontOffice implements FrontNavigatable {
 
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
-        this.frontOfficeController = frontOfficeController; 
+        this.frontOfficeController = frontOfficeController;
     }
 
     public void navigateToSettings(ActionEvent actionEvent) {
         navigateTo("user-settings/profile-settings.fxml");
 
+
+    }
+
+    @FXML
+    private void goToAIPage() {
+        try {
+            // Charge le fichier FXML de la page de l'IA
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/globalTravel/views/user_payment_grid.fxml"));
+            Parent root = loader.load();
+
+            // Obtient la scène actuelle
+            Stage stage = (Stage) paymentButton.getScene().getWindow();
+
+            // Change la scène pour afficher la page de l'IA
+            stage.setScene(new Scene(root));
+            stage.setTitle("AI Payment Module"); // Titre de la nouvelle page
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors du chargement de la page de l'IA.");
+        }
     }
 }
 

@@ -280,6 +280,7 @@ public class FlightUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
         clearForm();
         closeForm();
     }

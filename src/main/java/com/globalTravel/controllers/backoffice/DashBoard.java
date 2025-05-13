@@ -14,8 +14,13 @@ import java.io.IOException;
 
 public class DashBoard {
 
+    @FXML private Button btnSideSettings;
     @FXML
     private BorderPane mainContainer;  // Root layout container
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
 
     @FXML private Button btnSideActivity;
     @FXML private Button btnSideCar;
@@ -28,6 +33,8 @@ public class DashBoard {
     private Object controller;
     private User currentUser; // 🔥 Stocke l'utilisateur connecté
     private Navbar navbarController; // Référence au contrôleur de la navbar
+
+
 
     public void navigateTo(String fxmlFile) {
         try {
@@ -162,5 +169,10 @@ public class DashBoard {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void navigateToSettings(ActionEvent actionEvent) {
+        navigateTo("user-settings/profile-settings.fxml");
     }
 }

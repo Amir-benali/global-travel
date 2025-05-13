@@ -1077,15 +1077,15 @@
 .details-grid Label {
     -fx-font-size: 14px;
 }
-
-.details-grid Label:nth-child(odd) {
+/*
+.details-grid Label :nth-child(odd) {
     -fx-font-weight: bold;
     -fx-text-fill: #34495e;
 }
 
 .details-grid Label:nth-child(even) {
     -fx-text-fill: #7f8c8d;
-}
+}*/
 .modern-button {
     -fx-background-radius: 20;
     -fx-padding: 8 16;
@@ -2097,3 +2097,143 @@
     -fx-padding: 20 0;
     -fx-alignment: center-left;
 }
+
+.form-container {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.flight-details-container {
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.flight-detail-box {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-spacing: 10px;
+}
+
+.flight-detail {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.seat-button {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #0097ff;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.seat-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.selected-seat {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.flight-save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.flight-cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.car-reservations-container {
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-background-color: #f4f4f4;
+}
+/* Table Styles */
+.reservations-table {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Pagination Styles */
+.pagination {
+    -fx-padding: 10;
+    -fx-background-color: #ecf0f1;
+}
+
+.pagination-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+}
+
+.pagination-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.page-info {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+/* Status Flair Styles */
+/*.status-flair {*/
+/*    -fx-padding: 5px;*/
+/*    -fx-border-radius: 5px;*/
+/*    -fx-background-radius: 5px;*/
+/*    -fx-text-fill: white;*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.status-pending {*/
+/*    -fx-background-color: #f39c12;*/
+/*}*/
+
+/*.status-confirmed {*/
+/*    -fx-background-color: #2ecc71;*/
+/*}*/
+
+/*.status-canceled {*/
+/*    -fx-background-color: #e74c3c;*/
+/*}*/
+
+/*.status-failed {*/
+/*    -fx-background-color: #95a5a6;*/
+/*}*/
+

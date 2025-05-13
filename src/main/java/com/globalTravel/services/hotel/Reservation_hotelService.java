@@ -1,7 +1,5 @@
 package com.globalTravel.services.hotel;
 
-
-
 import com.globalTravel.models.hotel.Reservation_hotel;
 import com.globalTravel.services.IService;
 import com.globalTravel.utils.DataSource;
@@ -24,10 +22,14 @@ public class Reservation_hotelService implements IService<Reservation_hotel> {
             pst.setString(4, reservationHotel.getStatut_h());
             pst.setString(5, reservationHotel.getMoyen_Paiement_h());
             pst.setInt(6, reservationHotel.getid_chambre_j().getId_Chambre_h());
-            pst.executeUpdate();
-            System.out.println("Réservation ajoutée");
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Réservation ajoutée avec succès");
+            } else {
+                System.out.println("Aucune ligne n'a été affectée par l'insertion");
+            }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de l'ajout de la réservation : " + e.getMessage());
         }
     }
 
@@ -45,7 +47,7 @@ public class Reservation_hotelService implements IService<Reservation_hotel> {
             pst.executeUpdate();
             System.out.println("Réservation modifiée");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la modification de la réservation : " + e.getMessage());
         }
     }
 
@@ -57,7 +59,7 @@ public class Reservation_hotelService implements IService<Reservation_hotel> {
             pst.executeUpdate();
             System.out.println("Réservation supprimée");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la suppression de la réservation : " + e.getMessage());
         }
     }
 
@@ -79,7 +81,7 @@ public class Reservation_hotelService implements IService<Reservation_hotel> {
                 ));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur lors de la recherche des réservations : " + e.getMessage());
         }
         return reservations;
     }

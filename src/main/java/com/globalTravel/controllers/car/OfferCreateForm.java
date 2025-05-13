@@ -166,6 +166,8 @@ public class OfferCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/car/driver-grid.fxml");
+
         clearForm();
         closeForm();
     }

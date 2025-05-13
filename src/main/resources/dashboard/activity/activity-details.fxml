@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.layout.Region?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.globalTravel.controllers.activity.ActivityDetailsController"
+            style="-fx-background-color: #f4f4f4; -fx-padding: 20;"  VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+
+    <!-- VBox principale pour organiser les éléments -->
+    <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+        <!-- Titre de la page -->
+        <Label text="Détails de l'Activité" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4CAF50; -fx-alignment: CENTER;"/>
+
+        <!-- Nom de l'activité -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CALENDAR_ALT" size="20" fill="#4CAF50"/>
+            <Label text="Nom de l'activité :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="nomActivityLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Date de début -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CLOCK_ALT" size="20" fill="#4CAF50"/>
+            <Label text="Date de début :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="dateDebutLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Date de fin -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CLOCK_ALT" size="20" fill="#4CAF50"/>
+            <Label text="Date de fin :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="dateFinLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Description -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="INFO_CIRCLE" size="20" fill="#4CAF50"/>
+            <Label text="Description :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="descriptionLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Localisation -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="MAP_MARKER" size="20" fill="#4CAF50"/>
+            <Label text="Localisation :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="localisationLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Prix total -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="DOLLAR" size="20" fill="#4CAF50"/>
+            <Label text="Prix total :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="prixTotalLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Type d'activité -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="TAG" size="20" fill="#4CAF50"/>
+            <Label text="Type d'activité :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="typeActivityLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Hôtel -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="HOTEL" size="20" fill="#4CAF50"/>
+            <Label text="Hôtel :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="hotelLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Voiture -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="CAR" size="20" fill="#4CAF50"/>
+            <Label text="Voiture :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="voitureLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+
+        <!-- Vol -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <FontAwesomeIconView glyphName="PLANE" size="20" fill="#4CAF50"/>
+            <Label text="Vol :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+            <Label fx:id="volLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

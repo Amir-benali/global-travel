@@ -119,6 +119,7 @@ public class AirlineCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
         clearForm();
         closeForm();
     }
