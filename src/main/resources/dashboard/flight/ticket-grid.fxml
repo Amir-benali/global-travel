@@ -18,7 +18,6 @@
                     <children>
                         <Label styleClass="section-title" text="Ticket List" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#addTicket" styleClass="add-button" text="+ ADD" />
                     </children>
                 </HBox>
                 <ScrollPane fitToWidth="true" fitToHeight="true">

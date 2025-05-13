@@ -12,8 +12,9 @@ public class Ticket {
     private double ticket_price;
     private TicketStatus status;
     private Timestamp booking_date;
+    private int selected_user_id;
 
-    public Ticket(int ticket_id, int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
+    public Ticket(int ticket_id, int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date, int selected_user_id) {
         this.ticket_id = ticket_id;
         this.flight_id = flight_id;
         this.passenger_id = passenger_id;
@@ -23,9 +24,10 @@ public class Ticket {
         this.ticket_price = ticket_price;
         this.status = status;
         this.booking_date = booking_date;
+        this.selected_user_id = selected_user_id;
     }
 
-    public Ticket(int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
+    public Ticket(int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date, int selected_user_id) {
         this.flight_id = flight_id;
         this.passenger_id = passenger_id;
         this.passenger_email = passenger_email;
@@ -34,6 +36,7 @@ public class Ticket {
         this.ticket_price = ticket_price;
         this.status = status;
         this.booking_date = booking_date;
+        this.selected_user_id = selected_user_id;
     }
 
     @Override
@@ -48,6 +51,7 @@ public class Ticket {
                 ", ticket_price=" + ticket_price +
                 ", status=" + status +
                 ", booking_date='" + booking_date + '\'' +
+                ", selected_user_id=" + selected_user_id +
                 '}';
     }
 
@@ -121,5 +125,13 @@ public class Ticket {
 
     public void setBooking_date(Timestamp booking_date) {
         this.booking_date = booking_date;
+    }
+
+    public int getSelected_user_id() {
+        return selected_user_id;
+    }
+
+    public void setSelected_user_id(int selected_user_id) {
+        this.selected_user_id = selected_user_id;
     }
 }

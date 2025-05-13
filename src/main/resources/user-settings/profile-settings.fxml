@@ -54,7 +54,6 @@
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button fx:id="cancelButton" text="Cancel" styleClass="cancel-button"/>
         <Button fx:id="saveButton" text="Save Changes" styleClass="save-button"/>
     </HBox>
 </VBox>

@@ -163,7 +163,8 @@ public class HotelGrid implements Navigatable, FrontNavigatable {
         FontAwesomeIconView detailsIcon = new FontAwesomeIconView(FontAwesomeIcon.SEARCH);
         detailsIcon.setSize("1.5em");
         detailsButton.setGraphic(detailsIcon);
-        detailsButton.getStyleClass().addAll("hotel-button", "details-button");
+        detailsButton.getStyleClass().addAll("hotel-button", "view-details-button");
+
         detailsButton.setOnAction(e -> navigateToChambreManagement(hotel));
 
         // Ajouter les boutons au conteneur

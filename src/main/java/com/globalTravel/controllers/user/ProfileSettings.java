@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -47,8 +48,6 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
     @FXML
     private Button saveButton;
 
-    @FXML
-    private Button cancelButton;
 
     private final UserService userService = new UserService();
     private User currentUser;
@@ -63,7 +62,6 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
         uploadImageButton.setOnAction(event -> handleImageUpload());
         saveButton.setOnAction(event -> handleSaveChanges());
-        cancelButton.setOnAction(event -> handleCancel());
     }
 
     // Méthode pour définir le contrôleur de la navbar
@@ -83,7 +81,9 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
             if (currentUser.getImage() != null && !currentUser.getImage().isEmpty()) {
                 profileImage.setImage(new Image(currentUser.getImage()));
-            }
+                profileImage.setClip(new Circle(profileImage.getFitWidth() / 2, profileImage.getFitHeight() / 2, Math.min(profileImage.getFitWidth(), profileImage.getFitHeight()) / 2));
+
+        }
         } else {
             System.out.println("⚠ Aucun utilisateur connecté !");
         }
@@ -101,6 +101,8 @@ public class ProfileSettings implements FrontNavigatable, Navigatable {
 
         if (selectedImageFile != null) {
             profileImage.setImage(new Image(selectedImageFile.toURI().toString()));
+            profileImage.setClip(new Circle(profileImage.getFitWidth() / 2, profileImage.getFitHeight() / 2, Math.min(profileImage.getFitWidth(), profileImage.getFitHeight()) / 2));
+
         }
     }
 

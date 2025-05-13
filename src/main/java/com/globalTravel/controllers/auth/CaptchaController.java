@@ -70,7 +70,7 @@ public class CaptchaController {
             pstmt.setDate(5, java.sql.Date.valueOf(birthDate));
             pstmt.setString(6, phoneNumber);
             pstmt.setString(7, hashedPassword);
-            pstmt.setString(8, "USER"); // Rôle par défaut
+            pstmt.setString(8, "Employee"); // Rôle par défaut
             pstmt.setString(9, "Actif"); // Statut par défaut
 
             int rowsInserted = pstmt.executeUpdate();
@@ -127,20 +127,5 @@ public class CaptchaController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void navigateBackToSignup() {
-        try {
-            // Charger la vue signup.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/signup.fxml"));
-            Parent signupView = loader.load();
 
-            // Obtenir la scène actuelle
-            Scene currentScene = captchaWebView.getScene();
-            currentScene.setRoot(signupView);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger la page de signup.", Alert.AlertType.ERROR);
-        }
-    }
 }

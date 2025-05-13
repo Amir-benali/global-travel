@@ -217,6 +217,8 @@ public class ChambreUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+
         closeForm();
     }
 

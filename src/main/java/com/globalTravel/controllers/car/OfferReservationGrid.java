@@ -6,6 +6,7 @@ import com.globalTravel.models.car.CarReservation;
 import com.globalTravel.models.car.Offer;
 import com.globalTravel.models.car.Route;
 import com.globalTravel.models.car.TypeCarReservation;
+import com.globalTravel.models.user.User;
 import com.globalTravel.services.car.CarReservationService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
@@ -45,10 +46,10 @@ public class OfferReservationGrid implements FrontNavigatable {
     private FilteredList<CarReservation> filteredReservations;
 
     private int currentPage = 1;
-    private int itemsPerPage = 10;
+    private int itemsPerPage = 5;
     private int totalPages = 1;
     private FrontOffice frontOfficeController;
-
+    private User currentUser;
     @FXML
     public void initialize() {
         setupTable();
@@ -168,7 +169,7 @@ public class OfferReservationGrid implements FrontNavigatable {
         Task<List<CarReservation>> loadTask = new Task<>() {
             @Override
             protected List<CarReservation> call() throws Exception {
-                List<CarReservation> reservations = carReservationService.rechercher();
+                List<CarReservation> reservations = carReservationService.rechercher().stream().filter(reservation -> reservation.getUser().getId()==currentUser.getId()).toList();
                 for (CarReservation reservation : reservations) {
                     System.out.println("Reservation ID: " + reservation.getId() + ", Status: " + reservation.getStatus());
                 }
@@ -243,5 +244,6 @@ public class OfferReservationGrid implements FrontNavigatable {
     @Override
     public void setFrontOfficeController(FrontOffice frontOfficeController) {
         this.frontOfficeController = frontOfficeController;
+        this.currentUser = frontOfficeController.getCurrentUser();
     }
 }
