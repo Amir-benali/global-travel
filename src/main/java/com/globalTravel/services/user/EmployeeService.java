@@ -25,7 +25,7 @@ public class EmployeeService implements IService<Employee> {
             pstmt.setDate(2, new Date(employee.getDateNaissance().getTime()));
             pstmt.setString(3, employee.getAdresse());
             pstmt.setString(4, employee.getEmail());
-            pstmt.setString(5, "Employee");
+            pstmt.setString(5, "ROLE_EMPLOYEE");
             pstmt.setString(6, employee.getPassword());
             pstmt.setString(7, employee.getFirstName());
             pstmt.setString(8, employee.getLastName());
@@ -44,7 +44,7 @@ public class EmployeeService implements IService<Employee> {
     @Override
     public List<Employee> rechercher() {
         List<Employee> employees = new ArrayList<>();
-        String sql = "SELECT * FROM user WHERE roles = 'Employee'";
+        String sql = "SELECT * FROM user WHERE roles = 'ROLE_EMPLOYEE'";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -76,7 +76,7 @@ public class EmployeeService implements IService<Employee> {
     @Override
     public void modifier(Employee employee) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, poste = ? " +
-                "WHERE id = ? AND roles = 'Employee'";
+                "WHERE id = ? AND roles = 'ROLE_EMPLOYEE'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, employee.getGenre());
@@ -101,7 +101,7 @@ public class EmployeeService implements IService<Employee> {
 
     @Override
     public void supprimer(Employee employee) {
-        String sql = "DELETE FROM user WHERE id = ? AND roles = 'Employee'";
+        String sql = "DELETE FROM user WHERE id = ? AND roles = 'ROLE_EMPLOYEE'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, employee.getId());
