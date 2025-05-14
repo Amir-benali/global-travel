@@ -36,11 +36,17 @@
                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             <ListView fx:id="destinationSuggestions" GridPane.columnIndex="1" GridPane.rowIndex="3" visible="false"/>
 
-            <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <Label text="Date and Time:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <DatePicker fx:id="datePicker"/>
+                <TextField fx:id="timeField" promptText="HH:MM" prefWidth="100"/>
+            </HBox>
 
-            <Label text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <TextField fx:id="timeField" promptText="HH:MM" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Label text="Select User:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <TextField fx:id="selectedUserField" promptText="Selected User" editable="false" prefWidth="200"/>
+                <Button text="Select User" onAction="#handleSelectUser"/>
+            </HBox>
         </GridPane>
 
         <Region VBox.vgrow="ALWAYS"/> <!-- Spacer -->

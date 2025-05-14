@@ -131,6 +131,52 @@ public class FlightService implements IService<Flight> {
         return false;
     }
 
-  
+    // FlightService.java
+    public void decrementAvailableSeats(int flightId) {
+        String checkSeatsQuery = "SELECT available_seats FROM flights WHERE id_flight = ?";
+        String decrementSeatsQuery = "UPDATE flights SET available_seats = available_seats - 1 WHERE id_flight = ? AND available_seats > 0";
+        try {
+            PreparedStatement checkPst = connection.prepareStatement(checkSeatsQuery);
+            checkPst.setInt(1, flightId);
+            ResultSet rs = checkPst.executeQuery();
+            if (rs.next() && rs.getInt("available_seats") > 0) {
+                PreparedStatement decrementPst = connection.prepareStatement(decrementSeatsQuery);
+                decrementPst.setInt(1, flightId);
+                decrementPst.executeUpdate();
+                System.out.println("Available seats decremented");
+            } else {
+                System.out.println("No available seats to decrement");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Flight getFlightById(int flightId) {
+        String query = "SELECT * FROM flights WHERE id_flight = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, flightId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return new Flight(rs.getInt("id_flight"),
+                            rs.getString("flight_number"),
+                            rs.getString("airline_name"),
+                            rs.getString("departure_country"),
+                            rs.getString("arrival_country"),
+                            rs.getString("departure_airport_name"),
+                            rs.getString("arrival_airport_name"),
+                            rs.getTimestamp("departure_time"),
+                            rs.getTimestamp("arrival_time"),
+                            rs.getInt("duration_per_hours"),
+                            rs.getInt("available_seats"),
+                            rs.getDouble("flight_base_price"),
+                            FlightStatus.valueOf(rs.getString("flight_status")));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting flight by ID: " + e.getMessage());
+        }
+        return null;
+    }
 }
 

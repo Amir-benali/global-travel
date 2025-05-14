@@ -1,5 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
+import com.globalTravel.controllers.frontoffice.FrontNavigatable;
+import com.globalTravel.controllers.frontoffice.FrontOffice;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.models.hotel.Reservation_hotel;
 import com.globalTravel.services.hotel.Reservation_hotelService;
@@ -13,7 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class HotelReservationForm {
+public class HotelReservationForm implements FrontNavigatable {
 
     @FXML
     private Label typeLabel; // Label pour afficher le type de chambre
@@ -34,6 +36,7 @@ public class HotelReservationForm {
     private ComboBox<String> paymentMethodComboBox; // ComboBox pour la méthode de paiement
 
     private Chambre selectedChambre; // Chambre sélectionnée
+    private FrontOffice frontOfficeController;
 
     /**
      * Définit la chambre sélectionnée et met à jour les labels.
@@ -162,6 +165,8 @@ public class HotelReservationForm {
                 Reservation_hotelService reservationService = new Reservation_hotelService();
                 reservationService.ajouter(reservation); // Ajouter à la base de données
                 showAlert("Succès", "Votre réservation a été enregistrée avec succès !");
+                frontOfficeController.navigateTo("dashboard/hotel/list-reservation-h.fxml");
+
             });
 
             // Afficher la page de paiement
@@ -188,5 +193,10 @@ public class HotelReservationForm {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @Override
+    public void setFrontOfficeController(FrontOffice frontOfficeController) {
+        this.frontOfficeController=frontOfficeController;
     }
 }

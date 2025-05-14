@@ -5,29 +5,38 @@ import java.sql.Timestamp;
 public class Ticket {
     private int ticket_id;
     private int flight_id;
+    private int passenger_id;
+    private String passenger_email;
     private String seat_number;
     private TicketClass ticketClass;
     private double ticket_price;
     private TicketStatus status;
     private Timestamp booking_date;
+    private int selected_user_id;
 
-    public Ticket(int ticket_id, int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
+    public Ticket(int ticket_id, int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date, int selected_user_id) {
         this.ticket_id = ticket_id;
         this.flight_id = flight_id;
+        this.passenger_id = passenger_id;
+        this.passenger_email = passenger_email;
         this.seat_number = seat_number;
         this.ticketClass = ticketClass;
         this.ticket_price = ticket_price;
         this.status = status;
         this.booking_date = booking_date;
+        this.selected_user_id = selected_user_id;
     }
 
-    public Ticket(int flight_id, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date) {
+    public Ticket(int flight_id,int passenger_id , String passenger_email, String seat_number, TicketClass ticketClass, double ticket_price, TicketStatus status, Timestamp booking_date, int selected_user_id) {
         this.flight_id = flight_id;
+        this.passenger_id = passenger_id;
+        this.passenger_email = passenger_email;
         this.seat_number = seat_number;
         this.ticketClass = ticketClass;
         this.ticket_price = ticket_price;
         this.status = status;
         this.booking_date = booking_date;
+        this.selected_user_id = selected_user_id;
     }
 
     @Override
@@ -35,11 +44,14 @@ public class Ticket {
         return "Ticket{" +
                 "ticket_id=" + ticket_id +
                 ", flight_id=" + flight_id +
+                ", passenger_id=" + passenger_id +
+                ", passenger_email='" + passenger_email + '\'' +
                 ", seat_number='" + seat_number + '\'' +
                 ", ticketClass=" + ticketClass +
                 ", ticket_price=" + ticket_price +
                 ", status=" + status +
                 ", booking_date='" + booking_date + '\'' +
+                ", selected_user_id=" + selected_user_id +
                 '}';
     }
 
@@ -57,6 +69,22 @@ public class Ticket {
 
     public void setFlight_id(int flight_id) {
         this.flight_id = flight_id;
+    }
+
+    public int getPassenger_id() {
+        return passenger_id;
+    }
+
+    public void setPassenger_id(int passenger_id) {
+        this.passenger_id = passenger_id;
+    }
+
+    public String getPassenger_email() {
+        return passenger_email;
+    }
+
+    public void setPassenger_email(String passenger_email) {
+        this.passenger_email = passenger_email;
     }
 
     public String getSeat_number() {
@@ -97,5 +125,13 @@ public class Ticket {
 
     public void setBooking_date(Timestamp booking_date) {
         this.booking_date = booking_date;
+    }
+
+    public int getSelected_user_id() {
+        return selected_user_id;
+    }
+
+    public void setSelected_user_id(int selected_user_id) {
+        this.selected_user_id = selected_user_id;
     }
 }

@@ -114,6 +114,7 @@ public class OfferDetails implements Navigatable, FrontNavigatable {
     private void onBookClicked() {
         // TODO: Implement booking functionality
         frontOfficeController.navigateTo("dashboard/car/offer-book-form.fxml");
+        ((OfferBookForm) frontOfficeController.getController()).initialize(offer);
 
     }
 

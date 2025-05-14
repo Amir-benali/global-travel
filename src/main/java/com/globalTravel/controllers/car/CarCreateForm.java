@@ -210,6 +210,7 @@ public class CarCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/car/car-grid.fxml");
         clearForm();
         closeForm();
     }

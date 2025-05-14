@@ -180,7 +180,7 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation du nom de l'hôtel
         if (hotelNameField.getText().trim().isEmpty() || hotelNameField.getText().trim().length() <= 2) {
-            setFieldError(hotelNameField, "Le nom de l'hôtel est requis et doit contenir plus de 2 caractères.");
+            setFieldError(hotelNameField, "The hotel name is required and must contain more than 2 characters.");
             isValid = false;
         } else {
             clearFieldError(hotelNameField);
@@ -188,7 +188,7 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation de l'adresse
         if (addressField.getText().trim().isEmpty() || addressField.getText().trim().length() <= 2) {
-            setFieldError(addressField, "L'adresse est requise et doit contenir plus de 2 caractères.");
+            setFieldError(addressField, "The address is required and must contain more than 2 characters.");
             isValid = false;
         } else {
             clearFieldError(addressField);
@@ -196,7 +196,7 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation des services
         if (servicesField.getText().trim().isEmpty() || servicesField.getText().trim().length() <= 2) {
-            setFieldError(servicesField, "Les services sont requis et doivent contenir plus de 2 caractères.");
+            setFieldError(servicesField, "Services are required and must contain more than 2 characters.");
             isValid = false;
         } else {
             clearFieldError(servicesField);
@@ -204,7 +204,7 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation des coordonnées
         if (coordinatesField.getText().trim().isEmpty() || coordinatesField.getText().trim().length() <= 2) {
-            setFieldError(coordinatesField, "Les coordonnées sont requises et doivent contenir plus de 2 caractères.");
+            setFieldError(coordinatesField, "Coordinates are required and must contain more than 2 characters.");
             isValid = false;
         } else {
             clearFieldError(coordinatesField);
@@ -212,15 +212,14 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation des avis des clients
         if (reviewsField.getText().trim().isEmpty() || reviewsField.getText().trim().length() <= 2) {
-            setFieldError(reviewsField, "Les avis des clients sont requis et doivent contenir plus de 2 caractères.");
-            isValid = false;
+            setFieldError(reviewsField, "Customer reviews are required and must contain more than 2 characters.");            isValid = false;
         } else {
             clearFieldError(reviewsField);
         }
 
         // Validation du pays
         if (countryComboBox.getValue() == null) {
-            setFieldError(countryComboBox, "Choisissez un pays.");
+            setFieldError(countryComboBox, "Select a country.");
             isValid = false;
         } else {
             clearFieldError(countryComboBox);
@@ -228,7 +227,7 @@ public class HotelCreateForm implements Navigatable {
 
         // Validation de la ville
         if (cityComboBox.getValue() == null) {
-            setFieldError(cityComboBox, "Choisissez une ville.");
+            setFieldError(cityComboBox, "Select a city.");
             isValid = false;
         } else {
             clearFieldError(cityComboBox);
@@ -260,6 +259,8 @@ public class HotelCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+
+        dashBoardController.navigateTo("dashboard/hotel/hotel-grid.fxml");
         closeForm();
     }
 
@@ -290,11 +291,11 @@ public class HotelCreateForm implements Navigatable {
 
     @FXML
     private void handleTranslate() {
-        String textToTranslate = reviewsField.getText(); // Récupère l'avis existant
-        String targetLanguage = languageComboBox.getValue(); // Récupère la langue sélectionnée
+        String textToTranslate = reviewsField.getText();
+        String targetLanguage = languageComboBox.getValue();
 
         if (textToTranslate.isEmpty() || targetLanguage == null) {
-            translatedReviewTextArea.setText("Veuillez entrer un avis et choisir une langue.");
+            translatedReviewTextArea.setText("You must type a review and select a language.");
             return;
         }
 

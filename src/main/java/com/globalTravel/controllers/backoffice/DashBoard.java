@@ -1,6 +1,7 @@
 package com.globalTravel.controllers.backoffice;
 
 import com.globalTravel.controllers.flight.FlightUpdateForm;
+import com.globalTravel.controllers.user.ProfileSettings;
 import com.globalTravel.models.flight.Flight;
 import com.globalTravel.models.user.User;
 import javafx.event.ActionEvent;
@@ -13,8 +14,13 @@ import java.io.IOException;
 
 public class DashBoard {
 
+    @FXML private Button btnSideSettings;
     @FXML
     private BorderPane mainContainer;  // Root layout container
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
 
     @FXML private Button btnSideActivity;
     @FXML private Button btnSideCar;
@@ -26,6 +32,9 @@ public class DashBoard {
     private Button currentlySelectedButton; // Track the currently selected button
     private Object controller;
     private User currentUser; // 🔥 Stocke l'utilisateur connecté
+    private Navbar navbarController; // Référence au contrôleur de la navbar
+
+
 
     public void navigateTo(String fxmlFile) {
         try {
@@ -91,6 +100,22 @@ public class DashBoard {
     }
 
     @FXML
+    void navigateToProfileSettings(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard/user/profile-settings.fxml"));
+            Parent view = loader.load();
+
+            // Passer la référence de la navbar au contrôleur des paramètres utilisateur
+            ProfileSettings profileSettingsController = loader.getController();
+            profileSettingsController.setNavbarController(this.navbarController);
+
+            mainContainer.setCenter(view); // Afficher la page des paramètres
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void initialize() {
         handleButtonSelection(btnSideUser);
         navigateTo("dashboard/user/user-table.fxml");
@@ -144,5 +169,10 @@ public class DashBoard {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void navigateToSettings(ActionEvent actionEvent) {
+        navigateTo("user-settings/profile-settings.fxml");
     }
 }
