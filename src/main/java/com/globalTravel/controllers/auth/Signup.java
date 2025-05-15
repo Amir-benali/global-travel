@@ -49,8 +49,8 @@ public class Signup extends NanoHTTPD {
     private static final String HCAPTCHA_SITEKEY = "dfbe2378-f644-45ae-81ca-4838f5720434";
     private static final String HCAPTCHA_SECRET = "ES_020263b5a237461f8952d3e2997834db";
 
-    // Clé API pour Email Validation
-    private static final String EMAIL_API_KEY = "7fdf78ad74a44970b1a59a49087dbddc";
+    // API Key for Email Validation
+    private static final String EMAIL_API_KEY = "ecf07d3ad26b47c5878f79a9c0dbc6b2";
     private static final String EMAIL_API_URL = "https://emailvalidation.abstractapi.com/v1/";
 
     // Local server for hCaptcha
@@ -136,6 +136,27 @@ public class Signup extends NanoHTTPD {
         alert.showAndWait();
     }
 
+    private boolean isPasswordBreached(String password) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("password", password);
+
+            Content content = Request.post("https://password-exposed-aramgmhfh4f5dpc0.germanywestcentral-01.azurewebsites.net/predict")
+                    .addHeader("Content-Type", "application/json")
+                    .bodyString(json.toJSONString(), org.apache.hc.core5.http.ContentType.APPLICATION_JSON)
+                    .execute()
+                    .returnContent();
+
+            JSONParser parser = new JSONParser();
+            JSONObject response = (JSONObject) parser.parse(content.asString());
+
+            return "true".equalsIgnoreCase(response.get("breached").toString());
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return false; // Fallback in case of error
+        }
+    }
+
     @FXML
     private void handleSignup() {
         String firstName = firstNameField.getText().trim();
@@ -148,49 +169,49 @@ public class Signup extends NanoHTTPD {
         String confirmPassword = confirmPasswordField.getText().trim();
         boolean agreedToTerms = termsCheckBox.isSelected();
 
-        // Vérification des champs vides
+        // Field validation
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || gender == null || birthDate == null || phoneNumber.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            showAlert("Erreur", "Tous les champs sont obligatoires.", Alert.AlertType.WARNING);
+            showAlert("Error", "All fields are required.", Alert.AlertType.WARNING);
             return;
         }
 
         if (!isValidBirthDate(birthDate)) {
-            showAlert("Erreur", "Vous devez avoir au moins 18 ans.", Alert.AlertType.ERROR);
+            showAlert("Error", "You must be at least 18 years old.", Alert.AlertType.ERROR);
             return;
         }
 
         if (!isValidEmail(email)) {
-            showAlert("Erreur", "Veuillez entrer un email valide.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (!isValidPhoneNumber(phoneNumber)) {
-            showAlert("Erreur", "Numéro de téléphone invalide (8 chiffres).", Alert.AlertType.ERROR);
+            showAlert("Error", "Please enter a valid email address.", Alert.AlertType.ERROR);
             return;
         }
 
         if (!isValidPassword(password)) {
-            showAlert("Erreur", "Le mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre.", Alert.AlertType.ERROR);
+            showAlert("Error", "Password must contain at least 6 characters, one uppercase letter and one number.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (isPasswordBreached(password)) {
+            showAlert("Error", "This password has been compromised in a data breach. Please choose a different one.", Alert.AlertType.ERROR);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            showAlert("Erreur", "Les mots de passe ne correspondent pas.", Alert.AlertType.ERROR);
+            showAlert("Error", "Passwords do not match.", Alert.AlertType.ERROR);
             return;
         }
 
         if (!agreedToTerms) {
-            showAlert("Erreur", "Vous devez accepter les conditions d'utilisation.", Alert.AlertType.WARNING);
+            showAlert("Error", "You must accept the terms and conditions.", Alert.AlertType.WARNING);
             return;
         }
 
         if (userExists(email)) {
-            showAlert("Erreur", "L'email est déjà utilisé.", Alert.AlertType.ERROR);
+            showAlert("Error", "This email is already registered.", Alert.AlertType.ERROR);
             return;
         }
 
         if (!validateEmailWithAPI(email)) {
-            showAlert("Erreur", "L'email n'est pas valide ou n'est pas délivrable.", Alert.AlertType.ERROR);
+            showAlert("Error", "This email is not valid or not deliverable.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -203,41 +224,36 @@ public class Signup extends NanoHTTPD {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         Signup.userData.put("hashedPassword", hashedPassword);
 
-        // Si tout est valide, on passe à la page Captcha
+        // If all validations pass, proceed to Captcha page
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/auth/captcha.fxml"));
             Parent root = loader.load();
             emailField.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger la page Captcha.", Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to load Captcha page.", Alert.AlertType.ERROR);
         }
     }
 
-    // Méthode pour valider la date de naissance
     private boolean isValidBirthDate(LocalDate birthDate) {
         LocalDate today = LocalDate.now();
-        LocalDate minBirthDate = today.minusYears(18); // L'utilisateur doit avoir au moins 18 ans
+        LocalDate minBirthDate = today.minusYears(18); // User must be at least 18 years old
         return !birthDate.isAfter(today) && !birthDate.isAfter(minBirthDate);
     }
 
-    // Méthode pour valider le format de l'email
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
-    // Méthode pour valider le format du numéro de téléphone (8 chiffres)
     private boolean isValidPhoneNumber(String phone) {
         return phone.matches("\\d{8}");
     }
 
-    // Méthode pour valider le mot de passe
     private boolean isValidPassword(String password) {
         return password.length() >= 6 && password.matches(".*[A-Z].*") && password.matches(".*\\d.*");
     }
 
-    // Méthode pour vérifier si l'utilisateur existe déjà
     private boolean userExists(String email) {
         String sql = "SELECT id FROM user WHERE email = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -250,7 +266,6 @@ public class Signup extends NanoHTTPD {
         }
     }
 
-    // Méthode pour valider l'email via l'API
     private boolean validateEmailWithAPI(String email) {
         try {
             String apiUrl = EMAIL_API_URL + "?api_key=" + EMAIL_API_KEY + "&email=" + email;
@@ -288,9 +303,15 @@ public class Signup extends NanoHTTPD {
     }
 
     public void handleTermsAndConditions(ActionEvent actionEvent) {
+        // Implementation for terms and conditions
     }
 
     public void handleLogin(ActionEvent actionEvent) {
+        try {
+            navigateToLogin();
+        } catch (IOException e) {
+            showAlert("Error", "Failed to load login page.", Alert.AlertType.ERROR);
+        }
     }
 
     private String getCaptchaToken() {
@@ -325,11 +346,5 @@ public class Signup extends NanoHTTPD {
         } catch (Exception e) {
             System.err.println("Error stopping hCaptcha server: " + e.getMessage());
         }
-    }
-
-    // Call this method when the application is closing or when captcha validation is complete
-    public void onApplicationClose() {
-        stopCaptchaServer();
-        // Other cleanup code...
     }
 }

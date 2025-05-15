@@ -25,7 +25,7 @@ public class ResponsableService implements IService<Responsable> {
             pstmt.setDate(2, new Date(responsable.getDateNaissance().getTime()));
             pstmt.setString(3, responsable.getAdresse());
             pstmt.setString(4, responsable.getEmail());
-            pstmt.setString(5, "Responsable");
+            pstmt.setString(5, "ROLE_RESPONSABLE");
             pstmt.setString(6, responsable.getPassword());
             pstmt.setString(7, responsable.getFirstName());
             pstmt.setString(8, responsable.getLastName());
@@ -44,7 +44,7 @@ public class ResponsableService implements IService<Responsable> {
     @Override
     public List<Responsable> rechercher() {
         List<Responsable> responsables = new ArrayList<>();
-        String sql = "SELECT * FROM user WHERE roles = 'Responsable'";
+        String sql = "SELECT * FROM user WHERE roles = 'ROLE_RESPONSABLE'";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -76,7 +76,7 @@ public class ResponsableService implements IService<Responsable> {
     @Override
     public void modifier(Responsable responsable) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, departement = ? " +
-                "WHERE id = ? AND roles = 'Responsable'";
+                "WHERE id = ? AND roles = 'ROLE_RESPONSABLE'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, responsable.getGenre());
@@ -101,7 +101,7 @@ public class ResponsableService implements IService<Responsable> {
 
     @Override
     public void supprimer(Responsable responsable) {
-        String sql = "DELETE FROM user WHERE id = ? AND roles = 'Responsable'";
+        String sql = "DELETE FROM user WHERE id = ? AND roles = 'ROLE_RESPONSABLE'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, responsable.getId());

@@ -2273,6 +2273,18 @@
 /*    -fx-background-color: #95a5a6;*/
 /*}*/
 
+.icon-only-button {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+.icon-only-button:hover {
+    -fx-background-color: #f0f0f0;
 .no-results-label {
     -fx-font-family: 'Roboto', sans-serif;
     -fx-font-size: 16px;
