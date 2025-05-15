@@ -13,11 +13,14 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.control.Rating;
+import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -58,15 +61,46 @@ public class ReviewGrid implements Navigatable, FrontNavigatable {
     private VBox createReviewCard(Review review) {
         VBox card = new VBox(15);
         card.getStyleClass().add("review-card");
-        card.setStyle("-fx-background-color: #ffffff; -fx-border-radius: 8px; -fx-shadow: 2 2 10 rgba(0, 0, 0, 0.1); -fx-padding: 15;");
+        card.setStyle("-fx-background-color: #ffffff; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 15;");
+
+        // Create header with avatar and user info
+        HBox headerBox = new HBox(10);
+        headerBox.setAlignment(Pos.CENTER_LEFT);
+
+        // Create avatar image
+        ImageView avatarView = new ImageView();
+        avatarView.setFitHeight(40);
+        avatarView.setFitWidth(40);
+        avatarView.setDisable(true);
+        
+        // Create a circular clip for the avatar
+        Circle clip = new Circle(20);
+        clip.setCenterX(20);
+        clip.setCenterY(20);
+        avatarView.setClip(clip);
+        
+        // Construct avatar URL
+        String avatarUrl = "https://ui-avatars.com/api/?name=";
+        if (review.getUserPrenom() != null && review.getUserNom() != null) {
+            avatarUrl += review.getUserPrenom() + "+" + review.getUserNom();
+        } else {
+            avatarUrl += "anonymous+user";
+        }
+        avatarUrl += "&background=random";
+        
+        // Load avatar image
+        Image avatarImage = new Image(avatarUrl);
+        avatarView.setImage(avatarImage);
+
+        // User info label
+        Label userLabel = new Label("Avis de : " + review.getUserPrenom() + " " + review.getUserNom());
+        userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+        headerBox.getChildren().addAll(avatarView, userLabel);
 
         VBox reviewInfo = new VBox(10);
         reviewInfo.getStyleClass().add("review-info");
-
-        // Afficher le nom et le prénom de l'utilisateur
-        Label userLabel = new Label("Avis de : " + review.getUserPrenom() + " " + review.getUserNom());
-        userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        reviewInfo.getChildren().add(userLabel);
+        reviewInfo.getChildren().add(headerBox);
 
         // Commentaire avec icône FontAwesome
         FontAwesomeIconView commentIcon = new FontAwesomeIconView(FontAwesomeIcon.COMMENT);

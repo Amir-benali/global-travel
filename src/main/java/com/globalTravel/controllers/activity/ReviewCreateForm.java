@@ -12,12 +12,22 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ReviewCreateForm implements Navigatable {
+    private static final String AKISMET_API_KEY = "8c085842ad83";
+    private static final String AKISMET_API_URL = "https://rest.akismet.com/1.1/comment-check";
+    
     private DashBoard dashBoardController;
     private Stage stage;
 
@@ -68,10 +78,43 @@ public class ReviewCreateForm implements Navigatable {
         activityIdComboBox.setItems(observableActivityNames);
     }
 
+    private boolean isSpam(String comment) {
+        try {
+            HttpPost request = new HttpPost(AKISMET_API_URL);
+            
+            // Préparer les paramètres pour Akismet
+            List<BasicNameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("api_key", AKISMET_API_KEY));
+            params.add(new BasicNameValuePair("blog", "https://globaltravel.com"));
+            params.add(new BasicNameValuePair("comment_content", comment));
+            params.add(new BasicNameValuePair("comment_type", "comment"));
+            params.add(new BasicNameValuePair("user_ip", "127.0.0.1")); // À remplacer par l'IP réelle en production
+            params.add(new BasicNameValuePair("user_agent", "GlobalTravel/1.0"));
+            
+            request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            
+            String response = HttpClients.createDefault().execute(request, httpResponse -> 
+                EntityUtils.toString(httpResponse.getEntity()));
+            
+            return "true".equalsIgnoreCase(response.trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // En cas d'erreur, on considère que ce n'est pas du spam
+        }
+    }
+
     @FXML
     private void handleSaveReview() {
         try {
             if (!validateInputs()) {
+                return;
+            }
+
+            // Vérifier si le commentaire est du spam
+            if (isSpam(commentaireField.getText())) {
+                showAlert("Spam détecté", "Votre commentaire a été détecté comme spam. Veuillez le modifier.", Alert.AlertType.WARNING);
+                statusLabel.setText("Commentaire détecté comme spam");
+                statusLabel.setStyle("-fx-text-fill: red;");
                 return;
             }
 
