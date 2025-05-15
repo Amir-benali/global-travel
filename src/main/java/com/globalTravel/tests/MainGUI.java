@@ -25,6 +25,7 @@ public class MainGUI extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/styles/FlightStyle.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("global-travel");
