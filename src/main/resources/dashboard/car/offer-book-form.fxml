@@ -41,15 +41,24 @@
                 <DatePicker fx:id="datePicker"/>
                 <TextField fx:id="timeField" promptText="HH:MM" prefWidth="100"/>
             </HBox>
-
-            <Label text="Select User:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                <TextField fx:id="selectedUserField" promptText="Selected User" editable="false" prefWidth="200"/>
-                <Button text="Select User" onAction="#handleSelectUser"/>
-            </HBox>
         </GridPane>
 
-        <Region VBox.vgrow="ALWAYS"/> <!-- Spacer -->
+        <!-- Booking Summary Section -->
+        <VBox spacing="10" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-border-radius: 5; -fx-border-color: #dee2e6;">
+            <Label text="Booking Summary" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+            <Label text="Selected Seats:"/>
+            <FlowPane fx:id="seatsContainer" hgap="5" vgap="5"/>
+
+            <Label text="Assigned Employees:" style="-fx-padding: 5 0 0 0;"/>
+            <VBox fx:id="employeesContainer" spacing="5"/>
+
+            <Separator style="-fx-padding: 10 0 10 0;"/>
+            <HBox alignment="CENTER_RIGHT">
+                <Label text="Total Price:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold; -fx-text-fill: #2a6496; -fx-padding: 0 0 0 5;"/>
+            </HBox>
+        </VBox>
 
         <HBox spacing="10" alignment="CENTER_RIGHT">
             <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>

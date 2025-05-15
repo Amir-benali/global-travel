@@ -10,6 +10,7 @@ import com.globalTravel.models.car.Route;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.time.format.DateTimeFormatter;
@@ -100,8 +101,7 @@ public class OfferDetails implements Navigatable, FrontNavigatable {
                 carDriverLabel.setText("No driver assigned");
             }
 
-            // Load a specific image for the offer if available
-            // offerImage.setImage(new Image("/images/specific-offer-image.jpg"));
+             offerImage.setImage(new Image(offer.getCar().getImage()));
         }
     }
 
@@ -113,8 +113,9 @@ public class OfferDetails implements Navigatable, FrontNavigatable {
 
     private void onBookClicked() {
         // TODO: Implement booking functionality
-        frontOfficeController.navigateTo("dashboard/car/offer-book-form.fxml");
-        ((OfferBookForm) frontOfficeController.getController()).initialize(offer);
+
+        frontOfficeController.navigateTo("dashboard/car/car-seat-selection.fxml");
+        ((CarSeatSelection) frontOfficeController.getController()).initialize(offer);
 
     }
 
