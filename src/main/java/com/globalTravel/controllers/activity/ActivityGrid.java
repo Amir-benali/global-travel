@@ -507,7 +507,7 @@ public class ActivityGrid implements Navigatable, FrontNavigatable {
 
         // Filtrer les utilisateurs pour n'afficher que ceux ayant le rôle "USER"
         List<User> userRoleUsers = users.stream()
-                .filter(user -> "USER".equals(user.getRoles())) // Filtrer par rôle "USER"
+                .filter(user -> user.getRoles().toLowerCase().contains("employee")) // Filtrer par rôle "USER"
                 .collect(Collectors.toList());
 
         // Créer une boîte de dialogue pour afficher la liste des utilisateurs

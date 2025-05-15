@@ -88,7 +88,7 @@ public class Login {
         try {
             String role = (user.getRoles() != null) ? user.getRoles().toLowerCase() : "";
 
-            if (!role.equals("ROLE_ADMIN")) {
+            if (!role.toLowerCase().contains("admin")) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontOffice/front-office.fxml"));
                 Parent root = loader.load();
                 FrontOffice frontOfficeController = loader.getController();
