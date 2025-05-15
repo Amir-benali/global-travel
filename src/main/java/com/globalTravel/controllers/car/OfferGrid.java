@@ -78,11 +78,10 @@ public class OfferGrid implements Navigatable, FrontNavigatable {
         card.setPadding(new Insets(15));
 
         // Offer Image
-        String imagePath = "/images/carlogo.png"; // Default image
-        Image offerImage = new Image(imagePath, 325, 200, false, true);
-
+        String imagePath = offer.getCar().getImage();
+        Image offerImage = new Image(imagePath, false);
         ImageView offerImageView = new ImageView(offerImage);
-        offerImageView.setFitWidth(325);
+        offerImageView.setFitWidth(card.getPrefWidth() > 0 ? card.getPrefWidth() : 500);
         offerImageView.setFitHeight(200);
         offerImageView.setPreserveRatio(false);
         offerImageView.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));

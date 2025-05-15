@@ -8,6 +8,7 @@ import com.globalTravel.models.car.Route;
 import com.globalTravel.models.car.TypeCarReservation;
 import com.globalTravel.models.user.User;
 import com.globalTravel.services.car.CarReservationService;
+import com.globalTravel.services.car.OfferService;
 import com.globalTravel.services.car.RouteService;
 import com.globalTravel.utils.StripePayment;
 import com.stripe.model.PaymentIntent;
@@ -17,6 +18,8 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class PaymentForm implements FrontNavigatable {
 
@@ -25,11 +28,11 @@ public class PaymentForm implements FrontNavigatable {
     private CarReservationService carReservationService = new CarReservationService();
     private RouteService routeService = new RouteService();
     private Route route;
-    private User currentUser;
+    private ArrayList<User> employees;
     private Offer offer;
     private FrontOffice frontOfficeController;
     private CarReservation carReservation;
-
+    private ArrayList<String> reservedSeats;
     @FXML
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -83,6 +86,14 @@ public class PaymentForm implements FrontNavigatable {
         System.out.println("Payment confirmed: ");
         carReservation.setStatus(TypeCarReservation.CONFIRMED);
         carReservationService.modifier(carReservation);
+        carReservationService.assignEmployeeToReservation(offer.getId(), employees);
+        ArrayList<String> seats = new ArrayList<>(offer.getReservedSeats());
+        seats.addAll(this.reservedSeats);
+        seats = seats.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(seats);
+        offer.setReservedSeats(seats);
+        OfferService offerService = new OfferService();
+        offerService.modifier(offer);
         frontOfficeController.navigateTo("dashboard/car/offer-reservation-grid.fxml");
     }
     public void rejectPayment() {
@@ -94,23 +105,23 @@ public class PaymentForm implements FrontNavigatable {
 
     }
 
-    public void initialize(Route route, User currentUser, Offer offer ) {
+    public void initialize(Route route, ArrayList<User> emp, Offer offer, ArrayList<String> seats) {
 
         System.out.println("Initializing PaymentForm...");
         System.out.println("Route: " + route);
-        System.out.println("User: " + currentUser);
         System.out.println("Offer: " + offer);
 
         int id =routeService.addRoute(route);
         System.out.println(id);
         route.setId(id);
-        CarReservation carReservation = new CarReservation(new Date(System.currentTimeMillis()), TypeCarReservation.PENDING, route, offer, currentUser);
+        CarReservation carReservation = new CarReservation(new Date(System.currentTimeMillis()), TypeCarReservation.PENDING, route, offer);
         int idres = carReservationService.addCarReservation(carReservation);
         carReservation.setId(idres);
         this.route = route;
-        this.currentUser = currentUser;
+        this.employees = emp;
         this.offer = offer;
         this.carReservation = carReservation;
+        this.reservedSeats = seats;
     }
 
     @Override

@@ -1,0 +1,172 @@
+/* Container principal */
+.activities-grid-container-act {
+    -fx-background-color: #F8F9FA;
+}
+
+/* Header */
+.header-activity {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-spacing: 20px;
+}
+
+/* Titre de la section */
+.section-title-activty {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Barre de recherche */
+.search-field-activty {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-color: #F4F6F9;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #E0E0E0;
+    -fx-padding: 5px 15px;
+}
+
+.search-field-activty:focused {
+    -fx-border-color: #1E88E5;
+    -fx-effect: dropshadow(gaussian, rgba(30,136,229,0.2), 10, 0, 0, 0);
+}
+
+/* Bouton de recherche */
+.search-button-activty {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.search-button-activty:hover {
+    -fx-background-color: #1976D2;
+}
+
+/* ComboBox des suggestions */
+.suggestions-combo-activty {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.suggestions-combo-activty .list-cell {
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+}
+
+.suggestions-combo-activty .list-cell:hover {
+    -fx-background-color: #F4F6F9;
+}
+
+.suggestions-combo-activty .list-cell:selected {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+}
+
+/* Boutons d'action */
+.add-button-activity-activty {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.add-button-activity-activty:hover {
+    -fx-background-color: #43A047;
+}
+
+/* Grille d'activités */
+.activities-grid {
+    -fx-background-color: transparent;
+    -fx-padding: 20px;
+}
+
+/* Carte d'activité */
+.activity-card-actt {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-min-width: 300px;
+    -fx-max-width: 400px;
+}
+
+.activity-card-actt:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 8);
+    -fx-translate-y: -2px;
+}
+
+/* Titre de la carte */
+.card-title-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Texte de la carte */
+.card-text-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+    -fx-wrap-text: true;
+}
+
+/* Icônes */
+.icon-view {
+    -fx-fill: #1E88E5;
+}
+
+/* Boutons de la carte */
+.card-button {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-cursor: hand;
+}
+
+.card-button:hover {
+    -fx-background-color: #1976D2;
+}
+
+.card-button.delete {
+    -fx-background-color: #F44336;
+}
+
+.card-button.delete:hover {
+    -fx-background-color: #E53935;
+}
+
+/* Message "Aucun résultat" */
+.no-results-label {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: #666666;
+    -fx-padding: 20px;
+    -fx-background-color: #F8F9FA;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 10px;
+} 

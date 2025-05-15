@@ -1,6 +1,7 @@
 package com.globalTravel.models.car;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Offer {
     private int id;
@@ -9,6 +10,7 @@ public class Offer {
     private float price;
     private Route route;
     private PrivateCar car;
+    private ArrayList<String> reservedSeats = new ArrayList<>();
 
     public Offer(int id, String description, LocalDateTime date, float price, Route route, PrivateCar car) {
         this.id = id;
@@ -73,6 +75,14 @@ public class Offer {
 
     public void setCar(PrivateCar car) {
         this.car = car;
+    }
+
+    public ArrayList<String> getReservedSeats() {
+        return reservedSeats;
+    }
+
+    public void setReservedSeats(ArrayList<String> reservedSeats) {
+        this.reservedSeats = reservedSeats;
     }
 
     @Override
