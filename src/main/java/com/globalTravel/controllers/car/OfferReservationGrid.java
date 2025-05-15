@@ -169,7 +169,7 @@ public class OfferReservationGrid implements FrontNavigatable {
         Task<List<CarReservation>> loadTask = new Task<>() {
             @Override
             protected List<CarReservation> call() throws Exception {
-                List<CarReservation> reservations = carReservationService.rechercher().stream().filter(reservation -> reservation.getUser().getId()==currentUser.getId()).toList();
+                List<CarReservation> reservations = carReservationService.getReservationsByUser(currentUser.getId()).stream().filter(reservation -> reservation.getUser().getId()==currentUser.getId()).toList();
                 for (CarReservation reservation : reservations) {
                     System.out.println("Reservation ID: " + reservation.getId() + ", Status: " + reservation.getStatus());
                 }
