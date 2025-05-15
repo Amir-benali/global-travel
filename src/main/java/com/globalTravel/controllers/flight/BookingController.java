@@ -166,7 +166,7 @@ public class BookingController implements Navigatable, FrontNavigatable {
     private List<String> getFlightDetailsText(Flight flight) {
         List<String> details = new ArrayList<>();
         details.add("Flight Number: " + flight.getFlight_number());
-        details.add("Airline: " + flight.getAirline_name());
+        details.add("Airline: " + flight.getAirlineId());
         details.add("Departure: \n     " + flight.getDeparture_country() + "\n     " + flight.getDeparture_airport() + "\n     (" + flight.getDeparture_time() + ")");
         details.add("Arrival: \n     " + flight.getArrival_country() + "\n     " + flight.getArrival_airport() + "\n     (" + flight.getArrival_time() + ")");
         details.add("Base Price: $" + flight.getBase_price());

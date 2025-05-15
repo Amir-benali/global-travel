@@ -7,6 +7,7 @@ package com.globalTravel.controllers.flight;
             import com.globalTravel.services.flight.AirportService;
             import com.globalTravel.services.flight.FlightService;
             import com.globalTravel.services.flight.AirlineService;
+            import com.google.gson.Gson;
             import javafx.fxml.FXML;
             import javafx.scene.control.*;
             import javafx.scene.image.Image;
@@ -20,9 +21,11 @@ package com.globalTravel.controllers.flight;
             import java.time.LocalDate;
             import java.time.LocalDateTime;
             import java.time.LocalTime;
+            import java.util.ArrayList;
             import java.util.Arrays;
             import java.util.List;
             import java.util.stream.Collectors;
+
 
 public class FlightCreateForm  implements Navigatable {
 
@@ -53,7 +56,7 @@ public class FlightCreateForm  implements Navigatable {
                 @FXML
                 private ComboBox<Integer> arrivalMinuteComboBox;
                 @FXML
-                private TextField availableSeatsField;
+                private TextField seatsNumberField;
                 @FXML
                 private TextField priceField;
                 @FXML
@@ -90,6 +93,7 @@ public class FlightCreateForm  implements Navigatable {
                     arrivalAirportField.setEditable(true);
                     departure_countryField.setEditable(true);
                     arrival_countryField.setEditable(true);
+
 
                     try {
                         List<String> airportCountries = airportService.fetchAirportCountries();
@@ -192,7 +196,8 @@ public class FlightCreateForm  implements Navigatable {
         comboBox.show();
     }
 
-                private boolean validateInput() {
+
+    private boolean validateInput() {
                     String errorMessage = "";
 
                     if (flightNumberField.getText().isEmpty()) errorMessage += "Flight number is required.\n";
@@ -207,7 +212,7 @@ public class FlightCreateForm  implements Navigatable {
 
 
                     try {
-                        Integer.parseInt(availableSeatsField.getText());
+                        Integer.parseInt(seatsNumberField.getText());
                     } catch (NumberFormatException e) {
                         errorMessage += "Invalid number of available seats.\n";
                     }
@@ -258,6 +263,14 @@ public class FlightCreateForm  implements Navigatable {
                             return;
                         }
 
+                        // Retrieve the airline ID using the selected airline name
+                        String selectedAirlineName = airline_nameField.getValue();
+                        Integer airlineId = airlineService.getAirlineIdByName(selectedAirlineName);
+                        if (airlineId == null) {
+                            showAlert(Alert.AlertType.ERROR, "Error", "Invalid airline selected.");
+                            return;
+                        }
+
                         FlightStatus status = FlightStatus.valueOf(statusComboBox.getValue());
                         LocalDate departureDate = departureDatePicker.getValue();
                         LocalDate arrivalDate = arrivalDatePicker.getValue();
@@ -275,20 +288,52 @@ public class FlightCreateForm  implements Navigatable {
                         // Calculate flight duration in minutes
                         long durationInHours = java.time.Duration.between(departureDateTime, arrivalDateTime).toHours();
 
-                        Flight flight = new Flight(
-                                flightNumber,
-                                airline_nameField.getValue(),
-                                departure_countryField.getValue(),
-                                arrival_countryField.getValue(),
-                                departureAirportField.getValue(),
-                                arrivalAirportField.getValue(),
-                                Timestamp.valueOf(departureDateTime),
-                                Timestamp.valueOf(arrivalDateTime),
-                                (int) durationInHours, // Set the calculated duration
-                                Integer.parseInt(availableSeatsField.getText()),
-                                Double.parseDouble(priceField.getText()),
-                                status
-                        );
+
+                        // Generate available seats
+                        int seats;
+                        try {
+                            seats = Integer.parseInt(this.seatsNumberField.getText());
+                        } catch (NumberFormatException e) {
+                            showAlert(Alert.AlertType.ERROR, "Input Error", "Invalid number of available seats.");
+                            return; // Exit the method if the input is invalid
+                        }
+
+                     List<String> availableSeats = new ArrayList<>();
+                                int rows = (int) Math.ceil(seats / 5.0); // Assuming 5 seats per row (A, B, C, D, E)
+                                for (int row = 1; row <= rows; row++) {
+                                    for (char column : new char[]{'A', 'B', 'C', 'D', 'E'}) {
+                                        if (availableSeats.size() < seats) {
+                                            availableSeats.add(row + String.valueOf(column));
+                                        }
+                                    }
+                                }
+
+                                Gson gson = new Gson();
+
+                                // Convert availableSeats to JSON
+                                String availableSeatsJson = gson.toJson(availableSeats);
+
+                                List<String> unavailableSeats = new ArrayList<>();
+                                String unavailableSeatsJson = gson.toJson(unavailableSeats);
+
+                                Flight flight = new Flight(
+                                        flightNumber,
+                                        airlineId,
+                                        departure_countryField.getValue(),
+                                        arrival_countryField.getValue(),
+                                        departureAirportField.getValue(),
+                                        arrivalAirportField.getValue(),
+                                        Timestamp.valueOf(departureDateTime),
+                                        Timestamp.valueOf(arrivalDateTime),
+                                        (int) durationInHours,
+                                        availableSeats,
+                                        unavailableSeats,
+                                        Integer.parseInt(seatsNumberField.getText()),
+                                        Double.parseDouble(priceField.getText()),
+                                        status
+                                );
+                                flight.setAvailableSeats(availableSeats);
+                                flight.setUnavailableSeats(unavailableSeats);
 
                         flightService.ajouter(flight);
                         showAlert(Alert.AlertType.INFORMATION, "Success", "Flight added successfully.");
@@ -312,7 +357,7 @@ public class FlightCreateForm  implements Navigatable {
                     departureMinuteComboBox.getSelectionModel().clearSelection();
                     arrivalHourComboBox.getSelectionModel().clearSelection();
                     arrivalMinuteComboBox.getSelectionModel().clearSelection();
-                    availableSeatsField.clear();
+                    seatsNumberField.clear();
                     priceField.clear();
                     selectedImageLabel.setText("No image selected");
                     airlineLogoPreview.setImage(null);

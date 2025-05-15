@@ -50,7 +50,7 @@ public class Signup extends NanoHTTPD {
     private static final String HCAPTCHA_SECRET = "ES_020263b5a237461f8952d3e2997834db";
 
     // Clé API pour Email Validation
-    private static final String EMAIL_API_KEY = "7fdf78ad74a44970b1a59a49087dbddc";
+    private static final String EMAIL_API_KEY = "ecf07d3ad26b47c5878f79a9c0dbc6b2";
     private static final String EMAIL_API_URL = "https://emailvalidation.abstractapi.com/v1/";
 
     // Local server for hCaptcha

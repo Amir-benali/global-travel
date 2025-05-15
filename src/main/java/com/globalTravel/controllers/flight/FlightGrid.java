@@ -5,6 +5,7 @@ package com.globalTravel.controllers.flight;
             import com.globalTravel.controllers.frontoffice.FrontNavigatable;
             import com.globalTravel.controllers.frontoffice.FrontOffice;
             import com.globalTravel.models.flight.Flight;
+            import com.globalTravel.services.flight.AirlineService;
             import com.globalTravel.services.flight.FlightService;
             import javafx.event.ActionEvent;
             import javafx.fxml.FXML;
@@ -93,7 +94,8 @@ package com.globalTravel.controllers.flight;
                     Label countries = new Label(flight.getDeparture_country() + " → " + flight.getArrival_country());
                     countries.getStyleClass().add("flight-countries");
 
-                    Label airlineNameLabel = new Label(flight.getAirline_name());
+                    AirlineService airlineService = new AirlineService();
+                    Label airlineNameLabel = new Label(airlineService.getAirlineNameById(flight.getAirlineId()));
                     airlineNameLabel.getStyleClass().add("flight-airline-name");
 
                     Label priceLabel = new Label("Price: $" + String.format("%.2f", flight.getBase_price()));
@@ -113,7 +115,7 @@ package com.globalTravel.controllers.flight;
                     column1.getChildren().addAll(flightNumberLabel, departureTimeLabel, arrivalTimeLabel, durationLabel);
 
                     VBox column2 = new VBox(5);
-                    Label seatsLabel = new Label("Available Seats: " + flight.getAvailable_seats());
+                    Label seatsLabel = new Label("Seats: " + flight.getSeatsNumber());
                     Label flightStatusLabel = new Label("Status: " + flight.getStatus());
 
                     column2.getChildren().addAll(seatsLabel, flightStatusLabel);
@@ -161,7 +163,7 @@ package com.globalTravel.controllers.flight;
                     alert.setTitle("Flight Details");
                     alert.setHeaderText("Flight Information");
                     alert.setContentText("Flight Number: " + flight.getFlight_number() + "\n" +
-                            "Airline ID: " + flight.getAirline_name() + "\n" +
+                            "Airline ID: " + flight.getAirlineId() + "\n" +
                             "Departure Country: " + flight.getDeparture_country() + "\n" +
                             "Arrival Country: " + flight.getArrival_country() + "\n" +
                             "Departure Airport: " + flight.getDeparture_airport() + "\n" +
@@ -169,7 +171,7 @@ package com.globalTravel.controllers.flight;
                             "Departure Time: " + flight.getDeparture_time() + "\n" +
                             "Arrival Time: " + flight.getArrival_time() + "\n" +
                             "Duration: " + flight.getDuration() + " minutes\n" +
-                            "Available Seats: " + flight.getAvailable_seats() + "\n" +
+                            "Available Seats: " + flight.getSeatsNumber() + "\n" +
                             "Price: $" + flight.getBase_price() + "\n" +
                             "Status: " + flight.getStatus());
                     alert.showAndWait();
