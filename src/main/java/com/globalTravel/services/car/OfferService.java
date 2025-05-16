@@ -3,9 +3,11 @@ package com.globalTravel.services.car;
 import com.globalTravel.models.car.Offer;
 import com.globalTravel.services.IService;
 import com.globalTravel.utils.DataSource;
+import com.google.gson.Gson;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OfferService implements IService<Offer> {
@@ -40,7 +42,7 @@ public class OfferService implements IService<Offer> {
     @Override
     public void modifier(Offer offer) {
 
-        String req = "UPDATE car_offer SET description=? ,date=?,price=?,route_id=?,car_id=? WHERE id=?";
+        String req = "UPDATE car_offer SET description=? ,date=?,price=?,route_id=?,car_id=?,reserved_seats=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setString(1,  offer.getDescription());
@@ -53,7 +55,9 @@ public class OfferService implements IService<Offer> {
                 pst.setNull(4, Types.INTEGER);
             }
             pst.setInt(5, offer.getCar().getId());
-            pst.setInt(6, offer.getId());
+            String reservedSeatsJson = new Gson().toJson(offer.getReservedSeats());
+            pst.setString(6, reservedSeatsJson);
+            pst.setInt(7, offer.getId());
 
             pst.executeUpdate();
             System.out.println("offer has been modified");
@@ -85,11 +89,16 @@ public class OfferService implements IService<Offer> {
             PreparedStatement pst = connection.prepareStatement(req);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                offers.add(new Offer(rs.getInt("id"),rs.getString("description"),rs.getTimestamp("date").toLocalDateTime(), rs.getFloat("price"),routeService.getRouteById(rs.getInt("route_id")),privateCarService.getPrivateCarById(rs.getInt("car_id")) ));
+                Offer offer = new Offer(rs.getInt("id"),rs.getString("description"),rs.getTimestamp("date").toLocalDateTime(), rs.getFloat("price"),routeService.getRouteById(rs.getInt("route_id")),privateCarService.getPrivateCarById(rs.getInt("car_id")) );
+                 String seats =  rs.getString("reserved_seats");
+                seats = seats.replaceAll("[\\[\\]\"]", ""); // Remove brackets and quotes
+                offer.setReservedSeats( new ArrayList<>(Arrays.asList(seats.split(","))));
+                offers.add(offer);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(offers);
 
         return offers;
 
@@ -104,8 +113,18 @@ public class OfferService implements IService<Offer> {
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                offer = new Offer(rs.getInt("id"),rs.getString("description"),rs.getTimestamp("date").toLocalDateTime(), rs.getFloat("price"),routeService.getRouteById(rs.getInt("route_id")),privateCarService.getPrivateCarById(rs.getInt("car_id")));
+                offer = new Offer(
+                        rs.getInt("id"),
+                        rs.getString("description"),
+                        rs.getTimestamp("date").toLocalDateTime(),
+                        rs.getFloat("price"),
+                        routeService.getRouteById(rs.getInt("route_id")),
+                        privateCarService.getPrivateCarById(rs.getInt("car_id"))
+                );
 
+                String seats =  rs.getString("reserved_seats");
+                seats = seats.replaceAll("[\\[\\]\"]", ""); // Remove brackets and quotes
+                offer.setReservedSeats( new ArrayList<>(Arrays.asList(seats.split(","))));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

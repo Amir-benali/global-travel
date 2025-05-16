@@ -70,7 +70,7 @@ public class CaptchaController {
             pstmt.setDate(5, java.sql.Date.valueOf(birthDate));
             pstmt.setString(6, phoneNumber);
             pstmt.setString(7, hashedPassword);
-            pstmt.setString(8, "Employee"); // Rôle par défaut
+            pstmt.setString(8, "ROLE_EMPLOYEE"); // Rôle par défaut
             pstmt.setString(9, "Actif"); // Statut par défaut
 
             int rowsInserted = pstmt.executeUpdate();

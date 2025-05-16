@@ -4,6 +4,8 @@ import com.globalTravel.models.car.CarDriver;
 import com.globalTravel.models.car.CarReservation;
 import com.globalTravel.models.car.Route;
 import com.globalTravel.models.car.TypeCarReservation;
+import com.globalTravel.models.user.Employee;
+import com.globalTravel.models.user.User;
 import com.globalTravel.services.IService;
 import com.globalTravel.services.user.UserService;
 import com.globalTravel.utils.DataSource;
@@ -19,14 +21,13 @@ public class CarReservationService implements IService<CarReservation> {
     private UserService userService = new UserService();
     @Override
     public void ajouter(CarReservation carReservation) {
-        String req = "INSERT INTO car_reservation (date,status,offer_id,route_id,user_id ) VALUES (?,?,?,?,?)";
+        String req = "INSERT INTO car_reservation (date,status,offer_id,route_id ) VALUES (?,?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setDate(1, carReservation.getDate());
             pst.setString(2, carReservation.getStatus().toString());
             pst.setInt(3, carReservation.getOffer().getId());
             pst.setInt(4, carReservation.getRoute().getId());
-            pst.setInt(5, carReservation.getUser().getId());
             pst.executeUpdate();
             System.out.println("added  car reservation");
         } catch (SQLException e) {
@@ -37,15 +38,14 @@ public class CarReservationService implements IService<CarReservation> {
 
     @Override
     public void modifier(CarReservation carReservation) {
-        String req = "UPDATE car_reservation SET date=?,status=?,offer_id=?,route_id=?,user_id=? WHERE id=?";
+        String req = "UPDATE car_reservation SET date=?,status=?,offer_id=?,route_id=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setDate(1, carReservation.getDate());
             pst.setString(2, carReservation.getStatus().toString());
             pst.setInt(3, carReservation.getOffer().getId());
             pst.setInt(4, carReservation.getRoute().getId());
-            pst.setInt(5, carReservation.getUser().getId());
-            pst.setInt(6, carReservation.getId());
+            pst.setInt(5, carReservation.getId());
             pst.executeUpdate();
             System.out.println("car reservation has been modified");
         } catch (SQLException e) {
@@ -97,7 +97,7 @@ public class CarReservationService implements IService<CarReservation> {
         }
     }
     public int addCarReservation(CarReservation carReservation) {
-        String req = "INSERT INTO car_reservation (date, status, offer_id, route_id, user_id) VALUES (?, ?, ?, ?, ?)";
+        String req = "INSERT INTO car_reservation (date, status, offer_id, route_id) VALUES (?, ?, ?, ?)";
         int generatedId = -1;
 
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
@@ -105,7 +105,6 @@ public class CarReservationService implements IService<CarReservation> {
             pst.setString(2, carReservation.getStatus().toString());
             pst.setInt(3, carReservation.getOffer().getId());
             pst.setInt(4, carReservation.getRoute().getId());
-            pst.setInt(5, carReservation.getUser().getId());
 
             int affectedRows = pst.executeUpdate();
 
@@ -124,6 +123,40 @@ public class CarReservationService implements IService<CarReservation> {
         }
 
         return generatedId;
+    }
+
+    public void assignEmployeeToReservation(int reservationId, ArrayList<User> employees) {
+        String req = "insert INTO car_reservation_user (car_reservation_id, user_id) VALUES (?, ?)";
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            for (User employee : employees) {
+                pst.setInt(1, reservationId);
+                pst.setInt(2, employee.getId());
+                pst.executeUpdate();
+            }
+            System.out.println("added  car reservation user");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public ArrayList<CarReservation> getReservationsByUser(int userId) {
+        ArrayList<CarReservation> reservations = new ArrayList<>();
+        String req = "SELECT * FROM car_reservation JOIN car_reservation_user ON car_reservation.id = car_reservation_user.car_reservation_id WHERE car_reservation_user.user_id = ?";
+
+        try {
+            PreparedStatement pst = connection.prepareStatement(req);
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                CarReservation reservation = new CarReservation(rs.getInt("id"), rs.getDate("date"), TypeCarReservation.valueOf(rs.getString("status")), routeService.getRouteById( rs.getInt("route_id")),offerService.getOfferById(rs.getInt("offer_id")),  userService.getUserById( rs.getInt("user_id")));
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return  reservations ;
     }
 }
 

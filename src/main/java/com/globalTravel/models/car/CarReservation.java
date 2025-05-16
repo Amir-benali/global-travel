@@ -28,6 +28,15 @@ public class CarReservation {
         this.offer = offer;
         this.user = user;
     }
+    public CarReservation( Date date, TypeCarReservation status, Route route, Offer offer) {
+        this.id = id;
+        this.date = date;
+        this.status = status;
+        this.route = route;
+        this.offer = offer;
+    }
+
+
 
     public int getId() {
         return id;

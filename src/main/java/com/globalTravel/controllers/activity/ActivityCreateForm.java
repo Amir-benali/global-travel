@@ -12,6 +12,10 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,8 +25,12 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 
 public class ActivityCreateForm implements Navigatable {
+    private static final String COHERE_API_URL = "https://api.cohere.ai/v1/generate";
+    private static final String COHERE_API_KEY = "hI1uB2w3ERvP2CaCWI1kLqG3h43H2Rh2xu0LerHg";
+    
     private DashBoard dashBoardController;
 
     @FXML private ComboBox<TypeActivity> typeComboBox;
@@ -44,6 +52,7 @@ public class ActivityCreateForm implements Navigatable {
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
     @FXML private ComboBox<String> suggestionsComboBox;
+    @FXML private ComboBox<String> activityNameSuggestionsComboBox;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
@@ -72,6 +81,20 @@ public class ActivityCreateForm implements Navigatable {
         // Initialiser le ComboBox des suggestions de localisation
         suggestionsComboBox.setVisible(false);
         suggestionsComboBox.setOnAction(event -> handleSuggestionSelection());
+
+        // Initialisation du ComboBox pour les suggestions de nom d'activité
+        activityNameSuggestionsComboBox.setVisible(false);
+        activityNameSuggestionsComboBox.setOnAction(event -> handleActivityNameSuggestionSelection());
+        
+        // Ajouter un écouteur pour le champ de nom d'activité
+        activityNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.length() > 2) {
+                getActivityNameSuggestions(newValue);
+            } else {
+                activityNameSuggestionsComboBox.setVisible(false);
+                activityNameSuggestionsComboBox.getItems().clear();
+            }
+        });
     }
 
     private List<String> getNamesFromDatabase(String tableName, String nameColumnName) {
@@ -471,6 +494,78 @@ public class ActivityCreateForm implements Navigatable {
             suggestionsComboBox.setVisible(false);
         }
     }
+
+    private void getActivityNameSuggestions(String input) {
+        try {
+            HttpPost request = new HttpPost(COHERE_API_URL);
+            request.setHeader("Authorization", "Bearer " + COHERE_API_KEY);
+            request.setHeader("Content-Type", "application/json");
+
+            JSONObject requestBody = new JSONObject();
+            requestBody.put("prompt", "List 5 activity names starting with \"" + input + "\":");
+            requestBody.put("max_tokens", 50);
+            requestBody.put("temperature", 0.5);
+            requestBody.put("k", 0);
+            requestBody.put("p", 0.9);
+            requestBody.put("frequency_penalty", 0.0);
+            requestBody.put("presence_penalty", 0.0);
+            requestBody.put("stop_sequences", new JSONArray().put("\n\n"));
+            requestBody.put("return_likelihoods", "NONE");
+
+            request.setEntity(new StringEntity(requestBody.toString()));
+
+            String response = HttpClients.createDefault().execute(request, httpResponse -> 
+                EntityUtils.toString(httpResponse.getEntity()));
+
+            JSONObject jsonResponse = new JSONObject(response);
+            String generatedText = jsonResponse.getJSONArray("generations")
+                                             .getJSONObject(0)
+                                             .getString("text");
+
+            // Traiter les suggestions
+            final List<String> suggestions = new ArrayList<>();
+            String[] lines = generatedText.split("\n");
+            for (String line : lines) {
+                String cleanLine = line.replaceAll("^\\d+\\.\\s*", "").trim();
+                if (cleanLine.length() > 0) {
+                    suggestions.add(cleanLine);
+                }
+            }
+
+            // Limiter à 5 suggestions maximum
+            final List<String> finalSuggestions = suggestions.size() > 5 ? 
+                suggestions.subList(0, 5) : suggestions;
+
+            // Mettre à jour le ComboBox des suggestions
+            if (!finalSuggestions.isEmpty()) {
+                Platform.runLater(() -> {
+                    activityNameSuggestionsComboBox.getItems().setAll(finalSuggestions);
+                    activityNameSuggestionsComboBox.setVisible(true);
+                    activityNameSuggestionsComboBox.show();
+                });
+            } else {
+                Platform.runLater(() -> {
+                    activityNameSuggestionsComboBox.setVisible(false);
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des suggestions de nom d'activité : " + e.getMessage());
+            Platform.runLater(() -> {
+                activityNameSuggestionsComboBox.setVisible(false);
+            });
+        }
+    }
+
+    @FXML
+    private void handleActivityNameSuggestionSelection() {
+        if (activityNameSuggestionsComboBox.getValue() != null) {
+            String selectedName = activityNameSuggestionsComboBox.getValue();
+            activityNameField.setText(selectedName);
+            activityNameSuggestionsComboBox.setVisible(false);
+            activityNameSuggestionsComboBox.getSelectionModel().clearSelection();
+        }
+    }
+
     private int getCurrentUserId() {
         // Exemple : Récupérer l'ID de l'utilisateur actuel à partir de la session
         // Remplacez cette logique par votre propre mécanisme de récupération de l'ID utilisateur
