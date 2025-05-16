@@ -40,12 +40,13 @@ package com.globalTravel.controllers.flight;
             System.out.println("Flight: " + flight);
             System.out.println("User: " + currentUser);
 
-            FlightReservation flightReservation = new FlightReservation(new Date(System.currentTimeMillis()), "PENDING", flight, currentUser);
+            FlightReservation flightReservation = new FlightReservation(new Date(System.currentTimeMillis()), "PENDING", flight, ticket.getSeat_number(), currentUser.getId());
             int id = flightReservationService.ajouter(flightReservation);
             flightReservation.setId(id);
             this.flight = flight;
             this.currentUser = currentUser;
             this.ticket = ticket;
+
             this.flightReservation = flightReservation;
 
             WebEngine webEngine = webView.getEngine();
@@ -121,7 +122,7 @@ package com.globalTravel.controllers.flight;
             System.out.println("User: " + currentUser);
             System.out.println("Ticket: " + ticket);
 
-            FlightReservation flightReservation = new FlightReservation(new Date(System.currentTimeMillis()), "PENDING", flight, currentUser);
+            FlightReservation flightReservation = new FlightReservation(new Date(System.currentTimeMillis()), "PENDING", flight, ticket.getSeat_number() , currentUser.getId());
             int id = flightReservationService.ajouter(flightReservation);
             flightReservation.setId(id);
             this.flight = flight;
