@@ -126,7 +126,6 @@ package com.globalTravel.controllers.flight;
                     VBox buttonBox = new VBox(5);
                     buttonBox.setId("buttonBox");
                     Button updateButton = new Button();
-                    updateButton.setText("Update Flight");
                     ImageView updateIcon = new ImageView(new Image(getClass().getResource("/images/update_flight.png").toExternalForm()));
                     updateIcon.setFitWidth(20);
                     updateIcon.setFitHeight(20);
@@ -137,7 +136,6 @@ package com.globalTravel.controllers.flight;
                     Tooltip.install(updateButton, updateTooltip);
 
                     Button deleteButton = new Button();
-                    deleteButton.setText("Delete Flight");
                     ImageView deleteIcon = new ImageView(new Image(getClass().getResource("/images/delete_flight.png").toExternalForm()));
                     deleteIcon.setFitWidth(20);
                     deleteIcon.setFitHeight(20);

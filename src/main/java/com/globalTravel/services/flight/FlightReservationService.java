@@ -13,12 +13,13 @@ package com.globalTravel.services.flight;
             private UserService userService = new UserService();
 
             public int ajouter(FlightReservation reservation) {
-                String query = "INSERT INTO flight_reservations (booking_date, status, flight_id, user_id) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO flight_reservations (booking_date, status, flight_id, user_id,seat) VALUES (?, ?, ?, ?,?)";
                 try (PreparedStatement pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
                     pst.setDate(1, reservation.getBookingDate());
                     pst.setString(2, reservation.getStatus());
                     pst.setInt(3, reservation.getFlight().getId_flight());
-                    pst.setInt(4, reservation.getUser().getId());
+                    pst.setInt(4, reservation.getUser());
+                    pst.setString(5, reservation.getSeat());
                     pst.executeUpdate();
                     ResultSet rs = pst.getGeneratedKeys();
                     if (rs.next()) {
@@ -31,13 +32,14 @@ package com.globalTravel.services.flight;
             }
 
             public void modifier(FlightReservation reservation) {
-                String query = "UPDATE flight_reservations SET booking_date = ?, status = ?, flight_id = ?, user_id = ? WHERE id = ?";
+                String query = "UPDATE flight_reservations SET booking_date = ?, status = ?, flight_id = ?, user_id = ?, seat = ? WHERE id = ?";
                 try (PreparedStatement pst = connection.prepareStatement(query)) {
                     pst.setDate(1, reservation.getBookingDate());
                     pst.setString(2, reservation.getStatus());
                     pst.setInt(3, reservation.getFlight().getId_flight());
-                    pst.setInt(4, reservation.getUser().getId());
+                    pst.setInt(4, reservation.getUser());
                     pst.setInt(5, reservation.getId());
+                    pst.setString(6, reservation.getSeat());
                     pst.executeUpdate();
                     System.out.println("Flight reservation has been modified");
                 } catch (SQLException e) {
@@ -67,7 +69,9 @@ package com.globalTravel.services.flight;
                             rs.getDate("booking_date"),
                             rs.getString("status"),
                             flightService.getFlightById(rs.getInt("flight_id")),
-                            userService.getUserById(rs.getInt("user_id"))
+                            rs.getString("seat"),
+                                rs.getInt("user_id")
+
                         );
                         reservations.add(reservation);
                     }

@@ -1,325 +1,332 @@
 package com.globalTravel.controllers.flight;
 
-            import com.globalTravel.controllers.backoffice.DashBoard;
-            import com.globalTravel.controllers.backoffice.Navigatable;
-            import com.globalTravel.models.flight.Flight;
-            import com.globalTravel.models.flight.FlightStatus;
-            import com.globalTravel.services.flight.AirlineService;
-            import com.globalTravel.services.flight.AirportService;
-            import com.globalTravel.services.flight.FlightService;
-            import javafx.application.Platform;
-            import javafx.fxml.FXML;
-            import javafx.scene.control.*;
-            import javafx.scene.image.Image;
-            import javafx.scene.image.ImageView;
-            import javafx.scene.input.KeyEvent;
-            import javafx.stage.FileChooser;
-            import javafx.stage.Stage;
+                import com.globalTravel.controllers.backoffice.DashBoard;
+                import com.globalTravel.controllers.backoffice.Navigatable;
+                import com.globalTravel.models.flight.Flight;
+                import com.globalTravel.models.flight.FlightStatus;
+                import com.globalTravel.services.flight.AirlineService;
+                import com.globalTravel.services.flight.AirportService;
+                import com.globalTravel.services.flight.FlightService;
+                import com.google.gson.Gson;
+                import javafx.application.Platform;
+                import javafx.fxml.FXML;
+                import javafx.scene.control.*;
+                import javafx.scene.image.Image;
+                import javafx.scene.image.ImageView;
+                import javafx.scene.input.KeyEvent;
+                import javafx.stage.FileChooser;
+                import javafx.stage.Stage;
 
-            import java.io.File;
-            import java.sql.Timestamp;
-            import java.time.LocalDate;
-            import java.time.LocalDateTime;
-            import java.time.LocalTime;
-            import java.util.ArrayList;
-            import java.util.Arrays;
-            import java.util.List;
-            import java.util.stream.Collectors;
+                import java.io.File;
+                import java.sql.Timestamp;
+                import java.time.LocalDate;
+                import java.time.LocalDateTime;
+                import java.time.LocalTime;
+                import java.util.ArrayList;
+                import java.util.Arrays;
+                import java.util.List;
+                import java.util.stream.Collectors;
 
-            public class FlightUpdateForm implements Navigatable {
+                public class FlightUpdateForm implements Navigatable {
 
-                @FXML private TextField flightNumberField;
-                @FXML private ComboBox<String> airline_nameField;
-                @FXML private ComboBox<String> statusComboBox;
-                @FXML private ComboBox<String> departure_countryField;
-                @FXML private ComboBox<String> arrival_countryField;
-                @FXML private ComboBox<String> departureAirportField;
-                @FXML private ComboBox<String> arrivalAirportField;
-                @FXML private DatePicker departureDatePicker;
-                @FXML private ComboBox<Integer> departureHourComboBox;
-                @FXML private ComboBox<Integer> departureMinuteComboBox;
-                @FXML private DatePicker arrivalDatePicker;
-                @FXML private ComboBox<Integer> arrivalHourComboBox;
-                @FXML private ComboBox<Integer> arrivalMinuteComboBox;
-                @FXML private TextField seatsNumberField;
-                @FXML private TextField priceField;
-                @FXML private Label selectedImageLabel;
-                @FXML private ImageView airlineLogoPreview;
-                @FXML private Button saveButton;
+                    @FXML private TextField flightNumberField;
+                    @FXML private ComboBox<String> airline_nameField;
+                    @FXML private ComboBox<String> statusComboBox;
+                    @FXML private ComboBox<String> departure_countryField;
+                    @FXML private ComboBox<String> arrival_countryField;
+                    @FXML private ComboBox<String> departureAirportField;
+                    @FXML private ComboBox<String> arrivalAirportField;
+                    @FXML private DatePicker departureDatePicker;
+                    @FXML private ComboBox<Integer> departureHourComboBox;
+                    @FXML private ComboBox<Integer> departureMinuteComboBox;
+                    @FXML private DatePicker arrivalDatePicker;
+                    @FXML private ComboBox<Integer> arrivalHourComboBox;
+                    @FXML private ComboBox<Integer> arrivalMinuteComboBox;
+                    @FXML private TextField seatsNumberField;
+                    @FXML private TextField priceField;
+                    @FXML private Label selectedImageLabel;
+                    @FXML private ImageView airlineLogoPreview;
+                    @FXML private Button saveButton;
 
-                private AirlineService airlineService = new AirlineService();
-                private AirportService airportService = new AirportService();
-                private FlightService flightService = new FlightService();
-                private Flight flightToEdit;
-                private Stage stage;
-                private File selectedLogoFile;
-                private List<String> airportNames;
+                    private AirlineService airlineService = new AirlineService();
+                    private AirportService airportService = new AirportService();
+                    private FlightService flightService = new FlightService();
+                    private Flight flightToEdit;
+                    private Stage stage;
+                    private File selectedLogoFile;
+                    private List<String> airportNames;
 
-                public void setStage(Stage stage) {
-                    this.stage = stage;
-                }
-
-                private DashBoard dashBoardController;
-
-                @Override
-                public void setDashBoardController(DashBoard dashBoardController) {
-                    this.dashBoardController = dashBoardController;
-                }
-
-                @FXML
-                public void initialize(Flight flight) {
-                    flightToEdit = flight;
-
-                    departureAirportField.setEditable(true);
-                    arrivalAirportField.setEditable(true);
-
-                    try {
-                        List<String> airportCountries = airportService.fetchAirportCountries();
-                        departure_countryField.getItems().setAll(airportCountries);
-                        arrival_countryField.getItems().setAll(airportCountries);
-                    } catch (Exception e) {
-                        System.out.println("Error fetching airport countries: " + e.getMessage());
+                    public void setStage(Stage stage) {
+                        this.stage = stage;
                     }
 
-                    try {
-                        airportNames = airportService.fetchAirportNames();
-                        departureAirportField.getItems().setAll(airportNames);
-                        arrivalAirportField.getItems().setAll(airportNames);
-                    } catch (Exception e) {
-                        System.out.println("Error fetching airport names: " + e.getMessage());
+                    private DashBoard dashBoardController;
+
+                    @Override
+                    public void setDashBoardController(DashBoard dashBoardController) {
+                        this.dashBoardController = dashBoardController;
                     }
 
-                    departureAirportField.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-                        filterComboBox(departureAirportField, airportNames);
-                    });
+                    @FXML
+                    public void initialize(Flight flight) {
+                        flightToEdit = flight;
 
-                    arrivalAirportField.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-                        filterComboBox(arrivalAirportField, airportNames);
-                    });
+                        departureAirportField.setEditable(true);
+                        arrivalAirportField.setEditable(true);
 
-                    departureAirportField.setOnMouseClicked(event -> departureAirportField.show());
-                    arrivalAirportField.setOnMouseClicked(event -> arrivalAirportField.show());
-
-                    statusComboBox.getItems().setAll(Arrays.stream(FlightStatus.values()).map(Enum::name).toList());
-
-                    List<String> airlineNames = airlineService.getAllAirlineNames();
-                    airline_nameField.getItems().setAll(airlineNames);
-
-                    departureDatePicker.setDayCellFactory(picker -> new DateCell() {
-                        @Override
-                        public void updateItem(LocalDate date, boolean empty) {
-                            super.updateItem(date, empty);
-                            setDisable(empty || date.isBefore(LocalDate.now()));
+                        try {
+                            List<String> airportCountries = airportService.fetchAirportCountries();
+                            departure_countryField.getItems().setAll(airportCountries);
+                            arrival_countryField.getItems().setAll(airportCountries);
+                        } catch (Exception e) {
+                            System.out.println("Error fetching airport countries: " + e.getMessage());
                         }
-                    });
 
-                    arrivalDatePicker.setDisable(true);
+                        try {
+                            airportNames = airportService.fetchAirportNames();
+                            departureAirportField.getItems().setAll(airportNames);
+                            arrivalAirportField.getItems().setAll(airportNames);
+                        } catch (Exception e) {
+                            System.out.println("Error fetching airport names: " + e.getMessage());
+                        }
 
-                    departureDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        arrivalDatePicker.setDisable(false);
-                        arrivalDatePicker.setDayCellFactory(picker -> new DateCell() {
+                        departureAirportField.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+                            filterComboBox(departureAirportField, airportNames);
+                        });
+
+                        arrivalAirportField.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+                            filterComboBox(arrivalAirportField, airportNames);
+                        });
+
+                        departureAirportField.setOnMouseClicked(event -> departureAirportField.show());
+                        arrivalAirportField.setOnMouseClicked(event -> arrivalAirportField.show());
+
+                        statusComboBox.getItems().setAll(Arrays.stream(FlightStatus.values()).map(Enum::name).toList());
+
+                        List<String> airlineNames = airlineService.getAllAirlineNames();
+                        airline_nameField.getItems().setAll(airlineNames);
+
+                        departureDatePicker.setDayCellFactory(picker -> new DateCell() {
                             @Override
                             public void updateItem(LocalDate date, boolean empty) {
                                 super.updateItem(date, empty);
-                                setDisable(empty || date.isBefore(newValue));
+                                setDisable(empty || date.isBefore(LocalDate.now()));
                             }
                         });
-                    });
 
-                    arrivalDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null && newValue.isBefore(departureDatePicker.getValue())) {
-                            showAlert(Alert.AlertType.ERROR, "Invalid Date", "Arrival date cannot be before departure date.");
-                            arrivalDatePicker.setValue(null);
-                        }
-                    });
+                        arrivalDatePicker.setDisable(true);
 
-                    if (flightToEdit != null) {
-                        populateForm();
-                    }
-                }
-
-                private void filterComboBox(ComboBox<String> comboBox, List<String> items) {
-                    String query = comboBox.getEditor().getText();
-                    List<String> filteredItems = items.stream()
-                            .filter(item -> item.toLowerCase().contains(query.toLowerCase()))
-                            .sorted((item1, item2) -> {
-                                if (item1.toLowerCase().startsWith(query.toLowerCase())) {
-                                    return -1;
-                                } else if (item2.toLowerCase().startsWith(query.toLowerCase())) {
-                                    return 1;
+                        departureDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+                            arrivalDatePicker.setDisable(false);
+                            arrivalDatePicker.setDayCellFactory(picker -> new DateCell() {
+                                @Override
+                                public void updateItem(LocalDate date, boolean empty) {
+                                    super.updateItem(date, empty);
+                                    setDisable(empty || date.isBefore(newValue));
                                 }
-                                return item1.compareTo(item2);
-                            })
-                            .collect(Collectors.toList());
-                    comboBox.getItems().setAll(filteredItems);
-                    comboBox.show();
-                }
+                            });
+                        });
 
-                private void populateForm() {
-                    Platform.runLater(() -> {
-                        flightNumberField.setText(flightToEdit.getFlight_number());
-                        airline_nameField.setValue(airlineService.getAirlineNameById(flightToEdit.getAirlineId()));
-                        departure_countryField.setValue(flightToEdit.getDeparture_country());
-                        arrival_countryField.setValue(flightToEdit.getArrival_country());
-                        departureAirportField.setValue(flightToEdit.getDeparture_airport());
-                        arrivalAirportField.setValue(flightToEdit.getArrival_airport());
-                        departureDatePicker.setValue(flightToEdit.getDeparture_time().toLocalDateTime().toLocalDate());
-                        departureHourComboBox.setValue(flightToEdit.getDeparture_time().toLocalDateTime().getHour());
-                        departureMinuteComboBox.setValue(flightToEdit.getDeparture_time().toLocalDateTime().getMinute());
-                        arrivalDatePicker.setValue(flightToEdit.getArrival_time().toLocalDateTime().toLocalDate());
-                        arrivalHourComboBox.setValue(flightToEdit.getArrival_time().toLocalDateTime().getHour());
-                        arrivalMinuteComboBox.setValue(flightToEdit.getArrival_time().toLocalDateTime().getMinute());
-                        seatsNumberField.setText(String.valueOf(flightToEdit.getSeatsNumber()));
-                        priceField.setText(String.valueOf(flightToEdit.getBase_price()));
-                        statusComboBox.setValue(flightToEdit.getStatus().name());
-                    });
-                }
+                        arrivalDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue != null && newValue.isBefore(departureDatePicker.getValue())) {
+                                showAlert(Alert.AlertType.ERROR, "Invalid Date", "Arrival date cannot be before departure date.");
+                                arrivalDatePicker.setValue(null);
+                            }
+                        });
 
-                private boolean validateInput() {
-                    String errorMessage = "";
-
-                    if (flightNumberField.getText().isEmpty()) errorMessage += "Flight number is required.\n";
-                    if (airline_nameField.getValue() == null) errorMessage += "Airline name is required.\n";
-                    if (departure_countryField.getValue() == null) errorMessage += "Departure country is required.\n";
-                    if (arrival_countryField.getValue() == null) errorMessage += "Arrival country is required.\n";
-                    if (departureAirportField.getValue() == null) errorMessage += "Departure airport is required.\n";
-                    if (arrivalAirportField.getValue() == null) errorMessage += "Arrival airport is required.\n";
-                    if (departureDatePicker.getValue() == null) errorMessage += "Departure date is required.\n";
-                    if (arrivalDatePicker.getValue() == null) errorMessage += "Arrival date is required.\n";
-                    if (statusComboBox.getValue() == null) errorMessage += "Flight status is required.\n";
-
-                    try {
-                        Integer.parseInt(seatsNumberField.getText());
-                    } catch (NumberFormatException e) {
-                        errorMessage += "Invalid number of available seats.\n";
+                        if (flightToEdit != null) {
+                            populateForm();
+                        }
                     }
 
-                    try {
-                        Double.parseDouble(priceField.getText());
-                    } catch (NumberFormatException e) {
-                        errorMessage += "Invalid price.\n";
+                    private void filterComboBox(ComboBox<String> comboBox, List<String> items) {
+                        String query = comboBox.getEditor().getText();
+                        List<String> filteredItems = items.stream()
+                                .filter(item -> item.toLowerCase().contains(query.toLowerCase()))
+                                .sorted((item1, item2) -> {
+                                    if (item1.toLowerCase().startsWith(query.toLowerCase())) {
+                                        return -1;
+                                    } else if (item2.toLowerCase().startsWith(query.toLowerCase())) {
+                                        return 1;
+                                    }
+                                    return item1.compareTo(item2);
+                                })
+                                .collect(Collectors.toList());
+                        comboBox.getItems().setAll(filteredItems);
+                        comboBox.show();
                     }
 
-                    if (!errorMessage.isEmpty()) {
-                        showAlert(Alert.AlertType.ERROR, "Input Error", errorMessage);
-                        return false;
+                    private void populateForm() {
+                        Platform.runLater(() -> {
+                            flightNumberField.setText(flightToEdit.getFlight_number());
+                            airline_nameField.setValue(airlineService.getAirlineNameById(flightToEdit.getAirlineId()));
+                            departure_countryField.setValue(flightToEdit.getDeparture_country());
+                            arrival_countryField.setValue(flightToEdit.getArrival_country());
+                            departureAirportField.setValue(flightToEdit.getDeparture_airport());
+                            arrivalAirportField.setValue(flightToEdit.getArrival_airport());
+                            departureDatePicker.setValue(flightToEdit.getDeparture_time().toLocalDateTime().toLocalDate());
+                            departureHourComboBox.setValue(flightToEdit.getDeparture_time().toLocalDateTime().getHour());
+                            departureMinuteComboBox.setValue(flightToEdit.getDeparture_time().toLocalDateTime().getMinute());
+                            arrivalDatePicker.setValue(flightToEdit.getArrival_time().toLocalDateTime().toLocalDate());
+                            arrivalHourComboBox.setValue(flightToEdit.getArrival_time().toLocalDateTime().getHour());
+                            arrivalMinuteComboBox.setValue(flightToEdit.getArrival_time().toLocalDateTime().getMinute());
+                            seatsNumberField.setText(String.valueOf(flightToEdit.getSeatsNumber()));
+                            priceField.setText(String.valueOf(flightToEdit.getBase_price()));
+                            statusComboBox.setValue(flightToEdit.getStatus().name());
+                        });
                     }
-                    return true;
-                }
 
-                private void showAlert(Alert.AlertType type, String title, String message) {
-                    Alert alert = new Alert(type);
-                    alert.setTitle(title);
-                    alert.setHeaderText(null);
-                    alert.setContentText(message);
-                    alert.showAndWait();
-                }
+                    private boolean validateInput() {
+                        String errorMessage = "";
 
-                @FXML
-                private void handleSaveFlight() {
-                    if (!validateInput()) return;
+                        if (flightNumberField.getText().isEmpty()) errorMessage += "Flight number is required.\n";
+                        if (airline_nameField.getValue() == null) errorMessage += "Airline name is required.\n";
+                        if (departure_countryField.getValue() == null) errorMessage += "Departure country is required.\n";
+                        if (arrival_countryField.getValue() == null) errorMessage += "Arrival country is required.\n";
+                        if (departureAirportField.getValue() == null) errorMessage += "Departure airport is required.\n";
+                        if (arrivalAirportField.getValue() == null) errorMessage += "Arrival airport is required.\n";
+                        if (departureDatePicker.getValue() == null) errorMessage += "Departure date is required.\n";
+                        if (arrivalDatePicker.getValue() == null) errorMessage += "Arrival date is required.\n";
+                        if (statusComboBox.getValue() == null) errorMessage += "Flight status is required.\n";
 
-                    try {
-                        String flightNumber = flightNumberField.getText();
-                        String selectedAirlineName = airline_nameField.getValue();
-                        Integer airlineId = airlineService.getAirlineIdByName(selectedAirlineName);
-                        if (airlineId == null) {
-                            showAlert(Alert.AlertType.ERROR, "Error", "Invalid airline selected.");
-                            return;
+                        try {
+                            Integer.parseInt(seatsNumberField.getText());
+                        } catch (NumberFormatException e) {
+                            errorMessage += "Invalid number of available seats.\n";
                         }
 
-                        FlightStatus status = FlightStatus.valueOf(statusComboBox.getValue());
-                        LocalDate departureDate = departureDatePicker.getValue();
-                        LocalDate arrivalDate = arrivalDatePicker.getValue();
-                        LocalTime departureTime = LocalTime.of(
-                                departureHourComboBox.getValue(),
-                                departureMinuteComboBox.getValue()
-                        );
-                        LocalTime arrivalTime = LocalTime.of(
-                                arrivalHourComboBox.getValue(),
-                                arrivalMinuteComboBox.getValue()
-                        );
-                        LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
-                        LocalDateTime arrivalDateTime = LocalDateTime.of(arrivalDate, arrivalTime);
+                        try {
+                            Double.parseDouble(priceField.getText());
+                        } catch (NumberFormatException e) {
+                            errorMessage += "Invalid price.\n";
+                        }
 
-                        long durationInHours = java.time.Duration.between(departureDateTime, arrivalDateTime).toHours();
+                        if (!errorMessage.isEmpty()) {
+                            showAlert(Alert.AlertType.ERROR, "Input Error", errorMessage);
+                            return false;
+                        }
+                        return true;
+                    }
 
-                        int seatsNumber = Integer.parseInt(seatsNumberField.getText());
-                        List<String> availableSeats = new ArrayList<>();
-                        int rows = (int) Math.ceil(seatsNumber / 5.0); // Assuming 5 seats per row (A, B, C, D, E)
-                        for (int row = 1; row <= rows; row++) {
-                            for (char column : new char[]{'A', 'B', 'C', 'D', 'E'}) {
-                                if (availableSeats.size() < seatsNumber) {
-                                    availableSeats.add(row + String.valueOf(column));
+                    private void showAlert(Alert.AlertType type, String title, String message) {
+                        Alert alert = new Alert(type);
+                        alert.setTitle(title);
+                        alert.setHeaderText(null);
+                        alert.setContentText(message);
+                        alert.showAndWait();
+                    }
+
+                    @FXML
+                    private void handleSaveFlight() {
+                        if (!validateInput()) return;
+
+                        try {
+                            String flightNumber = flightNumberField.getText();
+                            String selectedAirlineName = airline_nameField.getValue();
+                            Integer airlineId = airlineService.getAirlineIdByName(selectedAirlineName);
+                            if (airlineId == null) {
+                                showAlert(Alert.AlertType.ERROR, "Error", "Invalid airline selected.");
+                                return;
+                            }
+
+                            FlightStatus status = FlightStatus.valueOf(statusComboBox.getValue());
+                            LocalDate departureDate = departureDatePicker.getValue();
+                            LocalDate arrivalDate = arrivalDatePicker.getValue();
+                            LocalTime departureTime = LocalTime.of(
+                                    departureHourComboBox.getValue(),
+                                    departureMinuteComboBox.getValue()
+                            );
+                            LocalTime arrivalTime = LocalTime.of(
+                                    arrivalHourComboBox.getValue(),
+                                    arrivalMinuteComboBox.getValue()
+                            );
+                            LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
+                            LocalDateTime arrivalDateTime = LocalDateTime.of(arrivalDate, arrivalTime);
+
+                            long durationInHours = java.time.Duration.between(departureDateTime, arrivalDateTime).toHours();
+
+                            int seatsNumber = Integer.parseInt(seatsNumberField.getText());
+                            List<String> availableSeats = new ArrayList<>();
+                            int rows = (int) Math.ceil(seatsNumber / 5.0); // Assuming 5 seats per row (A, B, C, D, E)
+                            for (int row = 1; row <= rows; row++) {
+                                for (char column : new char[]{'A', 'B', 'C', 'D', 'E'}) {
+                                    if (availableSeats.size() < seatsNumber) {
+                                        availableSeats.add(row + String.valueOf(column));
+                                    }
                                 }
                             }
+
+                            Gson gson = new Gson();
+                            String availableSeatsJson = gson.toJson(availableSeats);
+
+                            List<String> unavailableSeats = new ArrayList<>();
+                            String unavailableSeatsJson = gson.toJson(unavailableSeats);
+
+                            Flight flight = new Flight(
+                                    flightToEdit.getId_flight(),
+                                    flightNumber,
+                                    airlineId,
+                                    departure_countryField.getValue(),
+                                    arrival_countryField.getValue(),
+                                    departureAirportField.getValue(),
+                                    arrivalAirportField.getValue(),
+                                    Timestamp.valueOf(departureDateTime),
+                                    Timestamp.valueOf(arrivalDateTime),
+                                    (int) durationInHours,
+                                    availableSeats,
+                                    unavailableSeats,
+                                    seatsNumber,
+                                    Double.parseDouble(priceField.getText()),
+                                    status
+                            );
+
+                            flightService.modifier(flight);
+                            showAlert(Alert.AlertType.INFORMATION, "Success", "Flight updated successfully.");
+                            dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
+                            closeForm();
+                        } catch (Exception e) {
+                            showAlert(Alert.AlertType.ERROR, "Error", "Error updating flight: " + e.getMessage());
                         }
+                    }
 
-                        Flight flight = new Flight(
-                                flightToEdit.getId_flight(),
-                                flightNumber,
-                                airlineId,
-                                departure_countryField.getValue(),
-                                arrival_countryField.getValue(),
-                                departureAirportField.getValue(),
-                                arrivalAirportField.getValue(),
-                                Timestamp.valueOf(departureDateTime),
-                                Timestamp.valueOf(arrivalDateTime),
-                                (int) durationInHours,
-                                availableSeats,
-                                null,
-                                seatsNumber,
-                                Double.parseDouble(priceField.getText()),
-                                status
-                        );
-
-                        flightService.modifier(flight);
-                        showAlert(Alert.AlertType.INFORMATION, "Success", "Flight updated successfully.");
+                    @FXML
+                    private void handleCancel() {
                         dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
+                        clearForm();
                         closeForm();
-                    } catch (Exception e) {
-                        showAlert(Alert.AlertType.ERROR, "Error", "Error updating flight: " + e.getMessage());
+                    }
+
+                    private void clearForm() {
+                        flightNumberField.clear();
+                        airline_nameField.getSelectionModel().clearSelection();
+                        departure_countryField.getSelectionModel().clearSelection();
+                        arrival_countryField.getSelectionModel().clearSelection();
+                        departureAirportField.getSelectionModel().clearSelection();
+                        arrivalAirportField.getSelectionModel().clearSelection();
+                        departureDatePicker.setValue(null);
+                        arrivalDatePicker.setDisable(true);
+                        arrivalDatePicker.setValue(null);
+                        departureHourComboBox.getSelectionModel().clearSelection();
+                        departureMinuteComboBox.getSelectionModel().clearSelection();
+                        arrivalHourComboBox.getSelectionModel().clearSelection();
+                        arrivalMinuteComboBox.getSelectionModel().clearSelection();
+                        seatsNumberField.clear();
+                        priceField.clear();
+                        selectedImageLabel.setText("No image selected");
+                        airlineLogoPreview.setImage(null);
+                        statusComboBox.getSelectionModel().clearSelection();
+                    }
+
+                    public void setFlightToEdit(Flight flight) {
+                        this.flightToEdit = flight;
+                        if (flightToEdit != null) {
+                            populateForm();
+                        }
+                    }
+
+                    private void closeForm() {
+                        if (stage != null) {
+                            stage.close();
+                        }
                     }
                 }
-
-                @FXML
-                private void handleCancel() {
-                    dashBoardController.navigateTo("dashboard/flight/flight-grid.fxml");
-                    clearForm();
-                    closeForm();
-                }
-
-                private void clearForm() {
-                    flightNumberField.clear();
-                    airline_nameField.getSelectionModel().clearSelection();
-                    departure_countryField.getSelectionModel().clearSelection();
-                    arrival_countryField.getSelectionModel().clearSelection();
-                    departureAirportField.getSelectionModel().clearSelection();
-                    arrivalAirportField.getSelectionModel().clearSelection();
-                    departureDatePicker.setValue(null);
-                    arrivalDatePicker.setDisable(true);
-                    arrivalDatePicker.setValue(null);
-                    departureHourComboBox.getSelectionModel().clearSelection();
-                    departureMinuteComboBox.getSelectionModel().clearSelection();
-                    arrivalHourComboBox.getSelectionModel().clearSelection();
-                    arrivalMinuteComboBox.getSelectionModel().clearSelection();
-                    seatsNumberField.clear();
-                    priceField.clear();
-                    selectedImageLabel.setText("No image selected");
-                    airlineLogoPreview.setImage(null);
-                    statusComboBox.getSelectionModel().clearSelection();
-                }
-
-                public void setFlightToEdit(Flight flight) {
-                    this.flightToEdit = flight;
-                    if (flightToEdit != null) {
-                        populateForm();
-                    }
-                }
-
-                private void closeForm() {
-                    if (stage != null) {
-                        stage.close();
-                    }
-                }
-            }

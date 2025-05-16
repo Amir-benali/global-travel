@@ -155,7 +155,7 @@
 
                            <!-- Available Seats Field -->
                            <Label text="Available Seats:" styleClass="background-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                           <TextField fx:id="availableSeatsField" styleClass="input-field small-text-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+                           <TextField fx:id="seatsNumberField" styleClass="input-field small-text-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
                            <!-- Base Price Field -->
                            <Label text="Base Price:" styleClass="background-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
@@ -177,7 +177,7 @@
                            <!-- Image Selection Section -->
                            <Label text="Airline Logo:" styleClass="background-label" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
                            <HBox spacing="5" GridPane.rowIndex="11" GridPane.columnIndex="1">
-                               <Button text="Choose Airline Logo" onAction="#handleChooseImage" styleClass="choose-image-button"/>
+                               <Button text="Choose Airline Logo" styleClass="choose-image-button"/>
                                <Label fx:id="selectedImageLabel" text="No image selected" styleClass="selected-image-label"/>
                            </HBox>
 
