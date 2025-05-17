@@ -67,8 +67,7 @@ public class BookingController implements Navigatable, FrontNavigatable {
     private UserService userService = new UserService();
     private Button selectedSeatButton;
 
-    private static final int TOTAL_SEATS = 40; // Set total seats per flight
-    private static final int SEATS_PER_ROW = 4; // Default layout (4 seats per row)
+    private static final int SEATS_PER_ROW = 5; // Default layout (4 seats per row)
 
     public void initialize(Flight flight, User currentUser) {
         this.flight = flight;
@@ -166,7 +165,7 @@ public class BookingController implements Navigatable, FrontNavigatable {
     private List<String> getFlightDetailsText(Flight flight) {
         List<String> details = new ArrayList<>();
         details.add("Flight Number: " + flight.getFlight_number());
-        details.add("Airline: " + flight.getAirline_name());
+        details.add("Airline: " + flight.getAirlineId());
         details.add("Departure: \n     " + flight.getDeparture_country() + "\n     " + flight.getDeparture_airport() + "\n     (" + flight.getDeparture_time() + ")");
         details.add("Arrival: \n     " + flight.getArrival_country() + "\n     " + flight.getArrival_airport() + "\n     (" + flight.getArrival_time() + ")");
         details.add("Base Price: $" + flight.getBase_price());
@@ -188,21 +187,20 @@ public class BookingController implements Navigatable, FrontNavigatable {
 
     private void populateSeatGrid() {
         seatGrid.getChildren().clear();
-        TicketClass selectedClass = cmbTicketClass.getValue();
-        char[] seatLetters = {'A', 'B', 'C', 'D'};
-        int totalRows = TOTAL_SEATS / SEATS_PER_ROW;
+        int totalSeats = flight.getSeatsNumber();
+        int rows = (int) Math.ceil((double) totalSeats / SEATS_PER_ROW);
+        char[] seatColumns = {'A', 'B', 'C', 'D', 'E'};
 
-        for (int row = 1; row <= totalRows; row++) {
+        for (int row = 1; row <= rows; row++) {
             for (int col = 0; col < SEATS_PER_ROW; col++) {
-                String seatNumber = row + String.valueOf(seatLetters[col]);
+                int seatIndex = (row - 1) * SEATS_PER_ROW + col;
+                if (seatIndex >= totalSeats) break;
+
+                String seatNumber = row + String.valueOf(seatColumns[col]);
                 Button seatButton = new Button(seatNumber);
                 seatButton.getStyleClass().add("seat-button");
 
-                if (selectedClass == TicketClass.Economy && row <= 5) {
-                    seatButton.setDisable(true);
-                } else if (selectedClass == TicketClass.Business && (row <= 2 || row > 5)) {
-                    seatButton.setDisable(true);
-                } else if (selectedClass == TicketClass.First_Class && row > 2) {
+                if (flight.getUnavailableSeats().contains(seatNumber)) {
                     seatButton.setDisable(true);
                 } else {
                     seatButton.setOnAction(e -> handleSeatSelection(seatButton));

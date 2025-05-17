@@ -155,8 +155,8 @@
         </HBox>
 
         <!-- Available Seats Field -->
-        <Label text="Available Seats:" styleClass="background-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-        <TextField fx:id="availableSeatsField" styleClass="input-field small-text-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label text="Seats:" styleClass="background-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <TextField fx:id="seatsNumberField" styleClass="input-field small-text-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
         <!-- Base Price Field -->
         <Label text="Base Price:" styleClass="background-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>

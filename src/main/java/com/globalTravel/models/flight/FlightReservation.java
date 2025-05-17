@@ -8,20 +8,23 @@ public class FlightReservation {
     private Date bookingDate;
     private String status;
     private Flight flight;
-    private User user;
+    private String seat;
+    private int user;
 
-    public FlightReservation(Date bookingDate, String status, Flight flight, User user) {
+    public FlightReservation(Date bookingDate, String status, Flight flight, String seat, int user) {
         this.bookingDate = bookingDate;
         this.status = status;
         this.flight = flight;
+        this.seat = seat;
         this.user = user;
     }
 
-    public FlightReservation(int id, Date bookingDate, String status, Flight flight, User user) {
+    public FlightReservation(int id, Date bookingDate, String status, Flight flight, String seat, int user) {
         this.id = id;
         this.bookingDate = bookingDate;
         this.status = status;
         this.flight = flight;
+        this.seat = seat;
         this.user = user;
     }
 
@@ -57,12 +60,20 @@ public class FlightReservation {
         this.flight = flight;
     }
 
-    public User getUser() {
+    public int getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(int user) {
         this.user = user;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
+
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     @Override
@@ -73,6 +84,7 @@ public class FlightReservation {
                 ", status='" + status + '\'' +
                 ", flight=" + flight +
                 ", user=" + user +
+                ", seat='" + seat + '\'' +
                 '}';
     }
 }

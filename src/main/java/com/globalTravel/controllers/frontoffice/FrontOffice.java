@@ -82,7 +82,7 @@ public class FrontOffice implements FrontNavigatable {
             ImgUser.setPreserveRatio(false);
             ImgUser.setClip(new Circle(ImgUser.getFitWidth() / 2, ImgUser.getFitHeight() / 2, Math.min(ImgUser.getFitWidth(), ImgUser.getFitHeight()) / 2));
          }
-        if(currentUser.getRoles().toLowerCase().equals("employee")){
+        if(currentUser.getRoles().toLowerCase().contains("employee")){
             dashboardButton.setVisible(false);
             flightManagementButton.setVisible(false);
             carManagementButton.setVisible(false);
