@@ -1,34 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.control.MenuItem?>
-
-<HBox alignment="CENTER_LEFT" spacing="10" styleClass="header" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.Navbar">
+<HBox alignment="CENTER_LEFT" spacing="10" styleClass="header" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.globalTravel.controllers.backoffice.Navbar">
     <padding>
         <Insets bottom="10" left="20" right="20" top="10" />
     </padding>
     <Region prefHeight="51.0" prefWidth="189.0" />
     <Label styleClass="header-title" text="Admin" />
     <Region prefHeight="51.0" prefWidth="103.0" />
-    <TextField fx:id="searchField1" prefHeight="26.0" prefWidth="643.0" promptText="Rechercher..." />
     <Region prefHeight="51.0" prefWidth="31.0" HBox.hgrow="ALWAYS" />
+
     <MenuButton fx:id="userMenuButton" styleClass="user-menu-button">
         <graphic>
-            <ImageView fitHeight="51.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgUser" fitHeight="51.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
                 <image>
                     <Image url="@../images/user-icon.png" />
                 </image>
             </ImageView>
         </graphic>
         <items>
-            <MenuItem styleClass="menu-card-item" text="Profile" onAction="#handleProfile" />
             <MenuItem styleClass="menu-card-item" text="Settings" onAction="#handleSettings" />
         </items>
     </MenuButton>

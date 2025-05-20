@@ -1,6 +1,5 @@
 package com.globalTravel.services.hotel;
 
-
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.IService;
 import com.globalTravel.utils.DataSource;
@@ -60,8 +59,6 @@ public class HotelService implements IService<Hotel> {
         }
     }
 
-
-
     @Override
     public void supprimer(Hotel h) {
         String req = "DELETE FROM hotel WHERE id_hotel_h = ?";
@@ -73,6 +70,7 @@ public class HotelService implements IService<Hotel> {
             System.out.println(e.getMessage());
         }
     }
+
     public Hotel getHOTELById(int id) {
         Hotel hotel = null;
         String req = "SELECT * FROM hotel WHERE id_hotel_h = ?";
@@ -110,10 +108,40 @@ public class HotelService implements IService<Hotel> {
                         rs.getString("nom_h"),
                         rs.getString("adresse_h"),
                         rs.getString("ville_h"),
-                        rs.getString("pays_h"), rs.getInt("categorie_h"), rs.getString("services_h"), rs.getString("coordonnees_h"), rs.getString("avis_h")));
+                        rs.getString("pays_h"),
+                        rs.getInt("categorie_h"),
+                        rs.getString("services_h"),
+                        rs.getString("coordonnees_h"),
+                        rs.getString("avis_h")
+                ));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        return hotels;
+    }
+
+    public List<Hotel> rechercherParNom(String nom) {
+        List<Hotel> hotels = new ArrayList<>();
+        String req = "SELECT * FROM hotel WHERE nom_h LIKE ?";
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setString(1, "%" + nom + "%");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                hotels.add(new Hotel(
+                        rs.getInt("id_hotel_h"),
+                        rs.getString("nom_h"),
+                        rs.getString("adresse_h"),
+                        rs.getString("ville_h"),
+                        rs.getString("pays_h"),
+                        rs.getInt("categorie_h"),
+                        rs.getString("services_h"),
+                        rs.getString("coordonnees_h"),
+                        rs.getString("avis_h")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche par nom : " + e.getMessage());
         }
         return hotels;
     }

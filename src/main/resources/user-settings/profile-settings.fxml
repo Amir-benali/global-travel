@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.globalTravel.controllers.user.ProfileSettings"
+      styleClass="profile-settings"
+      spacing="20">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20"/>
+    </padding>
+    <VBox styleClass="profile-image-section" alignment="CENTER" spacing="15">
+        <stylesheets>
+            <URL value="@/styles/user-settings-style.css" />
+        </stylesheets>
+
+        <StackPane styleClass="profile-image-container">
+            <ImageView fx:id="profileImage" fitHeight="120" fitWidth="120" styleClass="profile-image"/>
+            <Button fx:id="uploadImageButton" styleClass="upload-image-button" onAction="#handleImageUpload">
+                <graphic>
+                    <FontAwesomeIconView glyphName="CAMERA" size="1.5em"/>
+                </graphic>
+            </Button>
+        </StackPane>
+        <Label text="Upload Profile Picture" styleClass="upload-label"/>
+    </VBox>
+
+    <GridPane styleClass="form-grid" hgap="20" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100" prefWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Last Name" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Email" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Phone" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Role" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="roleField" GridPane.rowIndex="4" GridPane.columnIndex="1" disable="true"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="saveButton" text="Save Changes" styleClass="save-button"/>
+    </HBox>
+</VBox>

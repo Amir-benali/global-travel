@@ -44,6 +44,7 @@ public class Hotel {
         return id_hotel_h;
     }
 
+
     public void setId_hotel_h(int id_hotel_h) {
         this.id_hotel_h = id_hotel_h;
     }
@@ -114,16 +115,6 @@ public class Hotel {
 
     @Override
     public String toString() {
-        return "hotel{" +
-                "id_hotel_h=" + id_hotel_h +
-                ", nom_h='" + nom_h + '\'' +
-                ", adresse_h='" + adresse_h + '\'' +
-                ", ville_h='" + ville_h + '\'' +
-                ", pays_h='" + pays_h + '\'' +
-                ", categorie_h=" + categorie_h +
-                ", services_h='" + services_h + '\'' +
-                ", coordonnees_h='" + coordonnees_h + '\'' +
-                ", avis_h='" + avis_h + '\'' +
-                '}';
+        return "Hôtel #" + id_hotel_h + " - " + nom_h;
     }
 }

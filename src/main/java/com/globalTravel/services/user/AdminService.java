@@ -25,7 +25,7 @@ public class AdminService implements IService<Admin> {
             pstmt.setDate(2, new Date(admin.getDateNaissance().getTime()));
             pstmt.setString(3, admin.getAdresse());
             pstmt.setString(4, admin.getEmail());
-            pstmt.setString(5, "Admin");
+            pstmt.setString(5, "ROLE_ADMIN");
             pstmt.setString(6, admin.getPassword());
             pstmt.setString(7, admin.getFirstName());
             pstmt.setString(8, admin.getLastName());
@@ -44,7 +44,7 @@ public class AdminService implements IService<Admin> {
     @Override
     public List<Admin> rechercher() {
         List<Admin> admins = new ArrayList<>();
-        String sql = "SELECT * FROM user WHERE roles = 'Admin'";
+        String sql = "SELECT * FROM user WHERE roles = 'ROLE_ADMIN'";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -76,7 +76,7 @@ public class AdminService implements IService<Admin> {
     @Override
     public void modifier(Admin admin) {
         String sql = "UPDATE user SET genre = ?, date_naissance = ?, adresse = ?, email = ?, password = ?, firstname = ?, lastname = ?, phone_number = ?, image = ?, statut = ?, privileges = ? " +
-                "WHERE id = ? AND roles = 'Admin'";
+                "WHERE id = ? AND roles = 'ROLE_ADMIN'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, admin.getGenre());
@@ -101,7 +101,7 @@ public class AdminService implements IService<Admin> {
 
     @Override
     public void supprimer(Admin admin) {
-        String sql = "DELETE FROM user WHERE id = ? AND roles = 'Admin'";
+        String sql = "DELETE FROM user WHERE id = ? AND roles = 'ROLE_ADMIN'";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, admin.getId());

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.geometry.Insets?>
+
+<?import java.net.URL?>
+
+<VBox spacing="10" styleClass="reservation-form" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.hotel.HotelReservationForm">
+
+    <stylesheets>
+
+        <URL value="@/styles/hotel-reservation-form.css"/>
+
+    </stylesheets>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre du formulaire -->
+    <Label fx:id="formTitleLabel" text="Reservation form" styleClass="form-title"/>
+
+    <!-- Informations sur la chambre -->
+    <Label text="Room type:" styleClass="form-label"/>
+    <Label fx:id="typeLabel" styleClass="info-label"/>
+
+    <Label text="Price per night:" styleClass="form-label"/>
+    <Label fx:id="priceLabel" styleClass="info-label"/>
+
+    <!-- Dates de check-in et check-out -->
+    <Label text="Date de check-in:" styleClass="form-label"/>
+    <DatePicker fx:id="checkinDatePicker" styleClass="date-picker"/>
+
+    <Label text="Date de check-out:" styleClass="form-label"/>
+    <DatePicker fx:id="checkoutDatePicker" styleClass="date-picker"/>
+
+    <!-- Nombre de chambres -->
+    <Label text="Nombre de chambres:" styleClass="form-label"/>
+    <TextField fx:id="numberOfRoomsField" promptText="Number of rooms" styleClass="input-field"/>
+
+    <!-- Méthode de paiement -->
+    <Label text="Méthode de paiement:" styleClass="form-label"/>
+    <ComboBox fx:id="paymentMethodComboBox" promptText="Choose a payment method" styleClass="combo-box"/>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button fx:id="payButton" text="Payer" onAction="#handlePayment" styleClass="payment-button"/>
+    </HBox>
+</VBox>

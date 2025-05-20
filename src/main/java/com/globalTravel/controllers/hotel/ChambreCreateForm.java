@@ -1,8 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
-import com.globalTravel.models.car.Route;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.ChambreService;
@@ -12,8 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import javax.naming.Name;
 
 public class ChambreCreateForm implements Navigatable {
 
@@ -29,15 +26,12 @@ public class ChambreCreateForm implements Navigatable {
     private ChambreService chambreService = new ChambreService();
     private HotelService hotelService = new HotelService();
     private Stage stage;
+    private DashBoard dashBoardController;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    private DashBoard dashBoardController;
-    @Override
-    public void setDashBoardController(DashBoard dashBoardController) {
-        this.dashBoardController = dashBoardController;
-    }
+
     @FXML
     public void initialize() {
         System.out.println("Initializing ChambreCreateForm...");
@@ -64,20 +58,6 @@ public class ChambreCreateForm implements Navigatable {
     private void loadHotels() {
         ObservableList<Hotel> hotels = FXCollections.observableArrayList(hotelService.rechercher());
         hotelComboBox.setItems(hotels);
-        hotelComboBox.setCellFactory(comboBox -> new ListCell<>() {
-            @Override
-            protected void updateItem(Hotel hotel, boolean empty) {
-                super.updateItem(hotel, empty);
-                setText(empty || hotel == null ? null : hotel.getNom_h());
-            }
-        });
-        hotelComboBox.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Hotel hotel, boolean empty) {
-                super.updateItem(hotel, empty);
-                setText(empty || hotel == null ? null : hotel.getNom_h());
-            }
-        });
     }
 
     private void validateForm() {
@@ -173,7 +153,6 @@ public class ChambreCreateForm implements Navigatable {
             chambreService.ajouter(chambre);
             showAlert("Succès", "Chambre créée avec succès !");
             closeForm();
-            dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
         } catch (Exception e) {
             System.err.println("Erreur lors de la sauvegarde de la chambre : " + e.getMessage());
             showAlert("Erreur", "Une erreur s'est produite lors de la création de la chambre.");
@@ -182,6 +161,8 @@ public class ChambreCreateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+
         closeForm();
     }
 
@@ -197,5 +178,10 @@ public class ChambreCreateForm implements Navigatable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @Override
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
     }
 }

@@ -13,13 +13,12 @@ public class RouteService implements IService<Route> {
 
     @Override
     public void ajouter(Route route) {
-        String req = "INSERT INTO car_route (date_start, date_destination,location_start,location_destination) VALUES (?,?,?,?)";
+        String req = "INSERT INTO car_route (date_start,location_start,location_destination) VALUES (?,?,?)";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setTimestamp(1,  Timestamp.valueOf(route.getDate_start()));
-            pst.setTimestamp(2, Timestamp.valueOf(route.getDate_destination()));
-            pst.setString(3, route.getLocation_start());
-            pst.setString(4, route.getLocation_destination());
+            pst.setString(2, route.getLocation_start());
+            pst.setString(3, route.getLocation_destination());
 
 
             pst.executeUpdate();
@@ -32,14 +31,13 @@ public class RouteService implements IService<Route> {
     @Override
     public void modifier(Route route) {
 
-        String req = "UPDATE car_route SET date_start=? ,date_destination=?,location_start=?,location_destination=? WHERE id=?";
+        String req = "UPDATE car_route SET date_start=? ,location_start=?,location_destination=? WHERE id=?";
         try {
             PreparedStatement pst = connection.prepareStatement(req);
             pst.setTimestamp(1, Timestamp.valueOf(route.getDate_start()));
-            pst.setTimestamp(2, Timestamp.valueOf(route.getDate_destination()));
-            pst.setString(3, route.getLocation_start());
-            pst.setString(4, route.getLocation_destination());
-            pst.setInt(5, route.getId());
+            pst.setString(2, route.getLocation_start());
+            pst.setString(3, route.getLocation_destination());
+            pst.setInt(4, route.getId());
 
             pst.executeUpdate();
             System.out.println("route has been modified");
@@ -71,7 +69,7 @@ public class RouteService implements IService<Route> {
             PreparedStatement pst = connection.prepareStatement(req);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                routes.add(new Route(rs.getInt("id"),rs.getTimestamp("date_start").toLocalDateTime(),rs.getTimestamp("date_destination").toLocalDateTime(),rs.getString("location_start"),rs.getString("location_destination")));
+                routes.add(new Route(rs.getInt("id"),rs.getTimestamp("date_start").toLocalDateTime(),rs.getString("location_start"),rs.getString("location_destination")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -90,7 +88,7 @@ public class RouteService implements IService<Route> {
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                route = new Route(rs.getInt("id"),rs.getTimestamp("date_start").toLocalDateTime(),rs.getTimestamp("date_destination").toLocalDateTime(),rs.getString("location_start"),rs.getString("location_destination"));
+                route = new Route(rs.getInt("id"),rs.getTimestamp("date_start").toLocalDateTime(),rs.getString("location_start"),rs.getString("location_destination"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -99,4 +97,31 @@ public class RouteService implements IService<Route> {
         return route;
     }
 
+    public int addRoute(Route route) {
+        String req = "INSERT INTO car_route (date_start, location_start,location_destination) VALUES (?, ?, ?)";
+        int generatedId = -1; // Default value in case of failure
+
+        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            pst.setTimestamp(1, Timestamp.valueOf(route.getDate_start()));
+            pst.setString(2, route.getLocation_start());
+            pst.setString(3, route.getLocation_destination());
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt(1); // Retrieve the auto-generated ID
+                        System.out.println("Added route with ID: " + generatedId);
+                    } else {
+                        System.out.println("No ID obtained.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return generatedId;
+    }
 }

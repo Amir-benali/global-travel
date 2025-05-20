@@ -1,19 +1,18 @@
 package com.globalTravel.controllers.flight;
 
-            import com.globalTravel.controllers.DashBoard;
+            import com.globalTravel.controllers.backoffice.DashBoard;
+            import com.globalTravel.controllers.backoffice.Navigatable;
             import com.globalTravel.models.flight.Airline;
             import com.globalTravel.services.flight.AirlineService;
             import javafx.application.Platform;
             import javafx.fxml.FXML;
             import javafx.scene.control.*;
-            import javafx.scene.image.Image;
-            import javafx.scene.image.ImageView;
             import javafx.stage.FileChooser;
             import javafx.stage.Stage;
 
             import java.io.File;
 
-            public class AirlineUpdateForm {
+            public class AirlineUpdateForm implements Navigatable {
 
                 @FXML private TextField airlineNameField;
                 @FXML private TextField airlineCodeField;
@@ -72,7 +71,7 @@ package com.globalTravel.controllers.flight;
                         airlineService.modifier(airlineToEdit);
 
                         showAlert(Alert.AlertType.INFORMATION, "Success", "Airline updated successfully.");
-                        clearForm();
+                        dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
                         closeForm();
                     } catch (Exception e) {
                         showAlert(Alert.AlertType.ERROR, "Error", "Error updating airline: " + e.getMessage());
@@ -131,6 +130,8 @@ package com.globalTravel.controllers.flight;
 
                 @FXML
                 private void handleCancel() {
+                    dashBoardController.navigateTo("dashboard/flight/airline-grid.fxml");
+
                     clearForm();
                     closeForm();
                 }

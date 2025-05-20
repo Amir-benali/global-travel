@@ -123,5 +123,48 @@ public class AirlineService implements IService<Airline> {
         }
         return false;
     }
+
+    public List<String> getAllAirlineNames() {
+        List<String> airlineNames = new ArrayList<>();
+        String query = "SELECT airline_name FROM airlines";
+        try (PreparedStatement pst = connection.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            while (rs.next()) {
+                airlineNames.add(rs.getString("airline_name"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving airline names: " + e.getMessage());
+        }
+        return airlineNames;
+    }
+
+    public Integer getAirlineIdByName(String airlineName) {
+        String query = "SELECT airline_id FROM airlines WHERE airline_name = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, airlineName);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("airline_id"); // Use the correct column name
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching airline ID: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String getAirlineNameById(int airlineId) {
+        String query = "SELECT airline_name FROM airlines WHERE airline_id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, airlineId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("airline_name");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching airline name: " + e.getMessage());
+        }
+        return null;
+    }
 }
 

@@ -120,7 +120,6 @@
     -fx-background-color: #0197FF;
 }
 
-/* Table Styles */
 .user-table {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -145,12 +144,28 @@
 }
 
 .user-table .table-row-cell:selected {
-    -fx-background-color: #f0f7ff;
+    -fx-background-color: #f0f7ff; /* Light blue background for selected row */
+    -fx-border-color: transparent transparent #ddd transparent; /* Add a border for better visibility */
+    -fx-border-width: 0 0 1 0;
+}
+
+.user-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #000; /* Ensure text color is readable */
 }
 
 .user-table .table-cell {
     -fx-alignment: center-left;
     -fx-padding: 12px;
+    -fx-text-fill: #333; /* Default text color */
+}
+
+.user-table .table-row-cell:hover {
+    -fx-background-color: #f5f5f5; /* Light gray background on hover */
+}
+
+.user-table .table-row-cell:empty {
+    -fx-background-color: transparent; /* Transparent background for empty rows */
+    -fx-border-color: transparent; /* No border for empty rows */
 }
 
 /* Pagination Styles */
@@ -252,7 +267,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
     -fx-background-radius: 5;
     -fx-padding: 10;
-    -fx-pref-width: 220;
+    -fx-pref-width: 275;
     -fx-alignment: center;
 }
 
@@ -276,7 +291,6 @@
     -fx-background-color: #0197FF;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
     -fx-background-radius: 3;
 }
 
@@ -661,14 +675,26 @@
     -fx-alignment: center-left;
 }
 
+.flight-airline {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+.flight-route {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
 .flight-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
 .flight-price {
-    -fx-font-size: 14px;
-    -fx-text-fill: #2ecc71;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b97e3;
 }
 
 .view-details-button {
@@ -1011,3 +1037,1290 @@
     -fx-text-fill: #ffffff; /* Dark gray text for today's date */
     -fx-font-weight: bold; /* Bold font for today's date */
 }
+.car-offer-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-transition: all 0.3s ease;
+}
+
+.car-image {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.car-brand-model {
+    -fx-font-size: 24px;
+
+}
+/* ... (vos styles existants) ... */
+
+/* Styles for Hotel Cards */
+.hotel-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 10px;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 300px;
+}
+
+.hotel-logo {
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.hotel-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.details-grid {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+}
+
+.details-grid Label {
+    -fx-font-size: 14px;
+}
+/*
+.details-grid Label :nth-child(odd) {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.details-grid Label:nth-child(even) {
+    -fx-text-fill: #7f8c8d;
+}*/
+.modern-button {
+    -fx-background-radius: 20;
+    -fx-padding: 8 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.update-button {
+    -fx-background-color: #3498db;
+}
+
+.update-button:hover {
+
+}
+.hotel-address {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+.hotel-city {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+.hotel-category {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4CAF50; /* Green color for category */
+    -fx-font-weight: bold;
+}
+
+/* Styles for Buttons in Hotel Cards */
+.view-details-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.view-details-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.delete-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.details-button {
+    -fx-background-color: #2196F3; /* Blue background */
+}
+
+.details-button:hover {
+    -fx-background-color: #1e88e5; /* Darker blue on hover */
+}
+
+.main-container {
+    -fx-background-color: #f0f4f8;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.offer-summary {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.price-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.date-label, .route-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #34495e;
+}
+
+.details-section {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.section-title {
+    -fx-font-size: 20px;
+}
+/* Styles for Search and Add Buttons */
+.search-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.search-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.add-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.add-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.pdf-button {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.pdf-button:hover {
+    -fx-background-color: #d35400;
+}
+
+/* Styles for Text Fields */
+.text-field {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 35px;
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #3498db;
+}
+
+/* Styles for FlowPane */
+.flow-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 20px;
+}
+
+/* Styles for ScrollPane */
+
+
+
+
+.activity-form {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+.form-title-activty {
+    -fx-font-size: 24px; /* Taille de police plus grande */
+    -fx-font-weight: bold;
+    -fx-text-fill: #3498db; /* Couleur bleue */
+    -fx-padding: 10 0; /* Espacement autour du titre */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); /* Ombre légère */
+}
+.form-section-activty {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+.section-label-activty {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+.form-field-activty {
+    -fx-pref-width: 350;
+    -fx-pref-height: 45;
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+.description-field-activty {
+    -fx-pref-width: 350;
+    -fx-pref-height: 100; /* Ajustez la hauteur selon vos besoins */
+    -fx-background-color: white; /* Fond blanc */
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+.time-combo-activty {
+    -fx-pref-width: 100;
+    -fx-pref-height: 35;
+    -fx-background-color: #ecf0f1;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5;
+}
+
+.cancel-button-activty {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5px;
+}
+
+.save-button-activty {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5px;
+}
+
+.status-label-activty {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.status-label.success-activty {
+    -fx-text-fill: #27ae60;
+}
+
+.status-label.error-activty {
+    -fx-text-fill: #e74c3c;
+}
+/* ScrollPane Styles */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #888;
+}
+
+/* Styles for Header */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+}
+
+.button-35 {
+    -fx-alignment: center;
+    -fx-background-color: #fff;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2);
+    -fx-text-fill: #121212;
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+
+
+/* Styles for Hotel Create Form */
+.form-content {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 10px;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10px 0;
+}
+
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.field-value {
+    -fx-text-fill: #2c3e50;
+}
+
+.action-button {
+    -fx-background-radius: 5;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.edit-button {
+    -fx-background-color: #3498db;
+}
+
+.edit-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+
+
+.book-button {
+    -fx-background-color: #27ae60;
+}
+
+.book-button:hover {
+    -fx-background-color: #2ecc71;
+}
+/* Styles for the list view (address suggestions) */
+.list-view {
+    -fx-pref-width: 300px;
+    -fx-max-height: 150px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-color: white;
+}
+
+.list-cell {
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #ecf0f1;
+    -fx-cursor: hand;
+}
+
+/* Styles for buttons */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 1);
+}
+
+.book-button {
+    -fx-background-color: #2ecc71; /* Green */
+    -fx-text-fill: white;
+}
+
+.book-button:hover {
+    -fx-background-color: #27ae60; /* Darker green */
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c; /* Red */
+    -fx-text-fill: white;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b; /* Darker red */
+}
+
+/* Styles for the WebView (map) */
+.web-view {
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+
+
+/* Styles for the date picker */
+.date-picker {
+    -fx-pref-width: 300px;
+    -fx-font-size: 14px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 0 5px 5px 0;
+}
+
+.date-picker .arrow-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.date-picker .text-field {
+    -fx-background-color: white;
+    -fx-border-radius: 5px 0 0 5px;
+}
+
+/* Hover effect for the card */
+.vbox:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+}
+.main-container {
+    -fx-background-color: #f0f4f8;
+}
+
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+
+.text-field, .date-picker {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5px;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.text-field:focused, .date-picker:focused {
+    -fx-border-color: #3498db;
+}
+
+
+.cancel-button {
+    -fx-background-color: #95a5a6;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.book-button {
+    -fx-background-color: #27ae60;
+}
+
+.book-button:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 5px;
+}
+
+/* Icon Specific Styles */
+.font-awesome-icon {
+    -fx-fill: #333333;
+}
+
+/* Custom Color Scheme for Icons */
+.font-awesome-icon-blue {
+    -fx-fill: #007BFF;
+}
+
+.font-awesome-icon-green {
+    -fx-fill: #28a745;
+    }
+/* Styles for Text Fields */
+.text-field, .text-area, .combo-box {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 35px;
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #3498db;
+}
+
+.text-area {
+    -fx-pref-height: 100px;
+}
+
+/* Styles for ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+
+
+/* Styles for Buttons */
+.save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.translate-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.translate-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Styles for Error Fields */
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.error-text {
+    -fx-fill: red;
+    -fx-font-size: 12px;
+}
+
+/* Styles for Translated Text Area */
+.translated-review-text-area {
+    -fx-pref-height: 100px;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+/* Styles for Labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Styles de add hotels */
+
+
+/* Styles for Hotel Create Form */
+.form-content {
+    -fx-background-color: white;
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-background-radius: 10px;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10px 0;
+}
+
+/* Styles for Text Fields */
+.text-field, .text-area, .combo-box {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 35px;
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #3498db;
+}
+
+.text-area {
+    -fx-pref-height: 100px;
+}
+
+/* Styles for ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+
+
+/* Styles for Buttons */
+.save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.translate-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 3);
+}
+
+.translate-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Styles for Error Fields */
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.error-text {
+    -fx-fill: red;
+    -fx-font-size: 12px;
+}
+
+/* Styles for Translated Text Area */
+.translated-review-text-area {
+    -fx-pref-height: 100px;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+/* Styles for Labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+/* emogi  */
+.emoji-button {
+    -fx-font-size: 18px;
+    -fx-background-color: #ffcc00;
+    -fx-text-fill: black;
+    -fx-background-radius: 50%;
+    -fx-padding: 5px;
+    -fx-border-color: #e6b800;
+}
+
+.emoji-button:hover {
+    -fx-background-color: #ffdb4d;
+}
+/*  stat  */
+.statistics-button {
+    -fx-background-color: #4CAF50; /* Vert */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+}
+
+.statistics-button:hover {
+    -fx-background-color: #45a049; /* Vert plus foncé au survol */
+}
+
+.pdf-button {
+    -fx-background-color: #008CBA; /* Bleu */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+}
+
+.pdf-button:hover {
+    -fx-background-color: #007B9E; /* Bleu plus foncé au survol */
+}
+
+/* Nouveau style pour le bouton .button-35 */
+.button-35 {
+    -fx-alignment: center;
+    -fx-background-color: #fff;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2);
+    -fx-text-fill: #121212;
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-padding:  1.2em;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.button-35:hover {
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3);
+}
+/* Style pour le bouton Annuler (rouge) */
+.cancel-button-activty {
+    -fx-background-color: #e74c3c; /* Rouge */
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-background-radius: 12px; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-padding:  1.2em;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.cancel-button-activty:hover {
+    -fx-background-color: #c0392b; /* Rouge plus foncé au survol */
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3); /* Ombre plus prononcée au survol */
+}
+
+/* Style pour le bouton Enregistrer (vert) */
+.save-button-activty {
+    -fx-background-color: #2ecc71; /* Vert */
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-background-radius: 12px; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(18, 18, 18, 0.1), 10, 0, 0, 2); /* Ombre légère */
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-padding: 1.2em;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+    -fx-transition: box-shadow 0.2s;
+}
+
+.save-button-activty:hover {
+    -fx-background-color: #27ae60; /* Vert plus foncé au survol */
+    -fx-effect: dropshadow(gaussian, #121212, 10, 0, 0, 3); /* Ombre plus prononcée au survol */
+}
+
+
+
+
+/* Titre du formulaire */
+.form-title-review {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+
+/* Section du formulaire */
+.form-section-review {
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
+}
+
+/* Label de section */
+.section-label-review {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+}
+
+/* Champ de formulaire */
+.form-field-review {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 30px;
+}
+
+/* Champ de notation (Rating) */
+.rating-field-review {
+    -fx-pref-width: 300px;
+}
+
+/* Bouton Annuler */
+.cancel-button-review {
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+}
+
+/* Bouton Enregistrer */
+.save-button-review {
+    -fx-background-color: #44ff44;
+    -fx-text-fill: white;
+}
+
+/* Label de statut */
+.status-label-review {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #333333;
+}
+.suggestions-list {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-max-height: 150px;
+}
+
+
+
+
+.suggestions-combo-activty {
+    -fx-background-color: white;
+    -fx-border-color: #4a90e2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px;
+}
+
+.suggestions-combo-activty .list-cell {
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+}
+
+.suggestions-combo-activty .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #4a90e2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+}
+
+.suggestions-combo-activty .list-view .list-cell {
+    -fx-padding: 8px;
+    -fx-background-color: white;
+}
+
+.suggestions-combo-activty .list-view .list-cell:hover {
+    -fx-background-color: #e8f0fe;
+}
+
+.suggestions-combo-activty .list-view .list-cell:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+
+
+
+
+
+
+
+/* Style pour le conteneur principal */
+.activities-grid-container-act {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Style pour le header */
+.header-activity {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+/* Style pour le titre de la section */
+.section-title-activty {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Style pour les boutons */
+.add-button-activity-activty {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.add-button-act:hover {
+    -fx-background-color: #1565C0; /* Changement de couleur au survol */
+}
+
+.activity-card-actt {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 15px;
+}
+
+/* Style pour le titre de la carte */
+.card-title-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+}
+
+/* Style pour le texte de la carte */
+.card-text-actt {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+}
+
+
+.search-field-activty {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 30px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 10px;
+}
+
+.search-button-activty {
+    -fx-background-color: #0080FF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+}
+
+.search-button-activty:hover {
+    -fx-background-color: #45a049;
+}
+
+
+
+.suggestions-list-activty {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-pref-width: 300px; /* Largeur préférée */
+    -fx-pref-height: 150px; /* Hauteur préférée */
+    -fx-max-height: 200px; /* Hauteur maximale */
+}
+
+
+
+
+.activity-form {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 20px;
+}
+
+.form-section-activty {
+    -fx-spacing: 10px;
+}
+
+.form-field-activty {
+    -fx-pref-width: 300px;
+}
+
+
+
+.time-combo-activty {
+    -fx-pref-width: 110px;
+}
+
+.cancel-button-activty {
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+}
+
+.save-button-activty {
+    -fx-background-color: #44ff44;
+    -fx-text-fill: white;
+}
+
+.status-label-activty {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.review-info {
+    -fx-spacing: 5;
+    -fx-padding: 20 0;
+    -fx-alignment: center-left;
+}
+
+.form-container {
+    -fx-padding: 20;
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.flight-details-container {
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.flight-actions {
+    -fx-alignment: center;
+}
+
+.flight-detail-box {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-spacing: 10px;
+}
+
+.flight-detail {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.seat-button {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #0097ff;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.seat-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.selected-seat {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.flight-save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+.flight-cancel-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+}
+
+.flight-cancel-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.car-reservations-container {
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-background-color: #f4f4f4;
+}
+/* Table Styles */
+.reservations-table {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Pagination Styles */
+.pagination {
+    -fx-padding: 10;
+    -fx-background-color: #ecf0f1;
+}
+
+.pagination-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+}
+
+.pagination-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.page-info {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+
+.flight-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
+
+/* Status Flair Styles */
+/*.status-flair {*/
+/*    -fx-padding: 5px;*/
+/*    -fx-border-radius: 5px;*/
+/*    -fx-background-radius: 5px;*/
+/*    -fx-text-fill: white;*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.status-pending {*/
+/*    -fx-background-color: #f39c12;*/
+/*}*/
+
+/*.status-confirmed {*/
+/*    -fx-background-color: #2ecc71;*/
+/*}*/
+
+/*.status-canceled {*/
+/*    -fx-background-color: #e74c3c;*/
+/*}*/
+
+/*.status-failed {*/
+/*    -fx-background-color: #95a5a6;*/
+/*}*/
+
+.icon-only-button {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+.icon-only-button:hover {
+    -fx-background-color: #f0f0f0;
+.no-results-label {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: #666666;
+    -fx-padding: 20px;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+}
+

@@ -5,62 +5,73 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true" styleClass="dashboard-component" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.DashBoardContent">
-    <VBox spacing="20">
+<ScrollPane fitToWidth="true" styleClass="dashboard-component" xmlns:fx="http://javafx.com/fxml" fx:controller="com.globalTravel.controllers.backoffice.DashBoardContent">
+    <VBox spacing="25" styleClass="dashboard-container">
         <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
+            <Insets top="30" right="30" bottom="30" left="30"/>
         </padding>
 
-        <Label text="Dashboard" styleClass="dashboard-title"/>
+        <!-- Header Section -->
+        <HBox alignment="CENTER_LEFT" styleClass="dashboard-header">
+            <Label text="Dashboard Overview" styleClass="dashboard-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Welcome back!" styleClass="welcome-text"/>
+        </HBox>
 
         <!-- Quick Stats -->
-        <HBox spacing="20" styleClass="quick-stats">
-            <VBox styleClass="stat-card">
-                <Label text="Total Bookings" styleClass="stat-title"/>
+        <HBox spacing="25" styleClass="quick-stats-container">
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <Label text="Total Activities" styleClass="stat-title"/>
                 <Label fx:id="totalBookingsLabel" text="0" styleClass="stat-value"/>
+                <Label text="All time activities" styleClass="stat-subtitle"/>
             </VBox>
-            <VBox styleClass="stat-card">
-                <Label text="Revenue" styleClass="stat-title"/>
-                <Label fx:id="revenueLabel" text="" styleClass="stat-value"/>
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                <Label text="Total Revenue" styleClass="stat-title"/>
+                <Label fx:id="revenueLabel" text="0.00" styleClass="stat-value"/>
+                <Label text="Total earnings" styleClass="stat-subtitle"/>
             </VBox>
-            <VBox styleClass="stat-card">
-                <Label text="Active Users" styleClass="stat-title"/>
-                <Label fx:id="activeUsersLabel" text="0" styleClass="stat-value"/>
-            </VBox>
-            <VBox styleClass="stat-card">
+            <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                 <Label text="New Activities" styleClass="stat-title"/>
                 <Label fx:id="newActivitiesLabel" text="0" styleClass="stat-value"/>
+                <Label text="Last 7 days" styleClass="stat-subtitle"/>
             </VBox>
         </HBox>
 
-        <!-- Charts -->
-        <HBox spacing="20" styleClass="charts">
-            <VBox styleClass="chart-container">
-                <Label text="Bookings by Category" styleClass="chart-title"/>
-                <PieChart fx:id="bookingsPieChart" />
+        <!-- Charts Section -->
+        <HBox spacing="25" styleClass="charts-container">
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
+                <Label text="Activities by Type" styleClass="chart-title"/>
+                <PieChart fx:id="bookingsPieChart" styleClass="custom-pie-chart"/>
             </VBox>
-            <VBox styleClass="chart-container">
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
                 <Label text="Revenue Trend" styleClass="chart-title"/>
-                <LineChart fx:id="revenueTrendChart">
+                <LineChart fx:id="revenueTrendChart" styleClass="custom-line-chart">
                     <xAxis>
-                        <CategoryAxis label="Month"/>
+                        <CategoryAxis label="Month" styleClass="chart-axis"/>
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Revenue ($)"/>
+                        <NumberAxis label="Revenue ($)" styleClass="chart-axis"/>
                     </yAxis>
                 </LineChart>
             </VBox>
         </HBox>
 
-        <!-- Top Activities -->
-        <VBox styleClass="top-activities">
-            <Label text="Top Activities" styleClass="section-title"/>
-            <TableView fx:id="topActivitiesTable">
+        <!-- Top Activities Section -->
+        <VBox styleClass="activities-container">
+            <HBox alignment="CENTER_LEFT" styleClass="section-header">
+                <Label text="Top Activities" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Sorted by Price" styleClass="section-subtitle"/>
+            </HBox>
+            <TableView fx:id="topActivitiesTable" styleClass="custom-table">
                 <columns>
-                    <TableColumn text="Activity Name"/>
-                    <TableColumn text="Bookings"/>
-                    <TableColumn text="Revenue"/>
-                    <TableColumn text="Rating"/>
+                    <TableColumn text="Activity Name" fx:id="activityNameColumn" styleClass="table-column"/>
+                    <TableColumn text="Type" fx:id="typeColumn" styleClass="table-column"/>
+                    <TableColumn text="Revenue" fx:id="revenueColumn" styleClass="table-column"/>
+                    <TableColumn text="Start Date" fx:id="startDateColumn" styleClass="table-column"/>
+                    <TableColumn text="Description" fx:id="descriptionColumn" styleClass="table-column"/>
+                    <TableColumn text="Location" fx:id="locationColumn" styleClass="table-column"/>
+                    <TableColumn text="End Date" fx:id="endDateColumn" styleClass="table-column"/>
                 </columns>
             </TableView>
         </VBox>

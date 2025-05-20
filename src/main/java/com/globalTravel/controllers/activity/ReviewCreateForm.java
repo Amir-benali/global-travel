@@ -1,5 +1,8 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
 import com.globalTravel.services.activity.ActivityService;
@@ -8,63 +11,122 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
+import org.controlsfx.control.Rating;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewCreateForm {
+import java.util.HashMap;
+import java.util.Map;
 
-    @FXML private TextField commentaireField;
-    @FXML private ComboBox<Integer> noteComboBox;
-    @FXML private ComboBox<Integer> activityIdComboBox; // Utilisation du ComboBox pour les ID d'activités
+public class ReviewCreateForm implements Navigatable {
+    private static final String AKISMET_API_KEY = "8c085842ad83";
+    private static final String AKISMET_API_URL = "https://rest.akismet.com/1.1/comment-check";
+    
+    private DashBoard dashBoardController;
+    private Stage stage;
+
+    @FXML private TextArea commentaireField;
+    @FXML private Rating noteRating;
+    @FXML private ComboBox<String> activityIdComboBox; // Changé pour afficher des noms
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
 
     private final ReviewService reviewService = new ReviewService();
-    private final ActivityService activityService = new ActivityService(); // Service pour récupérer les activités
-    private Stage stage;
+    private final ActivityService activityService = new ActivityService();
+    private Map<String, Integer> activityNameToIdMap = new HashMap<>(); // Pour associer les noms aux IDs
+    private int userId;
 
+    // Méthode pour définir le Stage
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    @FXML
-    public void initialize() {
-        // Remplir le ComboBox de la note avec des valeurs de 0 à 5
-        noteComboBox.getItems().setAll(0, 1, 2, 3, 4, 5);
-
-        // Remplir dynamiquement le ComboBox des IDs d'activités avec les valeurs provenant du service ActivityService
-        loadActivityIds();
+    // Méthode pour définir le DashBoardController
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+        this.userId=this.dashBoardController.getCurrentUser().getId();
     }
 
-    private void loadActivityIds() {
-        // Charger les IDs des activités depuis la base de données via le service
-        List<Integer> activityIds = reviewService.getAllActivityIds();  // Appeler la méthode de ReviewService
-        ObservableList<Integer> observableActivityIds = FXCollections.observableArrayList(activityIds);
-        activityIdComboBox.setItems(observableActivityIds);
+    @FXML
+    public void initialize() {
+        // Initialiser le Rating avec un maximum de 5 étoiles
+        noteRating.setMax(5);
+        noteRating.setRating(0); // Par défaut, aucune étoile sélectionnée
+
+        // Remplir dynamiquement le ComboBox des noms d'activités
+        loadActivityNames();
+    }
+
+    private void loadActivityNames() {
+        // Récupérer la liste des activités avec leurs noms
+        List<Activity> activities = reviewService.getAllActivities();
+
+        // Créer une liste observable pour les noms des activités
+        ObservableList<String> observableActivityNames = FXCollections.observableArrayList();
+        for (Activity activity : activities) {
+            observableActivityNames.add(activity.getNomActivity());
+            activityNameToIdMap.put(activity.getNomActivity(), activity.getId()); // Associer le nom à l'ID
+        }
+
+        // Remplir le ComboBox avec les noms des activités
+        activityIdComboBox.setItems(observableActivityNames);
+    }
+
+    private boolean isSpam(String comment) {
+        try {
+            HttpPost request = new HttpPost(AKISMET_API_URL);
+            
+            // Préparer les paramètres pour Akismet
+            List<BasicNameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("api_key", AKISMET_API_KEY));
+            params.add(new BasicNameValuePair("blog", "https://globaltravel.com"));
+            params.add(new BasicNameValuePair("comment_content", comment));
+            params.add(new BasicNameValuePair("comment_type", "comment"));
+            params.add(new BasicNameValuePair("user_ip", "127.0.0.1")); // À remplacer par l'IP réelle en production
+            params.add(new BasicNameValuePair("user_agent", "GlobalTravel/1.0"));
+            
+            request.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            
+            String response = HttpClients.createDefault().execute(request, httpResponse -> 
+                EntityUtils.toString(httpResponse.getEntity()));
+            
+            return "true".equalsIgnoreCase(response.trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // En cas d'erreur, on considère que ce n'est pas du spam
+        }
     }
 
     @FXML
     private void handleSaveReview() {
         try {
-            // Validation des champs obligatoires
             if (!validateInputs()) {
                 return;
             }
 
-            // Créer la review à partir des inputs
-            Review review = createReviewFromInputs();
+            // Vérifier si le commentaire est du spam
+            if (isSpam(commentaireField.getText())) {
+                showAlert("Spam détecté", "Votre commentaire a été détecté comme spam. Veuillez le modifier.", Alert.AlertType.WARNING);
+                statusLabel.setText("Commentaire détecté comme spam");
+                statusLabel.setStyle("-fx-text-fill: red;");
+                return;
+            }
 
-            // Utiliser la méthode ajouter du ReviewService pour ajouter la critique
+            Review review = createReviewFromInputs();
             reviewService.ajouter(review);
 
-            // Afficher un message de succès
             showAlert("Succès", "Critique ajoutée avec succès !", Alert.AlertType.INFORMATION);
             statusLabel.setText("Critique ajoutée avec succès !");
             statusLabel.setStyle("-fx-text-fill: green;");
             clearForm();
             closeForm();
         } catch (Exception e) {
-            // Afficher un message d'erreur en cas d'échec
             showAlert("Erreur", "Erreur lors de l'enregistrement : " + e.getMessage(), Alert.AlertType.ERROR);
             statusLabel.setText("Erreur : " + e.getMessage());
             statusLabel.setStyle("-fx-text-fill: red;");
@@ -72,43 +134,37 @@ public class ReviewCreateForm {
     }
 
     private Review createReviewFromInputs() {
+        String selectedActivityName = activityIdComboBox.getValue(); // Récupérer le nom sélectionné
+        int activityId = activityNameToIdMap.get(selectedActivityName); // Récupérer l'ID correspondant
+
         return new Review(
                 commentaireField.getText(),
-                noteComboBox.getValue(),
-                activityIdComboBox.getValue() // Utilisation de l'ID d'activité sélectionné dans le ComboBox
+                (int) noteRating.getRating(), // Récupérer la note sous forme d'entier
+                activityId,
+                userId
+
         );
     }
 
-    // Méthode pour valider les champs de saisie
     private boolean validateInputs() {
-        // Vérifier que le commentaire n'est pas vide
         if (commentaireField.getText().trim().isEmpty()) {
             showAlert("Erreur", "Le commentaire ne peut pas être vide.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Vérifier qu'une note est sélectionnée
-        if (noteComboBox.getValue() == null) {
+        if (noteRating.getRating() == 0) {
             showAlert("Erreur", "Veuillez sélectionner une note.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Vérifier qu'un ID d'activité est sélectionné
         if (activityIdComboBox.getValue() == null) {
             showAlert("Erreur", "Veuillez sélectionner une activité.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        // Vérifier que l'ID d'activité existe dans la base de données
-        if (!reviewService.activityExists(activityIdComboBox.getValue())) {
-            showAlert("Erreur", "L'ID de l'activité sélectionné n'existe pas dans la base de données.", Alert.AlertType.WARNING);
             return false;
         }
 
         return true;
     }
 
-    // Méthode pour afficher une alerte
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -119,19 +175,36 @@ public class ReviewCreateForm {
 
     @FXML
     private void handleCancel() {
+        // Effacer le formulaire
         clearForm();
-        closeForm();
+
+        // Fermer la fenêtre si le stage est initialisé
+        if (stage != null) {
+            stage.close();
+        } else {
+            System.out.println("Stage n'est pas initialisé.");
+        }
+
+        // Naviguer vers le tableau de bord si le contrôleur est initialisé
+        if (dashBoardController != null) {
+            dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
+        } else {
+            System.out.println("DashBoardController n'est pas initialisé.");
+        }
     }
 
     private void clearForm() {
         commentaireField.clear();
-        noteComboBox.setValue(null);
-        activityIdComboBox.setValue(null); // Effacer le ComboBox de l'ID d'activité
+        noteRating.setRating(0); // Réinitialiser le rating à 0 étoiles
+        activityIdComboBox.setValue(null);
     }
 
     private void closeForm() {
+        // Fermer la fenêtre si le stage est initialisé
         if (stage != null) {
             stage.close();
+        } else {
+            System.out.println("Stage n'est pas initialisé.");
         }
     }
 }

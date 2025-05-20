@@ -79,15 +79,11 @@ public class Chambre {
         this.option_h = option_h;
     }
 
-    @Override
     public String toString() {
-        return "Chambre{" +
-                "id_Chambre_h=" + id_Chambre_h +
-                ", type_chambre_h='" + type_chambre_h + '\'' +
-                ", prix_nuit_h=" + prix_nuit_h +
-                ", dispo_h='" + dispo_h + '\'' +
-                ", option_h='" + option_h + '\'' +
-                ", id_hotel_h='" + id_hotel_j + '\'' +
-                '}';
+        String hotelInfo = (id_hotel_j != null) ? ", Hôtel: " + id_hotel_j.getNom_h() : ", Aucun hôtel associé";
+        return "Chambre #" + id_Chambre_h +
+                " (" + type_chambre_h + ") - " +
+                prix_nuit_h + "€/nuit, Disponible: " + dispo_h +
+                hotelInfo;
     }
 }

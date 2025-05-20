@@ -1,42 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="login-container" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.globalTravel.controllers.auth.Login">
+<StackPane prefHeight="800.0" prefWidth="1280.0" styleClass="login-container"
+           xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/23.0.1"
+           fx:controller="com.globalTravel.controllers.auth.Login">
+
     <VBox alignment="CENTER" maxHeight="500" maxWidth="400" spacing="20" styleClass="login-card">
         <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">
             <image>
-                <Image url="@../images/logo.jpg" />
+                <Image url="@../images/logo.jpg"/>
             </image>
         </ImageView>
-        <Label styleClass="title" text="Welcome Back" />
-        <TextField fx:id="emailField" promptText="Email" styleClass="input-field" />
-        <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
-        <Button onAction="#handleLogin" styleClass="login-button" text="Log In" />
-        <HBox alignment="CENTER" spacing="10">
-            <CheckBox styleClass="remember-me" text="Remember me" />
-            <Region HBox.hgrow="ALWAYS" />
+        <Label styleClass="title" text="Welcome Back"/>
+
+        <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
+
+        <!-- Conteneur du champ mot de passe et de l'icône de visibilité -->
+        <HBox alignment="CENTER_LEFT" spacing="5">
+            <StackPane>
+                <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
+                <TextField fx:id="visiblePasswordField" promptText="Password" styleClass="input-field" visible="false" managed="false"/>
+            </StackPane>
+            <ImageView fx:id="togglePasswordIcon" fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true"
+                       onMouseClicked="#togglePasswordVisibility">
+                <image>
+                    <Image url="@../images/eye-closed.png"/>
+                </image>
+            </ImageView>
         </HBox>
-        <Separator />
+
+        <Button onAction="#handleLogin" styleClass="login-button" text="Log In"/>
+
         <HBox alignment="CENTER" spacing="10">
-            <Label text="Don't have an account?" />
-            <Hyperlink onAction="#handleSignUp" text="Sign Up" />
-            <Hyperlink onAction="#handleForgotPassword" text="Forgot Password?" />
+            <CheckBox fx:id="rememberMeCheckBox" styleClass="remember-me" text="Remember me"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Separator prefWidth="100"/>
+            <Label text="Or continue with"/>
+            <Separator prefWidth="100"/>
+        </HBox>
+
+        <Button fx:id="googleLoginButton" onAction="#handleGoogleLogin" styleClass="icon-only-button">
+            <graphic>
+                <ImageView fitHeight="24" fitWidth="24">
+                    <image>
+                        <Image url="@../images/google-icon.png"/>
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+
+
+        <Separator/>
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Don't have an account?"/>
+            <Hyperlink onAction="#handleSignUp" text="Sign Up"/>
+            <Hyperlink onAction="#handleForgotPassword" text="Forgot Password?"/>
         </HBox>
     </VBox>
-    <Circle radius="300" styleClass="background-circle" StackPane.alignment="BOTTOM_RIGHT" />
-    <Circle radius="200" styleClass="background-circle" StackPane.alignment="TOP_LEFT" />
+
+    <Circle radius="300" styleClass="background-circle" StackPane.alignment="BOTTOM_RIGHT"/>
+    <Circle radius="200" styleClass="background-circle" StackPane.alignment="TOP_LEFT"/>
 </StackPane>

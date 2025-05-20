@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.hotel;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.hotel.Chambre;
 import com.globalTravel.models.hotel.Hotel;
 import com.globalTravel.services.hotel.ChambreService;
@@ -217,6 +217,8 @@ public class ChambreUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+        dashBoardController.navigateTo("dashboard/hotel/chambre-grid.fxml");
+
         closeForm();
     }
 

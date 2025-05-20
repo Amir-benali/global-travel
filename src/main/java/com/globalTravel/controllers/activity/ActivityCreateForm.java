@@ -1,25 +1,36 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
 import com.globalTravel.utils.DataSource;
+import com.google.api.client.auth.oauth2.Credential;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 
 public class ActivityCreateForm implements Navigatable {
+    private static final String COHERE_API_URL = "https://api.cohere.ai/v1/generate";
+    private static final String COHERE_API_KEY = "hI1uB2w3ERvP2CaCWI1kLqG3h43H2Rh2xu0LerHg";
+    
     private DashBoard dashBoardController;
 
     @FXML private ComboBox<TypeActivity> typeComboBox;
@@ -35,16 +46,19 @@ public class ActivityCreateForm implements Navigatable {
     @FXML private ComboBox<String> endSecondComboBox;
     @FXML private TextField priceField;
     @FXML private TextField localisationField;
-    @FXML private ComboBox<Integer> hotelIdComboBox;
-    @FXML private ComboBox<Integer> carIdComboBox;
-    @FXML private ComboBox<Integer> flightIdComboBox;
+    @FXML private ComboBox<String> hotelIdComboBox;
+    @FXML private ComboBox<String> carIdComboBox;
+    @FXML private ComboBox<String> flightIdComboBox;
     @FXML private Button saveButton;
     @FXML private Label statusLabel;
+    @FXML private ComboBox<String> suggestionsComboBox;
+    @FXML private ComboBox<String> activityNameSuggestionsComboBox;
 
     @Override
     public void setDashBoardController(DashBoard dashBoardController) {
         this.dashBoardController = dashBoardController;
     }
+
     private final ActivityService activityService = new ActivityService();
     private final Connection connection = DataSource.getInstance().getConnection();
     private Stage stage;
@@ -55,32 +69,83 @@ public class ActivityCreateForm implements Navigatable {
 
     @FXML
     public void initialize() {
+        // Récupérer les valeurs de l'énumération TypeActivity.
         typeComboBox.getItems().setAll(TypeActivity.values());
         populateHourMinuteSecondComboBoxes();
 
-        // Charger les IDs depuis la base de données
-        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel", "id_hotel_h"));
-        carIdComboBox.getItems().setAll(getIdsFromDatabase("private_car", "id"));
-        flightIdComboBox.getItems().setAll(getIdsFromDatabase("flights", "id_flight"));
+        // Charger les noms d'hôtels, les marques de voitures et les numéros de vol depuis la base de données
+        hotelIdComboBox.getItems().setAll(getNamesFromDatabase("hotel", "nom_h"));
+        carIdComboBox.getItems().setAll(getCarBrandsFromDatabase());
+        flightIdComboBox.getItems().setAll(getFlightNumbersFromDatabase());
+
+        // Initialiser le ComboBox des suggestions de localisation
+        suggestionsComboBox.setVisible(false);
+        suggestionsComboBox.setOnAction(event -> handleSuggestionSelection());
+
+        // Initialisation du ComboBox pour les suggestions de nom d'activité
+        activityNameSuggestionsComboBox.setVisible(false);
+        activityNameSuggestionsComboBox.setOnAction(event -> handleActivityNameSuggestionSelection());
+        
+        // Ajouter un écouteur pour le champ de nom d'activité
+        activityNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.length() > 2) {
+                getActivityNameSuggestions(newValue);
+            } else {
+                activityNameSuggestionsComboBox.setVisible(false);
+                activityNameSuggestionsComboBox.getItems().clear();
+            }
+        });
     }
 
-    private List<Integer> getIdsFromDatabase(String tableName, String idColumnName) {
-        List<Integer> ids = new ArrayList<>();
-        String query = "SELECT " + idColumnName + " FROM " + tableName;
+    private List<String> getNamesFromDatabase(String tableName, String nameColumnName) {
+        List<String> names = new ArrayList<>();
+        String query = "SELECT " + nameColumnName + " FROM " + tableName;
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                ids.add(resultSet.getInt(idColumnName));
-                System.out.println("ID récupéré depuis " + tableName + ": " + resultSet.getInt(idColumnName));
+                names.add(resultSet.getString(nameColumnName));
             }
-
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des ID de " + tableName + " : " + e.getMessage());
+            System.out.println("Erreur lors de la récupération des noms de " + tableName + " : " + e.getMessage());
         }
 
-        return ids;
+        return names;
+    }
+
+    private List<String> getCarBrandsFromDatabase() {
+        List<String> brands = new ArrayList<>();
+        String query = "SELECT brand FROM private_car";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                brands.add(resultSet.getString("brand"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des marques de voitures : " + e.getMessage());
+        }
+
+        return brands;
+    }
+
+    private List<String> getFlightNumbersFromDatabase() {
+        List<String> flightNumbers = new ArrayList<>();
+        String query = "SELECT flight_number FROM flights";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                flightNumbers.add(resultSet.getString("flight_number"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des numéros de vol : " + e.getMessage());
+        }
+
+        return flightNumbers;
     }
 
     private void populateHourMinuteSecondComboBoxes() {
@@ -106,6 +171,9 @@ public class ActivityCreateForm implements Navigatable {
                 boolean isSaved = activityService.ajouter(activity);
 
                 if (isSaved) {
+                    // Ajouter l'événement à Google Calendar
+                    addEventToGoogleCalendar(activity);
+
                     showAlert(Alert.AlertType.INFORMATION, "Succès", "Activité ajoutée avec succès !");
                     statusLabel.setText("Activité ajoutée avec succès !");
                     statusLabel.setStyle("-fx-text-fill: green;");
@@ -125,11 +193,26 @@ public class ActivityCreateForm implements Navigatable {
         }
     }
 
+    private void addEventToGoogleCalendar(Activity activity) {
+        try {
+            Credential credential = GoogleCalendarAuth.authorize();
+            GoogleCalendarService calendarService = new GoogleCalendarService(credential);
+
+            Date startDate = new Date(activity.getDateDebut().getTime());
+            Date endDate = new Date(activity.getDateFin().getTime());
+
+            calendarService.addEvent(activity.getNomActivity(), activity.getLocalisation(), activity.getDescription(), startDate, endDate);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'ajout de l'événement à Google Calendar : " + e.getMessage());
+        }
+    }
+
     private Activity createActivityFromInputs() {
         Timestamp startTimestamp = combineDateTime(startDatePicker.getValue(), startHourComboBox.getValue(), startMinuteComboBox.getValue(), startSecondComboBox.getValue());
         Timestamp endTimestamp = combineDateTime(endDatePicker.getValue(), endHourComboBox.getValue(), endMinuteComboBox.getValue(), endSecondComboBox.getValue());
-
+        int userId = getCurrentUserId();
         return new Activity(
+
                 startTimestamp,
                 endTimestamp,
                 descriptionField.getText().trim(),
@@ -137,10 +220,58 @@ public class ActivityCreateForm implements Navigatable {
                 parsePrice(priceField.getText()),
                 activityNameField.getText().trim(),
                 typeComboBox.getValue(),
-                hotelIdComboBox.getValue() != null ? hotelIdComboBox.getValue() : 0,
-                carIdComboBox.getValue() != null ? carIdComboBox.getValue() : 0,
-                flightIdComboBox.getValue() != null ? flightIdComboBox.getValue() : 0
+                getHotelIdByName(hotelIdComboBox.getValue()),
+                getCarIdByBrand(carIdComboBox.getValue()),
+                getFlightIdByNumber(flightIdComboBox.getValue()),
+                userId
+
+
+
+
+
         );
+    }
+
+    private int getHotelIdByName(String hotelName) {
+        String query = "SELECT id_hotel_h FROM hotel WHERE nom_h = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, hotelName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id_hotel_h");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID de l'hôtel : " + e.getMessage());
+        }
+        return 0;
+    }
+
+    private int getCarIdByBrand(String brand) {
+        String query = "SELECT id FROM private_car WHERE brand = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, brand);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID de la voiture : " + e.getMessage());
+        }
+        return 0;
+    }
+
+    private int getFlightIdByNumber(String flightNumber) {
+        String query = "SELECT id_flight FROM flights WHERE flight_number = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, flightNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id_flight");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID du vol : " + e.getMessage());
+        }
+        return 0;
     }
 
     private Timestamp combineDateTime(java.time.LocalDate date, String hour, String minute, String second) {
@@ -152,31 +283,26 @@ public class ActivityCreateForm implements Navigatable {
     }
 
     private boolean validateInputs() {
-        // Contrôle du nom de l'activité
         if (activityNameField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le nom de l'activité est requis.");
             return false;
         }
 
-        // Contrôle de la description
         if (descriptionField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La description est requise.");
             return false;
         }
 
-        // Contrôle du prix
         if (!isValidPrice(priceField.getText())) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Le prix est invalide. Veuillez entrer un nombre positif.");
             return false;
         }
 
-        // Contrôle de la localisation
         if (localisationField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "La localisation est requise.");
             return false;
         }
 
-        // Contrôle des dates de début et de fin
         if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Les dates de début et de fin sont requises.");
             return false;
@@ -187,67 +313,82 @@ public class ActivityCreateForm implements Navigatable {
             return false;
         }
 
-        // Contrôle des heures, minutes et secondes
         if (startHourComboBox.getValue() == null || startMinuteComboBox.getValue() == null || startSecondComboBox.getValue() == null ||
                 endHourComboBox.getValue() == null || endMinuteComboBox.getValue() == null || endSecondComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner une heure, une minute et une seconde valides.");
             return false;
         }
 
-        // Contrôle du type d'activité
         if (typeComboBox.getValue() == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un type d'activité.");
             return false;
         }
 
-        // Contrôle de l'ID de l'hôtel
-        if (hotelIdComboBox.getValue() == null || hotelIdComboBox.getValue() == 0) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID d'hôtel valide.");
+        if (hotelIdComboBox.getValue() == null || hotelIdComboBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un nom d'hôtel valide.");
             return false;
-        } else if (!idExistsInDatabase("hotel", "id_hotel_h", hotelIdComboBox.getValue())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID de l'hôtel sélectionné n'existe pas dans la base de données.");
-            return false;
-        }
-
-        // Contrôle de l'ID de la voiture
-        if (carIdComboBox.getValue() == null || carIdComboBox.getValue() == 0) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID de voiture valide.");
-            return false;
-        } else if (!idExistsInDatabase("private_car", "id", carIdComboBox.getValue())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID de la voiture sélectionné n'existe pas dans la base de données.");
+        } else if (!nameExistsInDatabase("hotel", "nom_h", hotelIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le nom de l'hôtel sélectionné n'existe pas dans la base de données.");
             return false;
         }
 
-        // Contrôle de l'ID du vol
-        if (flightIdComboBox.getValue() == null || flightIdComboBox.getValue() == 0) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un ID de vol valide.");
+        if (carIdComboBox.getValue() == null || carIdComboBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner une marque de voiture valide.");
             return false;
-        } else if (!idExistsInDatabase("flights", "id_flight", flightIdComboBox.getValue())) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "L'ID du vol sélectionné n'existe pas dans la base de données.");
+        } else if (!brandExistsInDatabase("private_car", "brand", carIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "La marque de voiture sélectionnée n'existe pas dans la base de données.");
+            return false;
+        }
+
+        if (flightIdComboBox.getValue() == null || flightIdComboBox.getValue().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un numéro de vol valide.");
+            return false;
+        } else if (!flightNumberExistsInDatabase("flights", "flight_number", flightIdComboBox.getValue())) {
+            showAlert(Alert.AlertType.WARNING, "Validation", "Le numéro de vol sélectionné n'existe pas dans la base de données.");
             return false;
         }
 
         return true;
     }
 
-    /**
-     * Vérifie si un ID existe dans une table spécifique de la base de données.
-     *
-     * @param tableName    Le nom de la table.
-     * @param idColumnName Le nom de la colonne ID.
-     * @param id           L'ID à vérifier.
-     * @return true si l'ID existe, false sinon.
-     */
-    private boolean idExistsInDatabase(String tableName, String idColumnName, int id) {
-        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + idColumnName + " = ?";
+    private boolean nameExistsInDatabase(String tableName, String nameColumnName, String name) {
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + nameColumnName + " = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
+            statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt(1) > 0; // Retourne true si l'ID existe
+                return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la vérification de l'ID dans la table " + tableName + " : " + e.getMessage());
+            System.out.println("Erreur lors de la vérification du nom dans la table " + tableName + " : " + e.getMessage());
+        }
+        return false;
+    }
+
+    private boolean brandExistsInDatabase(String tableName, String brandColumnName, String brand) {
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + brandColumnName + " = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, brand);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la vérification de la marque dans la table " + tableName + " : " + e.getMessage());
+        }
+        return false;
+    }
+
+    private boolean flightNumberExistsInDatabase(String tableName, String flightNumberColumnName, String flightNumber) {
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + flightNumberColumnName + " = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, flightNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la vérification du numéro de vol dans la table " + tableName + " : " + e.getMessage());
         }
         return false;
     }
@@ -268,6 +409,7 @@ public class ActivityCreateForm implements Navigatable {
     private void handleCancel() {
         clearForm();
         closeForm();
+        dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
     }
 
     private void clearForm() {
@@ -281,6 +423,7 @@ public class ActivityCreateForm implements Navigatable {
         typeComboBox.setValue(null);
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
+
     }
 
     private void closeForm() {
@@ -295,5 +438,137 @@ public class ActivityCreateForm implements Navigatable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private List<String> getLocationSuggestions(String query) {
+        List<String> suggestions = new ArrayList<>();
+        String apiKey = "b6ae308ab9e242b382916cd2bf04da70"; // Votre clé API OpenCage Data
+        String apiUrl = "https://api.opencagedata.com/geocode/v1/json?q=" + query + "&key=" + apiKey;
+
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            JSONArray results = jsonResponse.getJSONArray("results");
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject result = results.getJSONObject(i);
+                String formattedLocation = result.getString("formatted");
+                suggestions.add(formattedLocation);
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des suggestions de localisation : " + e.getMessage());
+        }
+
+        return suggestions;
+    }
+
+    @FXML
+    private void handleLocationInput() {
+        String query = localisationField.getText().trim();
+        if (query.length() > 2) { // Seulement si l'utilisateur a tapé plus de 2 caractères
+            List<String> suggestions = getLocationSuggestions(query);
+            suggestionsComboBox.getItems().setAll(suggestions);
+            suggestionsComboBox.setVisible(true);
+        } else {
+            suggestionsComboBox.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void handleSuggestionSelection() {
+        String selectedLocation = suggestionsComboBox.getValue();
+        if (selectedLocation != null) {
+            localisationField.setText(selectedLocation);
+            suggestionsComboBox.setVisible(false);
+        }
+    }
+
+    private void getActivityNameSuggestions(String input) {
+        try {
+            HttpPost request = new HttpPost(COHERE_API_URL);
+            request.setHeader("Authorization", "Bearer " + COHERE_API_KEY);
+            request.setHeader("Content-Type", "application/json");
+
+            JSONObject requestBody = new JSONObject();
+            requestBody.put("prompt", "List 5 activity names starting with \"" + input + "\":");
+            requestBody.put("max_tokens", 50);
+            requestBody.put("temperature", 0.5);
+            requestBody.put("k", 0);
+            requestBody.put("p", 0.9);
+            requestBody.put("frequency_penalty", 0.0);
+            requestBody.put("presence_penalty", 0.0);
+            requestBody.put("stop_sequences", new JSONArray().put("\n\n"));
+            requestBody.put("return_likelihoods", "NONE");
+
+            request.setEntity(new StringEntity(requestBody.toString()));
+
+            String response = HttpClients.createDefault().execute(request, httpResponse -> 
+                EntityUtils.toString(httpResponse.getEntity()));
+
+            JSONObject jsonResponse = new JSONObject(response);
+            String generatedText = jsonResponse.getJSONArray("generations")
+                                             .getJSONObject(0)
+                                             .getString("text");
+
+            // Traiter les suggestions
+            final List<String> suggestions = new ArrayList<>();
+            String[] lines = generatedText.split("\n");
+            for (String line : lines) {
+                String cleanLine = line.replaceAll("^\\d+\\.\\s*", "").trim();
+                if (cleanLine.length() > 0) {
+                    suggestions.add(cleanLine);
+                }
+            }
+
+            // Limiter à 5 suggestions maximum
+            final List<String> finalSuggestions = suggestions.size() > 5 ? 
+                suggestions.subList(0, 5) : suggestions;
+
+            // Mettre à jour le ComboBox des suggestions
+            if (!finalSuggestions.isEmpty()) {
+                Platform.runLater(() -> {
+                    activityNameSuggestionsComboBox.getItems().setAll(finalSuggestions);
+                    activityNameSuggestionsComboBox.setVisible(true);
+                    activityNameSuggestionsComboBox.show();
+                });
+            } else {
+                Platform.runLater(() -> {
+                    activityNameSuggestionsComboBox.setVisible(false);
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des suggestions de nom d'activité : " + e.getMessage());
+            Platform.runLater(() -> {
+                activityNameSuggestionsComboBox.setVisible(false);
+            });
+        }
+    }
+
+    @FXML
+    private void handleActivityNameSuggestionSelection() {
+        if (activityNameSuggestionsComboBox.getValue() != null) {
+            String selectedName = activityNameSuggestionsComboBox.getValue();
+            activityNameField.setText(selectedName);
+            activityNameSuggestionsComboBox.setVisible(false);
+            activityNameSuggestionsComboBox.getSelectionModel().clearSelection();
+        }
+    }
+
+    private int getCurrentUserId() {
+        // Exemple : Récupérer l'ID de l'utilisateur actuel à partir de la session
+        // Remplacez cette logique par votre propre mécanisme de récupération de l'ID utilisateur
+        return 1; // Exemple : ID de l'utilisateur actuel (à remplacer par une logique dynamique)
     }
 }

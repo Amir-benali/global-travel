@@ -1,26 +1,30 @@
 package com.globalTravel.controllers.activity;
 
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
+import com.globalTravel.models.activity.Activity;
+import com.globalTravel.models.activity.Review;
 import com.globalTravel.services.activity.ReviewService;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import com.globalTravel.models.activity.Review;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import org.controlsfx.control.Rating;
 
-import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ReviewUpdateForm {
-
-    @FXML
-    private TextField commentaireField;
+public class ReviewUpdateForm implements Navigatable {
 
     @FXML
-    private ComboBox<Integer> noteComboBox;
+    private TextArea commentaireField;
 
     @FXML
-    private ComboBox<Integer> activityIdComboBox; // ComboBox pour les IDs des activités
+    private Rating noteRating; // Utilisation de Rating au lieu de ComboBox
+
+    @FXML
+    private ComboBox<String> activityIdComboBox; // ComboBox pour les noms des activités
 
     @FXML
     private DatePicker dateReviewPicker;
@@ -31,31 +35,48 @@ public class ReviewUpdateForm {
     private final ReviewService reviewService = new ReviewService();  // Utilisation du service ReviewService
 
     private Review reviewToUpdate;
+    private DashBoard dashBoardController;
+    private Map<String, Integer> activityNameToIdMap = new HashMap<>(); // Pour associer les noms aux IDs
 
     @FXML
     public void initialize() {
-        // Charger les notes possibles (de 0 à 5)
-        noteComboBox.setItems(FXCollections.observableArrayList(0, 1, 2, 3, 4, 5));
+        // Configurer le Rating pour afficher jusqu'à 5 étoiles
+        noteRating.setMax(5);
 
-        // Charger les Activity IDs depuis la base de données
+        // Charger les noms des activités depuis la base de données
         loadActivityIds();
     }
 
+    public void setDashBoardController(DashBoard dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
+
     private void loadActivityIds() {
-        // Charger les IDs des activités depuis la base de données via le service
-        List<Integer> activityIds = reviewService.getAllActivityIds();  // Appeler la méthode de ReviewService
-        ObservableList<Integer> observableActivityIds = FXCollections.observableArrayList(activityIds);
-        activityIdComboBox.setItems(observableActivityIds);
+        // Récupérer la liste des activités avec leurs noms
+        List<Activity> activities = reviewService.getAllActivities();
+
+        // Créer une liste observable pour les noms des activités
+        ObservableList<String> observableActivityNames = FXCollections.observableArrayList();
+        for (Activity activity : activities) {
+            observableActivityNames.add(activity.getNomActivity());
+            activityNameToIdMap.put(activity.getNomActivity(), activity.getId()); // Associer le nom à l'ID
+        }
+
+        // Remplir le ComboBox avec les noms des activités
+        activityIdComboBox.setItems(observableActivityNames);
     }
 
     public void setReviewToUpdate(Review review) {
         this.reviewToUpdate = review;
         if (review != null) {
-            // Pré-remplir les champs avec les valeurs de la review existante
             commentaireField.setText(review.getCommentaire());
-            noteComboBox.setValue(review.getNote());
-            activityIdComboBox.setValue(review.getActivityId());
-            dateReviewPicker.setValue(review.getDateReview().toLocalDate()); // Affichage de la date, mais non modifiable
+            noteRating.setRating(review.getNote());
+
+            // Récupérer le nom de l'activité en fonction de l'activityId
+            String nomActivity = reviewService.getNomActivity(review.getActivityId());
+            activityIdComboBox.setValue(nomActivity); // Afficher le nom de l'activité
+
+            dateReviewPicker.setValue(review.getDateReview().toLocalDate());
         }
     }
 
@@ -71,10 +92,14 @@ public class ReviewUpdateForm {
             return;
         }
 
+        // Récupérer l'ID de l'activité sélectionnée
+        String selectedActivityName = activityIdComboBox.getValue(); // Récupérer le nom sélectionné
+        int activityId = activityNameToIdMap.get(selectedActivityName); // Récupérer l'ID correspondant
+
         // Appliquer les modifications à la review
         reviewToUpdate.setCommentaire(commentaireField.getText().trim());
-        reviewToUpdate.setNote(noteComboBox.getValue());
-        reviewToUpdate.setActivityId(activityIdComboBox.getValue());
+        reviewToUpdate.setNote((int) noteRating.getRating()); // Récupérer la note du Rating
+        reviewToUpdate.setActivityId(activityId); // Mettre à jour l'ID de l'activité
 
         // Sauvegarder les modifications via le service ReviewService
         reviewService.modifier(reviewToUpdate);
@@ -92,20 +117,14 @@ public class ReviewUpdateForm {
         }
 
         // Vérifier qu'une note est sélectionnée
-        if (noteComboBox.getValue() == null) {
+        if (noteRating.getRating() == 0) {
             showAlert("Erreur", "Veuillez sélectionner une note.", Alert.AlertType.WARNING);
             return false;
         }
 
-        // Vérifier qu'un ID d'activité est sélectionné
+        // Vérifier qu'une activité est sélectionnée
         if (activityIdComboBox.getValue() == null) {
             showAlert("Erreur", "Veuillez sélectionner une activité.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        // Vérifier que l'ID d'activité existe dans la base de données
-        if (!reviewService.activityExists(activityIdComboBox.getValue())) {
-            showAlert("Erreur", "L'ID de l'activité sélectionné n'existe pas dans la base de données.", Alert.AlertType.WARNING);
             return false;
         }
 
@@ -123,8 +142,6 @@ public class ReviewUpdateForm {
 
     @FXML
     private void handleCancel() {
-        // Fermer la fenêtre ou annuler l'édition
-        Stage stage = (Stage) saveButton.getScene().getWindow();
-        stage.close();
+        dashBoardController.navigateTo("dashboard/activity/review-grid.fxml");
     }
 }

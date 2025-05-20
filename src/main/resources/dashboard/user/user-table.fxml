@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,14 +15,12 @@
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <!-- Top Controls -->
     <HBox alignment="CENTER_LEFT" spacing="10">
         <Label fx:id="selectionLabel" text="0 sélectionné" />
         <Region HBox.hgrow="ALWAYS" />
-        <TextField  fx:id="searchField" promptText="Rechercher..." />
+        <TextField fx:id="searchField" promptText="Rechercher..." onKeyReleased="#handleSearch"/>
     </HBox>
 
-    <!-- Table -->
     <TableView fx:id="userTable" styleClass="user-table" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="firstNameColumn" text="Prénom" prefWidth="120.0" />
@@ -35,23 +32,10 @@
             <TableColumn fx:id="phoneNumberColumn" text="Téléphone" prefWidth="150.0" />
             <TableColumn fx:id="rolesColumn" text="Rôle" prefWidth="150.0" />
             <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100.0" />
-            <TableColumn fx:id="actionColumn" text="Actions" prefWidth="150.0" /> <!-- New Action Column -->
+            <TableColumn fx:id="actionColumn" text="Actions" prefWidth="150.0" />
         </columns>
         <VBox.margin>
             <Insets top="20" />
         </VBox.margin>
     </TableView>
-
-    <!-- Pagination -->
-    <HBox alignment="CENTER" spacing="5" styleClass="pagination">
-        <Button styleClass="pagination-button" text="Précédent" />
-        <Button styleClass="pagination-button, current" text="1" />
-        <Button styleClass="pagination-button" text="2" />
-        <Button styleClass="pagination-button" text="3" />
-        <Button styleClass="pagination-button" text="4" />
-        <Button styleClass="pagination-button" text="5" />
-        <Button styleClass="pagination-button" text="6" />
-        <Button styleClass="pagination-button" text="7" />
-        <Button styleClass="pagination-button" text="Suivant" />
-    </HBox>
 </VBox>

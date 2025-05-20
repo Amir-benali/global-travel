@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.globalTravel.controllers.activity.ActivityCalendar"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #f4f4f4;">
+
+    <!-- VBox pour afficher les cartes d'activités -->
+    <VBox fx:id="activityContainer" layoutX="20" layoutY="20" spacing="10" prefWidth="560" prefHeight="360" />
+
+
+</AnchorPane>

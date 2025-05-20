@@ -1,7 +1,7 @@
 package com.globalTravel.controllers.activity;
 
-import com.globalTravel.controllers.DashBoard;
-import com.globalTravel.controllers.Navigatable;
+import com.globalTravel.controllers.backoffice.DashBoard;
+import com.globalTravel.controllers.backoffice.Navigatable;
 import com.globalTravel.models.activity.Activity;
 import com.globalTravel.models.activity.TypeActivity;
 import com.globalTravel.services.activity.ActivityService;
@@ -26,7 +26,7 @@ public class ActivityUpdateForm implements Navigatable {
     private DashBoard dashBoardController;
 
     @FXML private TextField activityNameField;
-    @FXML private TextField descriptionField;
+    @FXML private TextArea descriptionField;
     @FXML private TextField locationField;
     @FXML private DatePicker startDatePicker;
     @FXML private ComboBox<String> startHourComboBox;
@@ -38,9 +38,9 @@ public class ActivityUpdateForm implements Navigatable {
     @FXML private ComboBox<String> endSecondComboBox;
     @FXML private TextField priceField;
     @FXML private ComboBox<TypeActivity> typeComboBox;
-    @FXML private ComboBox<Integer> hotelIdComboBox;  // ComboBox for hotel selection
-    @FXML private ComboBox<Integer> carIdComboBox;   // ComboBox for car selection
-    @FXML private ComboBox<Integer> flightIdComboBox; // ComboBox for flight selection
+    @FXML private ComboBox<String> hotelIdComboBox;  // ComboBox for hotel names
+    @FXML private ComboBox<String> carIdComboBox;   // ComboBox for car brands
+    @FXML private ComboBox<String> flightIdComboBox; // ComboBox for flight numbers
     @FXML private Button saveButton;
 
     @Override
@@ -62,10 +62,10 @@ public class ActivityUpdateForm implements Navigatable {
         typeComboBox.setItems(FXCollections.observableArrayList(TypeActivity.values()));
         populateHourMinuteSecondComboBoxes();
 
-        // Load IDs from the database
-        hotelIdComboBox.getItems().setAll(getIdsFromDatabase("hotel", "id_hotel_h"));
-        carIdComboBox.getItems().setAll(getIdsFromDatabase("private_car", "id"));
-        flightIdComboBox.getItems().setAll(getIdsFromDatabase("flights", "id_flight"));
+        // Load hotel names, car brands, and flight numbers from the database
+        hotelIdComboBox.getItems().setAll(getNamesFromDatabase("hotel", "nom_h"));
+        carIdComboBox.getItems().setAll(getCarBrandsFromDatabase());
+        flightIdComboBox.getItems().setAll(getFlightNumbersFromDatabase());
     }
 
     public void initialize(Activity activityToEdit) {
@@ -98,9 +98,9 @@ public class ActivityUpdateForm implements Navigatable {
             typeComboBox.setValue(activityToEdit.getTypeActivity());
 
             // Set hotel, car, flight ComboBox values
-            hotelIdComboBox.setValue(activityToEdit.getJoinHotelId());
-            carIdComboBox.setValue(activityToEdit.getJoinVoitureId());
-            flightIdComboBox.setValue(activityToEdit.getJoinVolsId());
+            hotelIdComboBox.setValue(getHotelNameById(activityToEdit.getJoinHotelId()));
+            carIdComboBox.setValue(getCarBrandById(activityToEdit.getJoinVoitureId()));
+            flightIdComboBox.setValue(getFlightNumberById(activityToEdit.getJoinVolsId()));
         });
     }
 
@@ -156,27 +156,19 @@ public class ActivityUpdateForm implements Navigatable {
                 String startTime = String.format("%s:%s:%s", startHour, startMinute, startSecond);
                 String endTime = String.format("%s:%s:%s", endHour, endMinute, endSecond);
 
-                // Get selected hotel, car, and flight IDs from ComboBoxes
-                Integer hotelId = hotelIdComboBox.getValue();
-                Integer carId = carIdComboBox.getValue();
-                Integer flightId = flightIdComboBox.getValue();
+                // Get selected hotel, car, and flight names from ComboBoxes
+                String hotelName = hotelIdComboBox.getValue();
+                String carBrand = carIdComboBox.getValue();
+                String flightNumber = flightIdComboBox.getValue();
 
-                // Validate hotel, car, and flight IDs
-                if (hotelId != null && !idExistsInDatabase("hotel", "id_hotel_h", hotelId)) {
-                    showAlert("Validation Error", "The selected hotel ID does not exist in the database.", Alert.AlertType.WARNING);
-                    return;
-                }
-                if (carId != null && !idExistsInDatabase("private_car", "id", carId)) {
-                    showAlert("Validation Error", "The selected car ID does not exist in the database.", Alert.AlertType.WARNING);
-                    return;
-                }
-                if (flightId != null && !idExistsInDatabase("flights", "id_flight", flightId)) {
-                    showAlert("Validation Error", "The selected flight ID does not exist in the database.", Alert.AlertType.WARNING);
-                    return;
-                }
+                // Get IDs from names
+                int hotelId = getHotelIdByName(hotelName);
+                int carId = getCarIdByBrand(carBrand);
+                int flightId = getFlightIdByNumber(flightNumber);
 
                 // Create updated Activity object
                 Activity activity = new Activity(
+
                         activityToEdit.getId(),
                         Timestamp.valueOf(startDatePicker.getValue().atTime(LocalTime.parse(startTime))),
                         Timestamp.valueOf(endDatePicker.getValue().atTime(LocalTime.parse(endTime))),
@@ -185,9 +177,11 @@ public class ActivityUpdateForm implements Navigatable {
                         Integer.parseInt(priceField.getText()),
                         activityNameField.getText(),
                         selectedType,
-                        hotelId != null ? hotelId : 0,
-                        carId != null ? carId : 0,
-                        flightId != null ? flightId : 0
+                        hotelId,
+                        carId,
+                        flightId,
+                        0
+
                 );
 
                 // Update activity in the database
@@ -210,7 +204,9 @@ public class ActivityUpdateForm implements Navigatable {
 
     @FXML
     private void handleCancel() {
+
         closeForm();
+        dashBoardController.navigateTo("dashboard/activity/activity-grid.fxml");
     }
 
     private void closeForm() {
@@ -264,9 +260,9 @@ public class ActivityUpdateForm implements Navigatable {
             return false;
         }
 
-        // Check hotel, car, and flight IDs
+        // Check hotel, car, and flight names
         if (hotelIdComboBox.getValue() == null || carIdComboBox.getValue() == null || flightIdComboBox.getValue() == null) {
-            showAlert("Validation Error", "Please select valid IDs for hotel, car, and flight.", Alert.AlertType.WARNING);
+            showAlert("Validation Error", "Please select valid hotel, car, and flight.", Alert.AlertType.WARNING);
             return false;
         }
 
@@ -291,50 +287,138 @@ public class ActivityUpdateForm implements Navigatable {
         alert.showAndWait();
     }
 
-    /**
-     * Retrieves IDs from the database for a given table and column.
-     *
-     * @param tableName    The name of the table.
-     * @param idColumnName The name of the ID column.
-     * @return A list of IDs.
-     */
-    private List<Integer> getIdsFromDatabase(String tableName, String idColumnName) {
-        List<Integer> ids = new ArrayList<>();
-        String query = "SELECT " + idColumnName + " FROM " + tableName;
+    private List<String> getNamesFromDatabase(String tableName, String nameColumnName) {
+        List<String> names = new ArrayList<>();
+        String query = "SELECT " + nameColumnName + " FROM " + tableName;
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                ids.add(resultSet.getInt(idColumnName));
+                names.add(resultSet.getString(nameColumnName));
             }
-
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des ID de " + tableName + " : " + e.getMessage());
+            System.out.println("Erreur lors de la récupération des noms de " + tableName + " : " + e.getMessage());
         }
 
-        return ids;
+        return names;
     }
 
-    /**
-     * Checks if an ID exists in a specific table in the database.
-     *
-     * @param tableName    The name of the table.
-     * @param idColumnName The name of the ID column.
-     * @param id           The ID to check.
-     * @return true if the ID exists, false otherwise.
-     */
-    private boolean idExistsInDatabase(String tableName, String idColumnName, int id) {
-        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + idColumnName + " = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0; // Returns true if the ID exists
+    private List<String> getCarBrandsFromDatabase() {
+        List<String> brands = new ArrayList<>();
+        String query = "SELECT brand FROM private_car";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                brands.add(resultSet.getString("brand"));
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la vérification de l'ID dans la table " + tableName + " : " + e.getMessage());
+            System.out.println("Erreur lors de la récupération des marques de voitures : " + e.getMessage());
         }
-        return false;
+
+        return brands;
+    }
+
+    private List<String> getFlightNumbersFromDatabase() {
+        List<String> flightNumbers = new ArrayList<>();
+        String query = "SELECT flight_number FROM flights";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                flightNumbers.add(resultSet.getString("flight_number"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des numéros de vol : " + e.getMessage());
+        }
+
+        return flightNumbers;
+    }
+
+    private String getHotelNameById(int hotelId) {
+        String query = "SELECT nom_h FROM hotel WHERE id_hotel_h = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, hotelId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("nom_h");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom de l'hôtel : " + e.getMessage());
+        }
+        return "N/A";
+    }
+
+    private String getCarBrandById(int carId) {
+        String query = "SELECT brand FROM private_car WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, carId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("brand");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de la marque de la voiture : " + e.getMessage());
+        }
+        return "N/A";
+    }
+
+    private String getFlightNumberById(int flightId) {
+        String query = "SELECT flight_number FROM flights WHERE id_flight = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, flightId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("flight_number");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du numéro de vol : " + e.getMessage());
+        }
+        return "N/A";
+    }
+
+    private int getHotelIdByName(String hotelName) {
+        String query = "SELECT id_hotel_h FROM hotel WHERE nom_h = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, hotelName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id_hotel_h");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID de l'hôtel : " + e.getMessage());
+        }
+        return 0; // Retourne 0 si l'hôtel n'est pas trouvé
+    }
+
+    private int getCarIdByBrand(String brand) {
+        String query = "SELECT id FROM private_car WHERE brand = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, brand);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID de la voiture : " + e.getMessage());
+        }
+        return 0; // Retourne 0 si la voiture n'est pas trouvée
+    }
+
+    private int getFlightIdByNumber(String flightNumber) {
+        String query = "SELECT id_flight FROM flights WHERE flight_number = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, flightNumber);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("id_flight");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID du vol : " + e.getMessage());
+        }
+        return 0; // Retourne 0 si le vol n'est pas trouvé
     }
 }
